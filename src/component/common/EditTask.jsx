@@ -1,0 +1,203 @@
+import React from 'react';
+import { Pane, Dialog, Switch,Button } from 'evergreen-ui';
+import Component from '@reactions/component';
+import axios from "axios";
+import Cookies from "universal-cookie";
+import Host from "../../assets/js/Host";
+import { toast } from "react-toastify";
+import Lottie from "lottie-react-web";
+import loading from '../../assets/js/loading.json';
+import "react-toastify/dist/ReactToastify.css";
+import Select from 'react-select';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+// import moment from 'moment';
+const cookies = new Cookies();
+
+const customStyles = {
+    option: (provided, state) => ({
+        ...provided,
+        borderBottom: '1px dotted pink',
+        color: state.isSelected ? 'red' : 'blue',
+
+    }),
+    control: () => ({
+        // none of react-select's styles are passed to <Control />
+        width: '100%',
+        border: '1px solid #ababab',
+        borderRadius: 5,
+        padding: 5,
+        display: 'flex',
+        height:'42px',
+    }),
+    container: () => ({
+
+        width: '95%',
+        position: 'relative',
+        boxSizing: 'border-box',
+    }),
+    singleValue: (provided, state) => {
+        const opacity = state.isDisabled ? 0.5 : 1;
+        const transition = 'opacity 300ms';
+
+        return { ...provided, opacity, transition };
+    }
+}
+class EditTask extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            data: [],
+            task_title: '',
+            user: '',
+            description: '',
+            dead_time: '',
+            status_id: '',
+            startDate: new Date()
+        };
+    }
+
+    handleChange = date => {
+        this.setState({
+            startDate: date
+        });
+    };
+
+
+    render() {
+        const { selectedOption } = this.state;
+    
+
+        return (
+            <div style={{ marginRight: 10 }}  >
+                {/* <button onClick={()=>{
+    console.log('s', onProfileDelete()
+    );
+    
+}}>sss,,,,,</button> */}
+                <Component initialState={{ isShown: false, spin: false, }}    >
+                    {({ state, setState }) => (
+                        <Pane >
+                            <Dialog
+                                isShown={state.isShown}
+
+                                onCloseComplete={() => setState({ isShown: false })}
+                                hasHeader={false}
+                                shouldCloseOnOverlayClick={false}
+                                confirmLabel="Save"
+                                cancelLabel="Cancel"
+                                onConfirm={() => {
+                                    setState({ spin: true })
+                                    var headers = {
+                                        jwt: cookies.get("token")
+                                    };
+
+                                    axios({
+                                        url: Host + `tasks/task/${this.props.id}`,
+                                        method: "PUT",
+                                        headers: headers,
+                                        data: {
+                                            task_title: this.state.task_title,
+                                            description: this.state.description,
+                                            dead_time: this.state.startDate,
+                                            status_id: this.state.status_id
+                                        },
+                                    })
+
+                                        .then(res => {
+                                            // console.log(res.data);
+
+
+                                            if (res.data.status === true) {
+                                                setState({ isShown: false, spin: false })
+                                                toast.success('task updated successfully')
+                                                const { onProfileDelete } = this.props.onProfileDelete
+                                                onProfileDelete()
+                                            }
+                                            else if (res.data.status === false) {
+                                                toast.error(res.data.data.message.text)
+                                                setState({ spin: false })
+                                            }
+                                        })
+                                        .catch(function (error) {
+                                        // console.log(error);
+                                        setState({ spin: false });
+                                    })
+                                }}
+                            >
+                                <div >
+                                    <div id='new_itemnav' >  Edit Task  </div>
+                                    <div className='mod1'>
+                                        <div id='dailog' style={{ marginTop: 15, height: 'auto' }} >
+                                            <div id='dialog_title' > Title    </div>
+                                            <div style={{ width: '80%', textAlign: 'center' }} >
+                                                <input type='text' id='field2' style={{ width: '95%' }} value={this.state.task_title} onChange={(e) =>
+                                                    this.setState({ task_title: e.target.value })} />  </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div className='mod1'>
+                                        <div id='dailog' style={{ height: 'auto' }} >
+                                            <div id='dialog_title' > Description    </div>
+                                            <div style={{ width: '80%', textAlign: 'center' }} >
+                                                <textarea id='field3' value={this.state.description} onChange={(e) =>
+                                                    this.setState({ description: e.target.value })} />  </div>
+                                        </div>
+
+
+                                        <div id='dailog' >
+                                            <div id='dialog_title' >  Update Status  </div>
+
+                                            <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
+                                                <Select onChange={e => { this.setState({ status_id: e.value }); }}
+                                                    value={selectedOption}
+                                                    styles={customStyles}
+                                                    options={this.props.allstatus}
+                                                /> </div>
+                                        </div>
+
+                                        <div id='dailog' style={{ marginTop: 15, height: 'auto' }} >
+                                            <div id='dialog_title' > Date    </div>
+                                            <div style={{ width: '80%', textAlign: 'center' }} >
+                                                {/* <input type='date' id='field2' style={{ width: '95%' }} value={this.state.dead_time} onChange={(e) =>
+                                                    this.setState({ dead_time: e.target.value })} />   */}
+                                                <DatePicker
+                                                    selected={this.state.startDate}
+                                                    onChange={this.handleChange}
+                                                    timeInputLabel="Time:"
+                                                    dateFormat="MM/dd/yyyy h:mm aa"
+                                                    showTimeInput
+                                                />
+                                            </div>
+                                        </div>
+                                        {state.spin ? (
+                      <div style={{ width: "100%", position: "absolute" }}>
+                        <Lottie
+                          options={{
+                            animationData: loading
+                          }}
+                          width={300}
+                          height={150}
+                          position="absolute"
+                        />
+                      </div>
+                    ) : null}
+
+                                    </div>
+                       
+                                </div>
+                            </Dialog>
+
+                            <Button onClick={() => { setState({ isShown: true }) }}  >  <i className="fas fa-edit" id="edit"></i></Button>
+                        </Pane>
+                    )}
+                </Component>
+
+            </div>
+        );
+    }
+}
+export default EditTask;

@@ -42,9 +42,14 @@ componentDidMount(){
     headers: headers,
 })
 .then(res => {
+  if (res.data.status===false) {        
+    cookies.remove("token");
+    window.location.href = "/"
+  } else {
   cookies.set("userslength",res.data.data.length)
   this.setState({data:res.data.data})
 
+  }
 })
 
 axios({
@@ -56,23 +61,48 @@ axios({
   cookies.set("deplength",res.data.data.length)
 
 })
-axios({
-  url: Host + `tasks/tasks`,
-  method: "GET",
-  headers: headers,
+// axios({
+//   url: Host + `tasks/tasks`,
+//   method: "GET",
+//   headers: headers,
 
+// })
+
+//   .then(response => {
+//     console.log(response.data);
+//     cookies.set("tasks",response.data.data.length)
+
+//   })
+//   .catch(function (error) {
+
+//   });
+this.makeRequest(`tasks/tasks`,`GET`,response=>{
+  // console.log(response.data);
+  cookies.set("tasks",response.data.data.length)
 })
-
-  .then(response => {
-    console.log(response.data);
-    cookies.set("tasks",response.data.data.length)
-
-  })
-  .catch(function (error) {
-
-  });
-
 } }
+
+makeRequest(endPoint,method,callback) {
+  const jwt=cookies.get("token");
+  var headers = {
+    jwt:jwt,
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json',
+  };
+  axios({
+    url: Host + endPoint,
+    method: method,
+    headers: headers,
+  })
+    .then(response => {
+      callback(response)
+    })
+    .catch(function (error) {
+      //
+    });
+}
+
+
 
 render() {
   return (

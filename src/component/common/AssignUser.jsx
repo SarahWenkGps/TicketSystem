@@ -1,9 +1,12 @@
 import React from 'react';
-import { SelectMenu, Button } from "evergreen-ui";
+import { SelectMenu, Button, Pane, Heading } from "evergreen-ui";
 import Component from "@reactions/component";
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import axios from "axios";
+import Lottie from "lottie-react-web";
+import loading from '../../assets/js/loading.json'
+import CloseIcon from "@material-ui/icons/Close";
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import { toast } from "react-toastify";
@@ -17,41 +20,54 @@ class AssingUser extends React.Component {
         this.state = {
 
             data: [],
-            id:''
-
+            id: [],
+            spin: false
         };
     }
 
     assign_user() {
+        this.setState({ spin: true })
         var headers = {
             jwt: cookies.get("token")
         };
-        axios({
-            url: Host + `tasks/assign/${this.props.id}`,
-            method: "POST",
-            headers: headers,
-            data: {
-                user_id: this.state.id,
+        var counter = 0;
+        for (var i = 0; i < this.state.id.length; i++) {
 
-            },
-        })
 
-            .then(res => {
-                console.log(res.data);
-               
-                if (res.data.status===true) {
+            axios({
+                url: Host + `tasks/assign/${this.props.id}`,
+                method: "POST",
+                headers: headers,
+                data: {
+                    user_id: this.state.id[i],
 
-                        const { onProfileDelete } = this.props
-                        onProfileDelete()
-                        toast.success("user assigned successfully")
-                } else if(res.data.status===false) {
-                    toast.error(res.data.data.message.text)
-                }
-
+                },
             })
-            .catch(function (error) {
 
-            });
+                .then(res => {
+                    counter++;
+                    // console.log('ff',res);
+                    // console.log('this.state.id.length',this.state.id.length);
+                    // console.log('counter',counter);
+                    if (this.state.id.length === counter) {
+                        if (res.data.status === true) {
+                            toast.success("user assigned successfully")
+                            const { onProfileDelete } = this.props.onProfileDelete
+                            onProfileDelete()
+                            this.setState({ spin: false })
+                        } else if (res.data.status === false) {
+                            this.setState({ spin: false })
+                            toast.error(res.data.data.message.text)
+                        }
+                    }
+
+
+                })
+                .catch(function (error) {
+                    this.setState({ spin: false })
+                    // console.log(error.data);
+                });
+        }
     }
 
 
@@ -59,23 +75,54 @@ class AssingUser extends React.Component {
 
 
     render() {
+        const { onProfileDelete } = this.props.onProfileDelete
         return (
             <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }} >
+                {/* <button onClick={()=>{
+    console.log('s',onProfileDelete()
+    );
+    
+}}>ffff</button> */}
+
                 <Component
                     initialState={{
 
-                        selected: '',name:''
+                        selected: []
                     }}
                 >
                     {({ state, setState }) => (
                         <SelectMenu
                             isMultiSelect
                             title="Select multiple names"
+                            titleView={({ close, title, headerHeight }) => {
+                                return (
+                                    <Pane
+                                        display="flex"
+                                        alignItems="center"
+                                        borderBottom="default"
+                                        padding={8}
+                                        height={headerHeight}
+                                        boxSizing="border-box"
+                                    >
+
+
+                                        <Tooltip title="Assigned" onClick={() => {
+                                            this.assign_user();
+                                        }}   >
+                                            <IconButton aria-label="Assigned">
+                                                <AssignmentTurnedInIcon style={{ color: '#da251e', cursor: 'pointer' }} />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Pane>
+                                )
+                                title = "Select multiple names"
+                            }}
                             options={this.props.users}
                             selected={state.selected}
                             onSelect={item => {
                                 const selected = [...state.selected, item.value]
                                 this.setState({ id: selected })
+                              
                                 const selectedItems = selected
                                 const selectedItemsLength = selectedItems.length
                                 let selectedNames = ''
@@ -88,13 +135,8 @@ class AssingUser extends React.Component {
                                 }
                                 setState({
                                     selected,
-                                    selectedNames ,name:item.label
+                                    selectedNames
                                 })
-
-                                setTimeout(() => {
-                                    console.log(this.state.id);
-                                }, 200);
-
                             }}
                             onDeselect={item => {
                                 const deselectedItemIndex = state.selected.indexOf(item.value)
@@ -111,12 +153,8 @@ class AssingUser extends React.Component {
                                     selectedNames = selectedItemsLength.toString() + ' selected...'
                                 }
                                 setState({ selected: selectedItems, selectedNames })
-                                this.setState({
-                                    id: selectedItems
-                                })
-                                setTimeout(() => {
-                                    console.log(this.state.id);
-                                }, 200);
+                                this.setState({ id: selectedItems })
+                                
                             }}
                         >
                             <Button>{state.name || <SupervisorAccountIcon />}</Button>
@@ -124,15 +162,27 @@ class AssingUser extends React.Component {
                     )}
                 </Component>
 
-                <Tooltip style={{ marginLeft: 20}} title="Assigned" onClick={() => {
-                    this.assign_user();
-                }}   >
-                          <IconButton aria-label="Assigned">
-                          <AssignmentTurnedInIcon style={{ color: '#da251e', cursor: 'pointer' }}/>
-                          </IconButton>
-                        </Tooltip>
 
-              
+
+
+
+
+
+
+
+                {this.state.spin === true ? (
+                    <div style={{ width: "100%", position: "absolute" }}>
+                        <Lottie
+                            options={{
+                                animationData: loading
+                            }}
+                            width={300}
+                            height={150}
+                            position="absolute"
+                        />
+                    </div>
+                ) : null}
+
             </div>
         );
     }

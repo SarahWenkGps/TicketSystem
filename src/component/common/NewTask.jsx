@@ -7,6 +7,9 @@ import Host from "../../assets/js/Host";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Select from 'react-select';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+// import moment from 'moment';
 const cookies = new Cookies();
 
 const customStyles = {
@@ -40,92 +43,97 @@ const customStyles = {
 class NewTask extends React.Component {
     constructor(props) {
         super(props);
-       
+
         this.state = {
-          
-                data: [],
-                checked:'',
-                task_name:'',
-                user:'',
-                description:'',
-                dead_time:'',
-        
+
+            data: [],
+            checked: '',
+            task_name: '',
+            user: '',
+            description: '',
+            dead_time: '',
+            startDate: new Date()
         };
     }
 
-
-
-assign_user(id){
-    var headers = {
-        jwt: cookies.get("token")
-    };
-    axios({
-        url: Host + `tasks/assign/${id}`,
-        method: "POST",
-        headers: headers,
-        data: {
-            user_id: this.state.user,
-           
-        },
-    })
-
-        .then(response => {
-console.log(response.data);
- toast.success("user assigned successfully")
-
-        })
-        .catch(function (error) {
-
+    handleChange = date => {
+        this.setState({
+            startDate: date
         });
-}
+    };
+
+    assign_user(id) {
+        var headers = {
+            jwt: cookies.get("token")
+        };
+        axios({
+            url: Host + `tasks/assign/${id}`,
+            method: "POST",
+            headers: headers,
+            data: {
+                user_id: this.state.user,
+
+            },
+        })
+
+            .then(response => {
+                // console.log(response.data);
+                toast.success("user assigned successfully")
+
+            })
+            .catch(function (error) {
+
+            });
+    }
 
 
-    newtask= async () => {
+    newtask = async () => {
         var headers = {
             jwt: cookies.get("token")
         };
         try {
-        let res = await   axios({
-            url: Host + `tasks/task`,
-            method: "POST",
-            headers: headers,
-            data: {
-                task_name: this.state.task_name,
-                description: this.state.description,
-                dead_time:this.state.dead_time,
-                main_task_id:'0'
-            },
-        })
-
-           
-console.log(res.data);
+         
+            let res = await axios({
+                url: Host + `tasks/task`,
+                method: "POST",
+                headers: headers,
+                data: {
+                    task_name: this.state.task_name,
+                    description: this.state.description,
+                    dead_time: this.state.startDate,
+                    main_task_id: '0'
+                },
+            })
 
 
-if (res.data.status===true) {
-    if (this.state.user !== undefined) {
-        this.assign_user(res.data.data.task_id);
-    }
-    else{
-        const { onProfileDelete } = this.props
-        onProfileDelete()
-        toast.success('task created successfully')
-
-    }
+            // console.log(res.data);
 
 
-} else if(res.data.status===false) {
-    toast.error(res.data.data.message.text)
-}
+            if (res.data.status === true) {
+                if (this.state.user !== undefined) {
+                    this.assign_user(res.data.data.task_id);
+                }
+                else {
+                    const { onProfileDelete } = this.props
+                    onProfileDelete()
+                    toast.success('task created successfully')
 
-    
+                }
 
- 
 
+            } else if (res.data.status === false) {
+                toast.error(res.data.data.message.text)
             }
-            catch (error) {
-                console.log(error);
-             
-                 }
+
+
+
+
+
+        }
+        catch (error) {
+            // console.log(error);
+
+        }
     }
 
 
@@ -133,9 +141,15 @@ if (res.data.status===true) {
 
     render() {
         const { selectedOption } = this.state;
+        const { onProfileDelete } = this.props
+       
         return (
             <div   >
-
+{/* <button onClick={()=>{
+    console.log('s', onProfileDelete()
+    );
+    
+}}>sss,,,,,</button> */}
                 <Component initialState={{ isShown: false }}    >
                     {({ state, setState }) => (
                         <Pane >
@@ -148,15 +162,15 @@ if (res.data.status===true) {
                                 confirmLabel="Save"
                                 cancelLabel="Cancel"
                                 onConfirm={() => {
-                            
+
                                     // setState({ isShown: false });
                                     this.newtask();
                                 }}
                             >
                                 <div >
                                     <div id='new_itemnav' >  Create New Task  </div>
-                                
-                                
+
+
                                     <div className='mod1'>
                                         <div id='dailog' style={{ marginTop: 15, height: 'auto' }} >
                                             <div id='dialog_title' > Title    </div>
@@ -164,9 +178,9 @@ if (res.data.status===true) {
                                                 <input type='text' id='field2' style={{ width: '95%' }} value={this.state.task_name} onChange={(e) =>
                                                     this.setState({ task_name: e.target.value })} />  </div>
                                         </div>
-                                </div>
-                                
-                                
+                                    </div>
+
+
                                     <div className='mod1'>
                                         <div id='dailog' style={{ height: 'auto' }} >
                                             <div id='dialog_title' > Description    </div>
@@ -190,27 +204,30 @@ if (res.data.status===true) {
                                         <div id='dailog' style={{ marginTop: 15, height: 'auto' }} >
                                             <div id='dialog_title' > Date    </div>
                                             <div style={{ width: '80%', textAlign: 'center' }} >
-                                                <input type='date' id='field2' style={{ width: '95%' }} value={this.state.dead_time} onChange={(e) =>
-                                                    this.setState({ dead_time: e.target.value })} />  </div>
+                                                {/* <input type='date' id='field2' style={{ width: '95%' }} value={this.state.dead_time} onChange={(e) =>
+                                                    this.setState({ dead_time: e.target.value })} />   */}
+                                                <DatePicker
+                                                    selected={this.state.startDate}
+                                                    onChange={this.handleChange}
+                                                    timeInputLabel="Time:"
+                                                    dateFormat="MM/dd/yyyy h:mm aa"
+                                                    showTimeInput
+                                                />
+                                            </div>
                                         </div>
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', width: '50%' }}>
-                                            <span style={{ color: '#517c92', marginBottom: '.5rem' }}>Create Sub task</span>         <Component initialState={{ checked: true }}>
+                                            <span style={{ color: '#517c92', marginBottom: '.5rem' }}>Create Sub task</span>     
+                                               <Component initialState={{ checked: true }}>
                                                 {({ state, setState }) => (
                                                     <Switch
                                                         //   checked={state.checked}
                                                         onChange={e => {
                                                             this.setState({ checked: e.target.checked })
-                                                            console.log(e.target.checked);
+                                                            // console.log(e.target.checked);
                                                         }}
-
-
                                                     />
-                                                  
                                                 )}
-                                                  <button onClick={()=>{
-                                                        console.log(this.state.user);
-                                                        
-                                                    }} >sss</button>
+                                              
                                             </Component>
                                         </div>
 
@@ -226,7 +243,7 @@ if (res.data.status===true) {
                                                     <div id='dialog_title' >  Assign to </div>
 
                                                     <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
-                                                        <Select onChange={e => { this.setState({ sto: e.value }); console.log('sto', e.value); }}
+                                                        <Select onChange={e => { this.setState({ sto: e.value }); }}
                                                             value={selectedOption}
                                                             styles={customStyles}
                                                             options={this.state.device1}
@@ -238,7 +255,23 @@ if (res.data.status===true) {
                                                         <input type='date' id='field2' style={{ width: '95%' }} value={this.state.password} onChange={(e) =>
                                                             this.setState({ password: e.target.value })} />  </div>
                                                 </div>
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', width: '50%' }}>
+                                            <span style={{ color: '#517c92', marginBottom: '.5rem' }}>Create Sub task</span>     
+                                               <Component initialState={{ checked: true }}>
+                                                {({ state, setState }) => (
+                                                    <Switch
+                                                        //   checked={state.checked}
+                                                        onChange={e => {
+                                                            this.setState({ checked: e.target.checked })
+                                                            // console.log(e.target.checked);
+                                                        }}
+                                                    />
+                                                )}
+                                              
+                                            </Component>
+                                        </div>
                                             </div>
+
                                         ) : (
                                                 null
                                             )}

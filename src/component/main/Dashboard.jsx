@@ -17,20 +17,24 @@ class Dashboard extends Component {
     super(props);
     this.wrapper = React.createRef();
     this.state = {
-    wait:'',
+  
     check:'',
-    num:''
+   
     };
 }
 
 componentDidMount(){
-  if (cookies.get("userslength")) {
-    this.setState({wait:'no'})
-  }
+  // if (cookies.get("userslength")) {
+   
+  // }
   if (cookies.get("token")) {
     this.setState({check:'login'})
+   
   }
-  this.setState({num:cookies.get("tasks")})
+  else{
+    this.setState({check:'notlogin'})
+  }
+
 }
 
 
@@ -45,7 +49,7 @@ componentDidMount(){
             <Redirect to="/"></Redirect>
           )
         } else
-          if (this.state.check === "login" && this.state.wait==='no'  ) {
+          if (this.state.check === "login" && cookies.get("userslength")  ) {
             return (
               <div id='cuthome'  >
 
@@ -173,14 +177,14 @@ componentDidMount(){
                         {
                           color: '#cd85fe',
                           title: 'One',
-                          value: [this.state.num]
+                          value: cookies.get("tasks")
                         },
                     
-                        // {
-                        //   color: '#dfe0e042',
-                        //   title: 'Two',
-                        //   value: 100-cookies.get("tasks")
-                        // },
+                        {
+                          color: '#dfe0e042',
+                          title: 'Two',
+                          value: 100-cookies.get("tasks")
+                        },
                         // {
                         //   color: '#56B2BF',
                         //   title: 'Three',
@@ -218,7 +222,7 @@ componentDidMount(){
               </div>
 
             )
-          } else if (this.state.check === "" || this.state.wait!=='no'  ) {
+          } else if (this.state.check === "" || cookies.get("userslength")===undefined  ) {
             return (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}  >
 

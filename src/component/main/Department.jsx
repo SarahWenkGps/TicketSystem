@@ -75,6 +75,10 @@ class Departmant extends Component {
         headers: headers,  
     })
       .then(res => {
+        if (res.data.status===false) {        
+          cookies.remove("token");
+          window.location.href = "/"
+        } else {
         this.setState({ watt: "no" });
         let arr = [];
         for (let index = 0; index < res.data.data.length; index++) {
@@ -102,11 +106,11 @@ class Departmant extends Component {
           dpartmentdata: arr
         });
       
-        
+      }
       })
       .catch(err => {
-        console.log("error:", err);
-        // this.setState({ check: "notlogin"});
+        // console.log("error:", err);
+       
       
       });
   }

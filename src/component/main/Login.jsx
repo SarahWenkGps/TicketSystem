@@ -88,7 +88,7 @@ class Login extends Component {
                                     <div
                                         id="sign_but"
                                         onClick={(e) => {
-                                            if (this.state.username.length < 4) {
+                                            if (this.state.username.length < 3) {
                                                 return (
                                                     toast.error(`Username is short`)
                                                 );
@@ -112,7 +112,7 @@ class Login extends Component {
 
                                                 })
                                                     .then(response => {
-                                                        console.log(response.data);
+                                                        // console.log(response.data);
                                                         
                                                         if (response.data.status===false) {
                                                             toast.error(response.data.data.text)
@@ -123,7 +123,7 @@ class Login extends Component {
                                                       
                                                         window.location.href = "/Dashboard";
                                                         let token =response.data.data.token
-                                                        console.log('token',response.data.data.token);
+                                                        // console.log('token',response.data.data.token);
                                                         
                                                         let status = response.data.status
                                                         cookies.set("status",status)
@@ -139,7 +139,7 @@ class Login extends Component {
                                                      } })
                                                     .catch(function (err) {
                                                         setState({ spin: false });
-                                       console.log(err.data);
+                                    //    console.log(err.data);
                                        
                                                     });
                                             }                                        

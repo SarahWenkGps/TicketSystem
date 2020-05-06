@@ -120,7 +120,10 @@ class Edit_Dep extends React.Component {
               </Dialog>
 
               <div
-                onClick={() => setState({ isShown: true })}
+                onClick={() => {
+                  setState({ isShown: true , department:this.props.department, })
+
+                }}
 
               >
                 <i className="fas fa-edit" id="edit"></i>

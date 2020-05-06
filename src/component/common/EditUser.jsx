@@ -112,6 +112,7 @@ class EditUser extends React.Component {
                   })
               
                     .then(response => {
+console.log(response.data);
 
                       if (response.data.status===false) {
                         toast.error(response.data.data.text)
@@ -169,7 +170,7 @@ class EditUser extends React.Component {
 
                       <div style={{ width: "80%", textAlign: "center" , display:'flex',alignItems:'center',justifyContent:'center' }}>
                
-                      <Select onChange={e => { setState({ dep_nm: e.value }); console.log('dep_nm', e.value); }}
+                      <Select onChange={e => { setState({ dep_nm: e.value }); }}
                                                     defaultValue={state.depas}
                                                    value={selectedOption}
                                                     styles={customStyles}
@@ -225,7 +226,7 @@ class EditUser extends React.Component {
               <div
                 onClick={() =>{ 
                   setState({ isShown: true })
-                  let getIndex=this.props.data1.findIndex((element) => element.label === state.department)
+                  let getIndex=this.props.data1.findIndex((element) => element.label === this.props.department)
                   setState({depas:this.props.data1[getIndex]})
                 setState({
                   name: this.props.name,

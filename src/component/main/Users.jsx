@@ -122,12 +122,12 @@ class Users extends Component {
         this.setState({
           dapts: arr
         });
-        console.log('sss', res.data.data);
+        // console.log('sss', res.data.data);
 
       })
 
       .catch(err => {
-        console.log("error:", err);
+        // console.log("error:", err);
       });
 
 
@@ -140,6 +140,12 @@ class Users extends Component {
       headers: headers,
     })
       .then(res => {
+        console.log(res.data);
+        
+        if (res.data.status===false) {        
+          cookies.remove("token");
+          window.location.href = "/"
+        } else {
         this.setState({ watt: "no" });
         cookies.set("userslength", res.data.data.length)
         let arr = [];
@@ -152,18 +158,112 @@ class Users extends Component {
             pass: (<Changwpass ids={res.data.data[index].user_id} />),
 
             status: (
-              <Component initialState={{ isShown: true, spin: false }}>
-                {({ state, setState }) =>
-                  state.spin ? (
+              // <Component initialState={{ isShown: true, spin: false }}>
+              //   {({ state, setState }) =>
+              //     state.spin ? (
 
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >  <Spinner size={16} /></div>
-                  ) : res.data.data[index].enabled === 1 ? (
-                    <DoneIcon style={{ color: "#5bb061", fontSize: 30, cursor: "pointer" }} />
-                  ) : (
-                        <CloseIcon style={{ color: "rgb(169, 16, 16)", fontSize: 30, cursor: "pointer" }} />
-                      )
-                }
-              </Component>
+              //       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >  <Spinner size={16} /></div>
+              //     ) : res.data.data[index].enabled === 1 ? (
+              //       <DoneIcon style={{ color: "#5bb061", fontSize: 30, cursor: "pointer" }} />
+              //     ) : (
+              //           <CloseIcon style={{ color: "rgb(169, 16, 16)", fontSize: 30, cursor: "pointer" }} />
+              //         )
+              //   }
+              // </Component>
+
+              <Component initialState={{ isShown: true, spin: false }}>
+              {({ state, setState }) =>
+                 state.spin ? (
+               
+                  <div style={{display:'flex',justifyContent:'center',alignItems:'center'}} >  <Spinner size={16} /></div>
+                ) : res.data.data[index].enabled === 1 ? (
+                  <DoneIcon
+                    style={{
+                      color: "#5bb061",
+                      fontSize: 30,
+                      cursor: "pointer"
+                    }}
+                    onClick={() => {
+                      setState({ spin: true });
+                      var headers = {
+                        jwt: cookies.get("token")
+                      };
+                      axios({
+                        url: Host + `users/user/${res.data.data[index].user_id}`,
+                        method: "PUT",
+                        headers: headers,
+                        data: {
+                         name:'',
+                         email:'',
+                         department_id:'',
+                         enabled:0
+                        },
+                      })
+                        .then(response => {
+                          console.log(response.data);
+                          if (response.data.status===false) {
+                            toast.error(response.data.data.message.text)
+                            setState({ spin: false })
+                        }
+                        else if (response.data.status===true) {
+                          toast.success("User Disables successfully");
+                          setState({ spin: false });
+                          this.componentDidMount();
+                        }
+                        })
+                        .catch(function(error) {
+                          setState({ spin: false });
+                         
+                        });
+                    
+                    }}
+                  />
+                ) : (
+                  <CloseIcon
+                    style={{
+                      color: "rgb(169, 16, 16)",
+                      fontSize: 30,
+                      cursor: "pointer"
+                    }}
+                    onClick={() => {
+                      setState({ spin: true });
+                   
+                      axios({
+                        url: Host + `users/user/${res.data.data[index].user_id}`,
+                        method: "PUT",
+                        headers: headers,
+                        data: {
+                         name:'',
+                         email:'',
+                         department_id:'',
+                         enabled:"1"
+                        },
+                      })
+                        .then(response => {
+                          if (response.data.status===false) {
+                            toast.error(response.data.data.message.text)
+                            setState({ spin: false })
+                        }
+                        else if (response.data.status===true) {
+                          toast.success("User enabled successfully");
+                          setState({ spin: false });
+                          this.componentDidMount();
+                        }
+                        })
+                        .catch(function(error) {
+                          setState({ spin: false });
+                         
+                        });
+                    }}
+                  />
+                )
+              }
+            </Component>
+
+
+
+
+
             ),
 
             edit: (
@@ -179,11 +279,11 @@ class Users extends Component {
           Usersdata: arr
         });
 
-
+      }
       })
       .catch(err => {
-        console.log("error:", err);
-        // this.setState({ check: "notlogin"});
+        // console.log("error:", err);
+        
 
       });
   }
@@ -379,7 +479,7 @@ class Users extends Component {
                                   </div>
 
                                     <div style={{ width: "80%", textAlign: "center", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                      <Select onChange={e => { this.setState({ dep_nm: e.value }); console.log('dep_nm', e.value); }}
+                                      <Select onChange={e => { this.setState({ dep_nm: e.value }); }}
                                         value={selectedOption}
                                         styles={customStyles}
                                         options={this.state.dapts}
