@@ -55,7 +55,7 @@ class EditTask extends React.Component {
             description: '',
             dead_time: '',
             status_id: '',
-            startDate: new Date()
+            startDate: ''
         };
     }
 
@@ -132,7 +132,7 @@ class EditTask extends React.Component {
                                     <div className='mod1'>
                                         <div id='dailog' style={{ marginTop: 15, height: 'auto' }} >
                                             <div id='dialog_title' > Title    </div>
-                                            <div style={{ width: '80%', textAlign: 'center' }} >
+                                            <div style={{ width: '80%', textAlign: 'center',direction:'rtl' }} >
                                                 <input type='text' id='field2' style={{ width: '95%' }} value={this.state.task_title} onChange={(e) =>
                                                     this.setState({ task_title: e.target.value })} />  </div>
                                         </div>
@@ -142,7 +142,7 @@ class EditTask extends React.Component {
                                     <div className='mod1'>
                                         <div id='dailog' style={{ height: 'auto' }} >
                                             <div id='dialog_title' > Description    </div>
-                                            <div style={{ width: '80%', textAlign: 'center' }} >
+                                            <div style={{ width: '80%', textAlign: 'center' ,direction:'rtl'}} >
                                                 <textarea id='field3' value={this.state.description} onChange={(e) =>
                                                     this.setState({ description: e.target.value })} />  </div>
                                         </div>
@@ -170,6 +170,7 @@ class EditTask extends React.Component {
                                                     timeInputLabel="Time:"
                                                     dateFormat="MM/dd/yyyy h:mm aa"
                                                     showTimeInput
+                                                    minDate={new Date()}
                                                 />
                                             </div>
                                         </div>

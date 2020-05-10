@@ -204,7 +204,7 @@ export default function PersistentDrawerLeft(props) {
                         <div id='ss' style={{display:'flex',alignItems:'center',justifyContent:'center'}}  >
                          {(cookies.get("role"))=== "Designer" || (cookies.get("role"))==="Checker"  ? (
              <div></div>):( 
-                             <Link to ='/Notification'>   <Box display="flex">
+                             <Link to ='/Notifications'>   <Box display="flex">
   <Box m={2}>
     <Badge badgeContent={8} color="secondary">
      <NotificationsIcon  style={{color:'white'}} />

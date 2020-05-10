@@ -92,9 +92,9 @@ class Edit_Dep extends React.Component {
                   <div className="mod1">
                     <div id='dailog' style={{ marginTop: 15 }} >
                       <div id='dialog_title'>
-                      department </div>
+                      Department </div>
                       <div style={{ width: "80%", textAlign: "center" }}>
-                        <input type="text" id="field2" placeholder="department"
+                        <input type="text" id="field2" placeholder="Department"
                           value={state.department}
                           onChange={e => {
                             setState({ department: e.target.value })

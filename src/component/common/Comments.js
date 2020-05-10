@@ -12,6 +12,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import Lottie from "lottie-react-web";
 import loading from '../../assets/js/loading.json';
 import EditIcon from '@material-ui/icons/Edit';
+import moment from 'moment';
 // import moment from 'moment';
 const cookies = new Cookies();
 
@@ -151,9 +152,10 @@ class Comments extends React.Component {
                                             <div key={i} style={{ width: '100%', padding: '0 10px 0 10px', backgroundColor: '#f6f4f4', marginBottom: 5 }} >
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
                                                     <div>  <PersonIcon style={{ fontSize: 15, color: '#7f7f7f' }} />  {item.commenter_name}</div>
-                                                    <div>{item.comment_dateTime} </div>
+                                                    <div> 
+                                                    {moment(item.comment_dateTime).format("YYYY-MM-DD")} </div>
                                                 </div>
-                                                <div style={{ paddingTop: 10 }}  >{item.comment_text}</div>
+                                                <div style={{ paddingTop: 14,paddingBottom:10,textAlign:'end' }}  >{item.comment_text}</div>
                                                 <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '5px' }} >
 
                                                     <Component initialState={{ isShown: false }}>

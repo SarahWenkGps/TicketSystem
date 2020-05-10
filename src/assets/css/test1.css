@@ -22,21 +22,32 @@
    height: 160px;
 
 }
+
 #parent:hover #hover-content {
   display: flex;
   flex-direction: column;
   position: absolute;
-  min-height: 50px;
   z-index: 5;
-  background-color: #dfe0e0;
-  box-shadow: 0px 0px 4px grey;
   padding: 4px;
   border-radius: 5px;
 }
+#circle1{
+  display: flex;
+  align-items: center;
+  width: 33.33%;
+}
+#left1{
+  justify-content: flex-end;
+  display: flex;
+  /* align-items: center; */
+  flex-direction: column;
+  width: 33.33%;
+  padding-left: 15px;
+  margin-bottom: 30px;
+}
 #parent{
   position: relative;
-  position: relative;
-  text-align: start;
+  text-align: end;
   min-width: 60%;
   color: #2e6b95;
 }
@@ -76,6 +87,7 @@
   border: 1px solid #ababab;
   padding: 5px;
   margin-bottom: 10px;
+ 
 }
 #field2 {
     width: 80%;
@@ -85,12 +97,14 @@
     border: 1px solid #ababab;
     padding: 5px;
     margin-bottom: 10px;
+    
   }
   #dialog_title{
     width: 30%;
-    text-align: center;
+    text-align: left;
     color: #517c92;
     font-size: 15px;
+    padding-left: 2px;
   }
   #del{
     color: #d94848;
@@ -99,6 +113,16 @@
 #edit{
     color: #22619f;
     font-size: 18px;
+}
+
+.react-datepicker__input-container input {
+    display: block;
+   
+    width:350px ;
+    height:40px;
+  padding-left: 10px;
+    border-radius:5px;
+    border:1px solid #ababab;
 }
 #edit:hover,#del:hover{
   cursor: pointer;
@@ -138,6 +162,7 @@
   border: 1px solid #ababab;
   padding: 5px;
   margin-bottom: 10px;
+ 
 }
 
 #tasknew{
@@ -272,6 +297,7 @@ a {
   border-right: none;
   border-bottom: 1px solid gray;
   outline: none;
+  direction: rtl;
 }
 #com_icon{
   color: #22619f;
@@ -360,12 +386,26 @@ a {
   align-items: center;
   justify-content: center;
 }
+#search{
+  width: 25%;
+    height: 35px;
+    border-radius: 5px;
+    border: 1px solid #c3bebe;
+    padding: 5px;
+    color: gray;
+}
+#searchdiv{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
 #circle_div {
   background-color: #fff;
   width: 50%;
   height: 350px;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
   box-shadow: 0px 0px 4px 0px #c7c4c4;
   border-radius: 5px;
@@ -397,7 +437,7 @@ thead{
     display: flex;
     align-items: center;
     justify-content: space-around;
-    /* height: 60px; */
+    height: 60px;
     font-weight: 600;
     font-size: 18px;
     width: 100%;

@@ -21,6 +21,12 @@ class App extends React.Component{
       Dash:[],
       check:'',
       che:'login',
+      new: '',
+      inprogress:'',
+      closed:'',
+      approved:'',
+      rejected:'',
+      archived:'',
     };
   }
 
@@ -61,46 +67,80 @@ axios({
   cookies.set("deplength",res.data.data.length)
 
 })
-// axios({
-//   url: Host + `tasks/tasks`,
-//   method: "GET",
-//   headers: headers,
+axios({
+  url: Host + `tasks/tasks`,
+  method: "GET",
+  headers: headers,
 
-// })
-
-//   .then(response => {
-//     console.log(response.data);
-//     cookies.set("tasks",response.data.data.length)
-
-//   })
-//   .catch(function (error) {
-
-//   });
-this.makeRequest(`tasks/tasks`,`GET`,response=>{
-  // console.log(response.data);
-  cookies.set("tasks",response.data.data.length)
 })
-} }
 
-makeRequest(endPoint,method,callback) {
-  const jwt=cookies.get("token");
-  var headers = {
-    jwt:jwt,
-    'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'application/json',
-  };
-  axios({
-    url: Host + endPoint,
-    method: method,
-    headers: headers,
-  })
-    .then(response => {
-      callback(response)
+  .then(response => {
+    console.log(response.data);
+    cookies.set("tasks",response.data.data.length)
+    let data = response.data.data
+       
+    let newdata = data.filter(f =>
+      f.status === 'new'
+    )
+    this.setState({
+      new: newdata.length
     })
-    .catch(function (error) {
-      //
-    });
-}
+  
+    let assignedata = data.filter(f =>
+      f.status === "archived")
+    this.setState({
+      archived: assignedata.length
+    })
+    let inprogressdata = data.filter(f =>
+      f.status === "in progress")
+    this.setState({
+      inprogress: inprogressdata.length
+    })
+    let closeddata = data.filter(f =>
+      f.status === "closed")
+    this.setState({
+      closed: closeddata.length
+    })
+    let approveddata= data.filter(f =>
+      f.status==="approved")
+      this.setState({approved:approveddata.length})
+
+      let rejecteddata= data.filter(f =>
+        f.status==="rejected")
+        this.setState({rejected:rejecteddata.length})
+
+  })
+  .catch(function (error) {
+
+  });
+
+
+  }}
+
+// this.makeRequest(`tasks/tasks`,`GET`,response=>{
+//   cookies.set("tasks",response.data.data.length)
+// })
+// } }
+
+// makeRequest(endPoint,method,callback) {
+//   const jwt=cookies.get("token");
+//   var headers = {
+//     jwt:jwt,
+//     'Access-Control-Allow-Origin': '*',
+//     'Content-Type': 'application/json',
+//   };
+//   axios({
+//     url: Host + endPoint,
+//     method: method,
+//     headers: headers,
+//   })
+//     .then(response => {
+//       callback(response)
+//     })
+//     .catch(function (error) {
+     
+//     });
+// }
 
 
 

@@ -4,7 +4,15 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
 
 class DashTable extends React.Component{
+  constructor(props) {
+    super(props);
+    this.wrapper = React.createRef();
+    this.state = {
+      Usersdata:[],
+      check: '',
 
+    };
+  }
     
     getMuiTheme = () =>
     createMuiTheme({
@@ -13,16 +21,27 @@ class DashTable extends React.Component{
           elevation4: {
             width: "100%"
           }
-        }
+        },
+        MuiTableCell: {
+          head: {
+
+            color: '#2e6b95',
+            fontSize:'15px',
+            fontWeight:'700' 
+          },
+          root: {
+            textAlign: 'center'
+          }
+        },
+     
       }
     });
 render() {
 
     const columns = [
-    
+      { name: " # ", field: "hash" },
         { name: " Name  ", field: "name" },
-        { name: " Username ", field: "username" },
-        { name: " Department ", field: "depa" },
+        { name: " Tasks  ", field: "tasks" },
         
       
       ];
@@ -38,14 +57,11 @@ render() {
         download:false,
   
       };
-      const data = [
-        {name: "Name 1", username: "Title 1", depa: "Location 1"},
-        {name: "Name 2", username: "Title 2", depa: "Location 2"},
-    ];  
+    
   return (
   <div style={{width:'100%'}} >
  <MuiThemeProvider theme={this.getMuiTheme()}>
-        <MaterialDatatable title={"RECENT ACTIVITIES"} data={data} columns={columns} options={options} />
+        <MaterialDatatable title={"RECENT ACTIVITIES"} data={this.props.data} columns={columns} options={options} />
       </MuiThemeProvider>
   </div>
   );

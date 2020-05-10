@@ -26,48 +26,55 @@ class AssingUser extends React.Component {
     }
 
     assign_user() {
-        this.setState({ spin: true })
-        var headers = {
-            jwt: cookies.get("token")
-        };
-        var counter = 0;
-        for (var i = 0; i < this.state.id.length; i++) {
-
-
-            axios({
-                url: Host + `tasks/assign/${this.props.id}`,
-                method: "POST",
-                headers: headers,
-                data: {
-                    user_id: this.state.id[i],
-
-                },
-            })
-
-                .then(res => {
-                    counter++;
-                    // console.log('ff',res);
-                    // console.log('this.state.id.length',this.state.id.length);
-                    // console.log('counter',counter);
-                    if (this.state.id.length === counter) {
-                        if (res.data.status === true) {
-                            toast.success("user assigned successfully")
-                            const { onProfileDelete } = this.props.onProfileDelete
-                            onProfileDelete()
-                            this.setState({ spin: false })
-                        } else if (res.data.status === false) {
-                            this.setState({ spin: false })
-                            toast.error(res.data.data.message.text)
-                        }
-                    }
-
-
+        if (this.state.id.length > 0) {
+            this.setState({ spin: true })
+            var headers = {
+                jwt: cookies.get("token")
+            };
+            var counter = 0;
+            for (var i = 0; i < this.state.id.length; i++) {
+    
+    
+                axios({
+                    url: Host + `tasks/assign/${this.props.id}`,
+                    method: "POST",
+                    headers: headers,
+                    data: {
+                        user_id: this.state.id[i],
+    
+                    },
                 })
-                .catch(function (error) {
-                    this.setState({ spin: false })
-                    // console.log(error.data);
-                });
+    
+                    .then(res => {
+                        counter++;
+                        // console.log('ff',res);
+                        // console.log('this.state.id.length',this.state.id.length);
+                        // console.log('counter',counter);
+                        if (this.state.id.length === counter) {
+                            if (res.data.status === true) {
+                                toast.success("user assigned successfully")
+                                const { onProfileDelete } = this.props.onProfileDelete
+                                onProfileDelete()
+                                this.setState({ spin: false })
+                            } else if (res.data.status === false) {
+                                this.setState({ spin: false })
+                                toast.error(res.data.data.message.text)
+                            }
+                        }
+    
+    
+                    })
+                    .catch(function (error) {
+                        this.setState({ spin: false })
+                        // console.log(error.data);
+                    });
+            }
+            
         }
+        else{
+            return toast.error("Select User First")
+        }
+       
     }
 
 
@@ -78,11 +85,7 @@ class AssingUser extends React.Component {
         const { onProfileDelete } = this.props.onProfileDelete
         return (
             <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }} >
-                {/* <button onClick={()=>{
-    console.log('s',onProfileDelete()
-    );
-    
-}}>ffff</button> */}
+           
 
                 <Component
                     initialState={{

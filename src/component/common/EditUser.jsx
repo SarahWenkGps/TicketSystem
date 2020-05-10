@@ -9,6 +9,7 @@ import Select from "react-select";
 import loading from '../../assets/js/loading.json';
 import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 const cookies = new Cookies();
 const customStyles = {
   option: (provided, state) => ({
@@ -22,7 +23,7 @@ const customStyles = {
       width: '100%',
       border: '1px solid #ababab',
       borderRadius: 5,
-      padding: 5,
+      padding: 0,
       display: 'flex'
   }),
   container: () => ({
@@ -112,7 +113,7 @@ class EditUser extends React.Component {
                   })
               
                     .then(response => {
-console.log(response.data);
+
 
                       if (response.data.status===false) {
                         toast.error(response.data.data.text)

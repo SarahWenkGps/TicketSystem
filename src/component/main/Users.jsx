@@ -30,7 +30,7 @@ const customStyles = {
     width: '100%',
     border: '1px solid #ababab',
     borderRadius: 5,
-    padding: 5,
+    padding: 0,
     display: 'flex'
   }),
   container: () => ({
@@ -79,8 +79,9 @@ class Users extends Component {
         MuiTableCell: {
           head: {
 
-            color: '#2e6b95'
-
+            color: '#2e6b95',
+            fontSize:'15px',
+            fontWeight:'700' 
           },
           root: {
             textAlign: 'center'
@@ -151,6 +152,7 @@ class Users extends Component {
         let arr = [];
         for (let index = 0; index < res.data.data.length; index++) {
           let obj = {
+            hash:[index +1],
             username: res.data.data[index].username,
             name: res.data.data[index].name,
             depa: res.data.data[index].department.name,
@@ -158,18 +160,7 @@ class Users extends Component {
             pass: (<Changwpass ids={res.data.data[index].user_id} />),
 
             status: (
-              // <Component initialState={{ isShown: true, spin: false }}>
-              //   {({ state, setState }) =>
-              //     state.spin ? (
-
-              //       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >  <Spinner size={16} /></div>
-              //     ) : res.data.data[index].enabled === 1 ? (
-              //       <DoneIcon style={{ color: "#5bb061", fontSize: 30, cursor: "pointer" }} />
-              //     ) : (
-              //           <CloseIcon style={{ color: "rgb(169, 16, 16)", fontSize: 30, cursor: "pointer" }} />
-              //         )
-              //   }
-              // </Component>
+            
 
               <Component initialState={{ isShown: true, spin: false }}>
               {({ state, setState }) =>
@@ -294,6 +285,7 @@ class Users extends Component {
   render() {
     const { selectedOption } = this.state;
     const columns = [
+      { name: " # ", field: "hash" },
       { name: " Username ", field: "username" },
       { name: " Name  ", field: "name" },
       { name: " Department ", field: "depa" },

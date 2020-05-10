@@ -9,24 +9,32 @@ import Lottie from "lottie-react-web";
 import loading from '../../assets/js/loading.json';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import axios from "axios";
-import {Popover,Pane,Button} from 'evergreen-ui';
+import { Popover, Pane, Button } from 'evergreen-ui';
 import Cookies from "universal-cookie";
 import Host from "../../assets/js/Host";
 import Details from './Details';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import AssingUser from './AssignUser';
 import EditTask from './EditTask';
+import PersonIcon from '@material-ui/icons/Person';
 import Comments from './Comments';
+import moment from 'moment';
 const cookies = new Cookies();
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: '18px',
     flexBasis: '50%',
     flexShrink: 0,
+    color: '#2e6b95',
+    fontWeight: '600'
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
@@ -44,8 +52,11 @@ export default function ControlledExpansionPanels(props) {
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
+
+
   };
   return (
+
     <div className="ControlledExpansionPanels"  >
 
 
@@ -91,104 +102,124 @@ export default function ControlledExpansionPanels(props) {
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1bh-content"
-            id="panel1bh-header"
+            id="panel1bh-header" 
           >
-            <Typography className={classes.heading}>{props.name}  </Typography>
-            <Typography className={classes.secondaryHeading}> {props.time}  </Typography>
-          
+            <div className={classes.heading}>{props.name}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
+                <div style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100' }} >
+                  <PersonIcon style={{ fontSize: 14 }} /> {props.createdby} </div>
+
+              </div>
+            </div>
+            <div className={classes.secondaryHeading}>
+              {props.time === '0000-00-00 00:00:00' ? (
+                null
+              ) : (
+                  <div id="parent">
+                    <AccessAlarmIcon style={{ color: '#da251e', cursor: 'pointer' }} />
+                    <div id="hover-content" >
+                      {moment(props.time).format("YYYY-MM-DD")}
+                    </div>
+                  </div>
+
+                )}
+
+            </div>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column' }}  >
+          <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column',borderTop: '1px solid rgb(225, 227, 229)' }}  >
+            <div style={{ width: '100%', paddingBottom: 35, textAlign: 'end', fontSize: 16,paddingTop:10 }}  >
+              {props.desc}
+            </div>
 
 
-            {props.desc}
-           
+
             <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse' }} >
               <AssingUser users={props.users} id={props.id} onProfileDelete={props} />
 
               {props.assigners.length > 0 ? (
-               
-                <Component initialState={{ spin: false }}>
-                {({ state, setState }) => (
-                  <div>
-                <Popover 
-                content={
-                  <Pane
-                    width={240}
-                    height={240}
-                    overflow="auto"
-                    display="flex"
-                    alignItems="center"
-                   backgroundColor="#dfe0e0c9"
-                    flexDirection="column"
-                  >
-                  
-                  {props.assigners.map((item, i) => (
-                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 20, borderBottom: '1px solid #9e9c9c',width:'100%',padding:5 }}  >
-                      {item.name}
-                      <i className="far fa-trash-alt" id="del" onClick={() => {
-                        setState({spin:true})
-                        var headers = {
-                          "Content-Type": "application/json",
-                          jwt: cookies.get("token")
-                        };
-                        axios({
-                          url: Host + `tasks/unassign/${props.id}`,
-                          method: "POST",
-                          headers: headers,
-                          data: {
-                            user_id: item.user_id
-                          }
-                        })
-                          .then(response => {
-                            if (response.data.status === false) {
-                              toast.error(response.data.data.message)
-                              // console.log(response.data);
-                              setState({spin:false})
 
-                            }
-                            else if (response.data.status === true) {
-                              // console.log(response.data);
-                              toast.success("deleted successfully")
-                              const { onProfileDelete } = props
-                              onProfileDelete();
-                              setState({spin:false})
-                            }
-                          })
-                          .catch(function (err) {
-                            // console.log(err);
-                            setState({spin:false})
-                          });
-                      }}
-                      ></i>
-                       
+                <Component initialState={{ spin: false }}>
+                  {({ state, setState }) => (
+                    <div>
+                      <Popover
+                        content={
+                          <Pane
+                            width={240}
+                            height={240}
+                            overflow="auto"
+                            display="flex"
+                            alignItems="center"
+                            backgroundColor="#dfe0e0c9"
+                            flexDirection="column"
+                          >
+
+                            {props.assigners.map((item, i) => (
+                              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 20, borderBottom: '1px solid #9e9c9c', width: '100%', padding: 5 }}  >
+                                {item.name}
+                                <i className="far fa-trash-alt" id="del" onClick={() => {
+                                  setState({ spin: true })
+                                  var headers = {
+                                    "Content-Type": "application/json",
+                                    jwt: cookies.get("token")
+                                  };
+                                  axios({
+                                    url: Host + `tasks/unassign/${props.id}`,
+                                    method: "POST",
+                                    headers: headers,
+                                    data: {
+                                      user_id: item.user_id
+                                    }
+                                  })
+                                    .then(response => {
+                                      if (response.data.status === false) {
+                                        toast.error(response.data.data.message)
+                                        // console.log(response.data);
+                                        setState({ spin: false })
+
+                                      }
+                                      else if (response.data.status === true) {
+                                        // console.log(response.data);
+                                        toast.success("deleted successfully")
+                                        const { onProfileDelete } = props
+                                        onProfileDelete();
+                                        setState({ spin: false })
+                                      }
+                                    })
+                                    .catch(function (err) {
+                                      // console.log(err);
+                                      setState({ spin: false })
+                                    });
+                                }}
+                                ></i>
+
+                              </div>
+
+                            ))}
+                          </Pane>
+                        } >
+                        <Button style={{ marginRight: 10 }}  >Assigners </Button>
+                      </Popover>
+                      {state.spin === true ? (
+                        <div style={{ position: "absolute", zIndex: 20 }}>
+                          <Lottie
+                            options={{
+                              animationData: loading
+                            }}
+                            width={300}
+                            height={150}
+                            position="absolute"
+                          />
+                        </div>
+                      ) : null}
                     </div>
-                    
-                  ))}           
-                  </Pane>
-                } >
-                <Button style={{marginRight:10}}  >Assigners </Button>
-              </Popover>
-              {state.spin === true ? (
-                                    <div style={{  position: "absolute",zIndex:20 }}>
-                                        <Lottie
-                                            options={{
-                                                animationData: loading
-                                            }}
-                                            width={300}
-                                            height={150}
-                                            position="absolute"
-                                        />
-                                    </div>
-                                ) : null}
-              </div>
-                 )}
-                
-                 </Component>
-                 
-               
-          ) : (
-                   null
-                 )}
+                  )}
+
+                </Component>
+
+
+              ) : (
+                  null
+                )}
 
               <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} />
             </div>
@@ -196,8 +227,8 @@ export default function ControlledExpansionPanels(props) {
           </ExpansionPanelDetails>
 
           <div id='pan_main'  >
-            <div style={{width:'50%'}} ><Comments id={props.id} onProfileDelete={props} /></div>
-            <div style={{width:'50%'}} ><Details /></div>
+            <div style={{ width: '50%' }} ><Comments id={props.id} onProfileDelete={props} /></div>
+            <div style={{ width: '50%' }} ><Details id={props.id} onProfileDelete={props} /></div>
           </div>
 
 
@@ -207,6 +238,8 @@ export default function ControlledExpansionPanels(props) {
 
 
     </div>
+
+
   );
 }
 

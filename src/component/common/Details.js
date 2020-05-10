@@ -4,15 +4,11 @@ import Component from '@reactions/component';
 import axios from "axios";
 import Cookies from "universal-cookie";
 import Host from "../../assets/js/Host";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import SendIcon from '@material-ui/icons/Send';
 import "react-datepicker/dist/react-datepicker.css";
-import PersonIcon from '@material-ui/icons/Person';
 import Lottie from "lottie-react-web";
 import loading from '../../assets/js/loading.json';
-import EditIcon from '@material-ui/icons/Edit';
-// import moment from 'moment';
+
 const cookies = new Cookies();
 
 
@@ -23,9 +19,8 @@ class Comments extends React.Component {
 
         this.state = {
             spin: false,
-            comments: [],
-            comment: '',
-            comment2: '',
+            data: [],
+          
         };
     }
 
@@ -43,87 +38,33 @@ class Comments extends React.Component {
             jwt: cookies.get("token"),
         };
         axios({
-            url: Host + `comments/${this.props.id}`,
+            url: Host + `activities/task/${this.props.id}`,
             method: "GET",
             headers: headers,
         })
             .then(response => {
-                // console.log('tok', response.data);
+              console.log('tok', response.data.data);
+              var arr =[];
+              for (let i = 0; i < response.data.data.length; i++) {
+                let obj = {
+                    value: response.data.data[i],
+                  }
+                  arr.push(obj);
+                  
+              }
+              this.setState({ data: arr })
                 this.setState({ spin: false })
-                this.setState({ comments: response.data.data })
+                
             })
             .catch(function (error) {
-                // console.log('error', error);
+                
                 this.setState({ spin: true })
             });
 
     }
 
 
-    editcoment(data) {
-        var headers = {
-            jwt: cookies.get("token")
-        };
-        axios({
-            url: Host + `comments/comment/${data}`,
-            method: "PUT",
-            headers: headers,
-            data: {
-                comment: this.state.comment2,
-
-            },
-        })
-
-            .then(res => {
-                // console.log(response.data);
-                if (res.data.status === true) {
-                    toast.success("Comment updated successfully")
-                    this.callcomm();
-                    const { onProfileDelete } = this.props.onProfileDelete
-                    onProfileDelete()
-                }
-                else if (res.data.status === false) {
-                    toast.error(res.data.data.message.text)
-                }
-            })
-            .catch(function (error) {
-
-            });
-    }
-
-
-    addcomm() {
-        var headers = {
-            jwt: cookies.get("token")
-        };
-        axios({
-            url: Host + `comments/comment`,
-            method: "POST",
-            headers: headers,
-            data: {
-                comment: this.state.comment,
-                task_id: this.props.id,
-            },
-        })
-
-            .then(res => {
-                // console.log(response.data);
-                if (res.data.status === true) {
-                    toast.success("Comment added successfully")
-                    this.callcomm();
-                    const { onProfileDelete } = this.props.onProfileDelete
-                    onProfileDelete()
-                }
-                else if (res.data.status === false) {
-                    toast.error(res.data.data.message.text)
-                }
-            })
-            .catch(function (error) {
-
-            });
-    }
-
-
+    
 
 
 
@@ -145,14 +86,32 @@ class Comments extends React.Component {
                             >
 
 
-                               
+
+{this.state.data.map((item,i)=>(
+    <div key={i} style={{fontSize:15,padding:5,display:'flex',alignItems:'center'}} >
+<div style={{width:6,height:6,backgroundColor:'#2e6b95',borderRadius:300,marginRight:5}}  />
+<div  >{item.value}</div>
+</div>
+))}
+              {this.state.spin === true ? (
+                                    <div style={{ width: "100%", position: "absolute" }}>
+                                        <Lottie
+                                            options={{
+                                                animationData: loading
+                                            }}
+                                            width={300}
+                                            height={150}
+                                            position="absolute"
+                                        />
+                                    </div>
+                                ) : null}                   
                             </Dialog>
 
                             <Button onClick={() => {
                                 setState({ isShown: true })
-                                // this.callcomm();
+                                this.callcomm();
                             }}
-                                id='coment1' >Details </Button>
+                                id='coment1' >Activites </Button>
                         </Pane>
                     )}
                 </Component>

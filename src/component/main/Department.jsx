@@ -44,7 +44,9 @@ class Departmant extends Component {
         MuiTableCell:{
           head:{
 
- color: '#2e6b95'
+            color: '#2e6b95',
+            fontSize:'15px',
+            fontWeight:'700'
 
           },
           root:{
@@ -83,7 +85,7 @@ class Departmant extends Component {
         let arr = [];
         for (let index = 0; index < res.data.data.length; index++) {
           let obj = {
-          
+            hash:[index +1],
             Department: res.data.data[index].name,
     
             edit: (
@@ -147,10 +149,10 @@ class Departmant extends Component {
   render() {
    
     const columns = [
-
+      { name: " # ", field: "hash" },
       { name: " Department ", field: "Department" },
       { name: "Edit", field: "edit" },
-      { name: "delete", field: "delete" },
+      { name: "Delete", field: "delete" },
     
     ];
   
