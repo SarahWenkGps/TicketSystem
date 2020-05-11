@@ -68,14 +68,14 @@ axios({
 
 })
 axios({
-  url: Host + `tasks/tasks`,
+  url: Host + `tasks/tasks?params={"from_date":0,"to_date":0}`,
   method: "GET",
   headers: headers,
 
 })
 
   .then(response => {
-    console.log(response.data);
+    // console.log(response.data);
     cookies.set("tasks",response.data.data.length)
     let data = response.data.data
        

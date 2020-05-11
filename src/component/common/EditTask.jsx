@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pane, Dialog, Switch,Button } from 'evergreen-ui';
+import { Pane, Dialog, Button } from 'evergreen-ui';
 import Component from '@reactions/component';
 import axios from "axios";
 import Cookies from "universal-cookie";

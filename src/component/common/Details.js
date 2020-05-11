@@ -43,7 +43,7 @@ class Comments extends React.Component {
             headers: headers,
         })
             .then(response => {
-              console.log('tok', response.data.data);
+            //   console.log('tok', response.data.data);
               var arr =[];
               for (let i = 0; i < response.data.data.length; i++) {
                 let obj = {

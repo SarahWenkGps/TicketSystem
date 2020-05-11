@@ -166,7 +166,7 @@ class Comments extends React.Component {
                                                                     hasHeader={false}
                                                                     onCloseComplete={() => setState({ isShown: false })}
                                                                     hasFooter={false}
-                                                                    onCloseComplete={() => setState({ isShown: false })}
+                                                                 
                                                                     topOffset={200}
                                                                 >
                                                                     <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', marginBottom: 5, marginTop: 5 }} >

@@ -15,8 +15,10 @@ import Select from "react-select";
 import { Redirect } from "react-router-dom";
 import Changwpass from '../common/Changepass';
 import EditUser from '../common/EditUser';
-import loading from '../../assets/js/loading.json'
+import loading from '../../assets/js/loading.json';
+import Permitions from '../common/Permitions';
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+
 const cookies = new Cookies();
 const customStyles = {
   option: (provided, state) => ({
@@ -141,7 +143,7 @@ class Users extends Component {
       headers: headers,
     })
       .then(res => {
-        console.log(res.data);
+        // console.log(res.data);
         
         if (res.data.status===false) {        
           cookies.remove("token");
@@ -157,6 +159,7 @@ class Users extends Component {
             name: res.data.data[index].name,
             depa: res.data.data[index].department.name,
             email: res.data.data[index].email,
+            Permitions:(<Permitions ids={res.data.data[index].user_id}  />),
             pass: (<Changwpass ids={res.data.data[index].user_id} />),
 
             status: (
@@ -191,7 +194,7 @@ class Users extends Component {
                         },
                       })
                         .then(response => {
-                          console.log(response.data);
+                          // console.log(response.data);
                           if (response.data.status===false) {
                             toast.error(response.data.data.message.text)
                             setState({ spin: false })
@@ -251,10 +254,6 @@ class Users extends Component {
               }
             </Component>
 
-
-
-
-
             ),
 
             edit: (
@@ -290,6 +289,7 @@ class Users extends Component {
       { name: " Name  ", field: "name" },
       { name: " Department ", field: "depa" },
       { name: "Email", field: "email" },
+      {name:"Permitions", field:"Permitions"},
       { name: " Password", field: "pass" },
       { name: " Status", field: "status" },
       { name: "Edit", field: "edit" },
@@ -376,7 +376,7 @@ class Users extends Component {
                                   .then(response => {
                                     // console.log(response.data);
                                     if (response.data.status===false) {
-                                      toast.error(response.data.data.text)
+                                      toast.error(response.data.data.message.text)
                                       setState({ spin: false })
                                   }
                                   else if (response.data.status===true) {

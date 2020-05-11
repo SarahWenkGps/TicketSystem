@@ -155,15 +155,11 @@ class NewTask extends React.Component {
 
     render() {
         const { selectedOption } = this.state;
-        const { onProfileDelete } = this.props
+        
        
         return (
             <div   >
-{/* <button onClick={()=>{
-    console.log('s', onProfileDelete()
-    );
-    
-}}>sss,,,,,</button> */}
+
                 <Component initialState={{ isShown: false }}    >
                     {({ state, setState }) => (
                         <Pane >

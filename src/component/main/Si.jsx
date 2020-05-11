@@ -311,7 +311,7 @@ export default function PersistentDrawerLeft(props) {
                   <List className='sidefect'  style={{paddingBottom:0}} >
 
                     <ListItem >
-                  <img src={require('../../assets/img/user.png')} alt='img' id='side_img'  />
+                  <img src={require('../../assets/img/web.png')} alt='img' id='side_img'  />
                       <ListItemText ><span  className='sspan' style={{fontWeight: '500',fontSize:'16px' }}>Departments</span></ListItemText>
                     </ListItem>
 

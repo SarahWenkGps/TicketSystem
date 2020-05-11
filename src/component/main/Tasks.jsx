@@ -2,22 +2,16 @@ import React from 'react';
 import { Tab, Tabs ,Row,Col} from 'react-bootstrap';
 import loading from '../../assets/js/loading.json';
 import axios from "axios";
-import {SelectMenu,Button} from 'evergreen-ui';
-import Component from "@reactions/component";
 import Cookies from "universal-cookie";
 import Lottie from 'lottie-react-web';
 import Host from "../../assets/js/Host";
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NewTask from '../common/NewTask';
 import { Redirect } from "react-router-dom";
 import Tasknwe1 from '../common/Tasknwe1';
-import { filterData, SearchType } from 'filter-data';
-import { useTheme, fade, makeStyles } from '@material-ui/core/styles';
 import RangePicker from "react-range-picker";
 import moment from 'moment';
 import Context from "../../assets/js/context";
-import {extendMoment} from 'moment-range';
 const cookies = new Cookies();
 
 class Tasks extends React.Component {
@@ -39,16 +33,16 @@ class Tasks extends React.Component {
       afterfilter:'',
      search:[],
      date:[],
-     date1:[],
-     date2:[],
+     date1 :moment(moment().format('L')).format("X") * 1000 ,
+   date2 :0,
      check: "",
      watt: "yes",
     all:[],
     wait:true,
     range:[],
-     start : moment("2018-10-14", 'YYYY-MM-DD'),
-    end : moment("2018-10-20", 'YYYY-MM-DD'),
-    
+    //  day : moment().format('L'),
+     allday:'',
+    spin:false
     }
     this.filterRef = React.createRef();
   }
@@ -59,6 +53,7 @@ class Tasks extends React.Component {
     this.filterRef.current.clearAll();
   }
   componentDidMount() {
+    this.setState({spin:true})
     if (cookies.get("token")) {
       this.setState({ check: "login" })
     }
@@ -91,22 +86,20 @@ class Tasks extends React.Component {
 
    
     })
+   
 
    
     axios({
-      url: Host + `tasks/tasks`,
+      url: Host + `tasks/tasks?params={"from_date":${this.state.date1},"to_date":${this.state.date2}}`,
       method: "GET",
       headers: headers,
-      data:{
-        from_date:" 2020-05-06",
-        to_date: ""
-     
-    }
+    
     })
  
    
       .then(response => {
-        this.setState({ watt: "no" });
+        this.setState({ watt:"no"});
+        this.setState({spin:false})
         if (response.data.status===false) {        
           cookies.remove("token");
           window.location.href = "/"
@@ -151,7 +144,7 @@ class Tasks extends React.Component {
 
       })
       .catch(function (error) {
-        // console.log('error',error);
+        this.setState({spin:false})
       });
 
     axios({
@@ -162,6 +155,7 @@ class Tasks extends React.Component {
       .then(res => {
         let arr = [];
         for (let index = 0; index < res.data.data.length; index++) {
+         
           let obj = {
 
             label: res.data.data[index].name,
@@ -180,49 +174,48 @@ class Tasks extends React.Component {
       });
   }
   handleInput =(e) =>{
-    console.log(e.target.value);
+    // console.log(e.target.value);
     this.setState({search:e.target.value})
   }
 
  
    onDateChanges = (date, date2) => {
-   console.log(" date is ",  moment(date).format("YYYY-MM-DD"), moment(date2).format("YYYY-MM-DD"));
-   this.setState({date1:moment(date).format("YYYY-MM-DD"),date2:moment(date2).format("YYYY-MM-DD")})}
+   this.setState({date1:moment(date).format("X") * 1000,date2:moment(date2).format("X") * 1000})}
   render() {
     let filter =this.state.tasks.filter((dog) => {
      
-      return ( ( dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) ) && ( dog.dead_time.includes(this.state.date1) || dog.dead_time.includes(this.state.date2) ))
+      return (  dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) ) 
      
     })
 
     let filter2 =this.state.new.filter((dog) => {
      
-      return ( ( dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) ) && ( dog.dead_time.includes(this.state.date1) || dog.dead_time.includes(this.state.date2) ))
+      return ( dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) )
      
     })
     let filter3 =this.state.inprogress.filter((dog) => {
      
-      return ( ( dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) ) && ( dog.dead_time.includes(this.state.date1) || dog.dead_time.includes(this.state.date2) ))
+      return (  dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) )
      
     })
     let filter4 =this.state.closed.filter((dog) => {
      
-      return ( ( dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) ) && ( dog.dead_time.includes(this.state.date1) || dog.dead_time.includes(this.state.date2) ))
+      return (  dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) )
      
     })
     let filter5 =this.state.approved.filter((dog) => {
      
-      return ( ( dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) ) && ( dog.dead_time.includes(this.state.date1) || dog.dead_time.includes(this.state.date2) ))
+      return (  dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) )
      
     })
     let filter6 =this.state.rejected.filter((dog) => {
      
-      return ( ( dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) ) && ( dog.dead_time.includes(this.state.date1) || dog.dead_time.includes(this.state.date2) ))
+      return (  dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) )
      
     })
     let filter7 =this.state.archived.filter((dog) => {
      
-      return ( ( dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search) ) && ( dog.dead_time.includes(this.state.date1) || dog.dead_time.includes(this.state.date2) ))
+      return (  dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search))
      
     })
     return (
@@ -241,7 +234,10 @@ class Tasks extends React.Component {
 
           <div id="apfot" ref={this.myRef}  >
 
-
+{/* <button onClick={()=>{
+  console.log(this.state.date1 ==='' && this.state.allday ==='' );
+ ;
+}} >ffff</button> */}
             <div style={{
               display: 'flex', flexDirection: 'column', justifyContent: 'center'
               , width: '100%'
@@ -250,8 +246,42 @@ class Tasks extends React.Component {
 
 <div id='searchdiv' >
 <input type='text'  onChange={this.handleInput} placeholder='Search' id='search' />
-<RangePicker onDateSelected={this.onDateChanges}   />
+<div style={{display:'flex'}}  >
+<RangePicker onDateSelected={this.onDateChanges} 
+ onClose={() => {
+  this.componentDidMount();
+}}  />
+<div onClick={()=>{
+  this.setState({date1:0,date2:0})
+ setTimeout(() => {
+  this.componentDidMount();
+ }, 200);
+}} id="date_btn" > All Day </div>
+
+<div onClick={()=>{
+  this.setState({date1:moment(moment().format('L')).format("X") * 1000,date2:0})
+ setTimeout(() => {
+  this.componentDidMount();
+ }, 200);
+}} id="date_btn" > Today  </div>
+
 </div>
+</div>
+
+{this.state.spin===true ?(
+    <div style={{ width: "100%", position: "absolute" }}>
+     <Lottie
+      options={{
+        animationData: loading
+      }}
+      width={300}
+      height={300}
+    />
+  </div>
+):(
+  null
+)}
+
               <Tabs defaultActiveKey="All Tasks" style={{ display: 'flex', width: '85%', justifyContent: 'space-between' }}  >
                 <Tab eventKey="All Tasks" title="All Tasks" style={{ marginTop: 20 }} >
 
@@ -358,15 +388,6 @@ class Tasks extends React.Component {
                 </Tab>
 
               </Tabs>
-
-
-
-
-
-
-
-
-
 
             </div>
 

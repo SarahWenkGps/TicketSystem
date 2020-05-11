@@ -116,7 +116,7 @@ class EditUser extends React.Component {
 
 
                       if (response.data.status===false) {
-                        toast.error(response.data.data.text)
+                        toast.error(response.data.data.message.text)
                         setState({ spin: false })
                     }
                     else if (response.data.status===true) {

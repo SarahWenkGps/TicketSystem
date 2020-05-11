@@ -41,9 +41,13 @@ render() {
     const columns = [
       { name: " # ", field: "hash" },
         { name: " Name  ", field: "name" },
-        { name: " Tasks  ", field: "tasks" },
-        
-      
+        { name: "All Tasks  ", field: "alltasks" },
+        { name: "New", field: "alltasks" },
+        { name: "In Progress", field: "inprogress" },
+        { name: "Closed", field: "closed" },
+        { name: "Approved  ", field: "approved" },
+        { name: "Rejected  ", field: "rejected" },
+        { name: "Archived", field: "archived" },
       ];
   
       const options = {

@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import Typography from '@material-ui/core/Typography';
 import Component from '@reactions/component';
 import Lottie from "lottie-react-web";
 import loading from '../../assets/js/loading.json';
@@ -13,9 +12,7 @@ import { Popover, Pane, Button } from 'evergreen-ui';
 import Cookies from "universal-cookie";
 import Host from "../../assets/js/Host";
 import Details from './Details';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import AssingUser from './AssignUser';
@@ -48,13 +45,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ControlledExpansionPanels(props) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  // const [ setExpanded] = React.useState(false);
 
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
+  // const handleChange = (panel) => (event, isExpanded) => {
+  //   setExpanded(isExpanded ? panel : false);
 
 
-  };
+  // };
   return (
 
     <div className="ControlledExpansionPanels"  >
@@ -127,7 +124,9 @@ export default function ControlledExpansionPanels(props) {
             </div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column',borderTop: '1px solid rgb(225, 227, 229)' }}  >
-            <div style={{ width: '100%', paddingBottom: 35, textAlign: 'end', fontSize: 16,paddingTop:10 }}  >
+            <div style={{ width: '100%', paddingBottom: 35, textAlign: 'end', fontSize: 16,paddingTop:10
+          
+          }}  >
               {props.desc}
             </div>
 
@@ -172,7 +171,7 @@ export default function ControlledExpansionPanels(props) {
                                   })
                                     .then(response => {
                                       if (response.data.status === false) {
-                                        toast.error(response.data.data.message)
+                                        toast.error(response.data.data.message.text)
                                         // console.log(response.data);
                                         setState({ spin: false })
 

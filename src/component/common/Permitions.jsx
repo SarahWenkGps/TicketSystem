@@ -1,94 +1,85 @@
 import React from 'react';
-import { SelectMenu, Button, Pane} from "evergreen-ui";
-import Component from "@reactions/component";
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import {SelectMenu ,Pane, Button } from 'evergreen-ui';
+import Component from '@reactions/component';
 import axios from "axios";
-import Lottie from "lottie-react-web";
-import loading from '../../assets/js/loading.json'
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import { toast } from "react-toastify";
 import Cookies from "universal-cookie";
 import Host from "../../assets/js/Host";
+import "react-toastify/dist/ReactToastify.css";
+import "react-datepicker/dist/react-datepicker.css";
+import Tooltip from '@material-ui/core/Tooltip';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import IconButton from '@material-ui/core/IconButton';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
 const cookies = new Cookies();
-class AssingUser extends React.Component {
-  
+
+
+
+class Permitions extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-
+            spin: false,
             data: [],
-            id: '',
-            spin: false
+            roles:[],
+          
         };
     }
 
+    handleChange = date => {
+        this.setState({
+            startDate: date
+        });
+    };
 
 
-    assign_user() {
-        if (this.state.id.length > 0) {
-            this.setState({ spin: true })
-            var headers = {
-                jwt: cookies.get("token")
-            };
-            var counter= 0;
-            for (var i = 0; i < this.state.id.length; i++) {
-               
-                axios({
-                    url: Host + `tasks/assign/${this.props.id}`,
-                    method: "POST",
-                    headers: headers,
-                    data: {
-                        user_id: this.state.id[i],
-    
-                    },
-                })
-    
-                    .then(res => {
-                        counter++;
-                        // console.log('ff',res);
-                        // console.log('this.state.id.length',this.state.id.length);
-                        // console.log('counter',counter);
-                        if (this.state.id.length === counter) {
-                            if (res.data.status === true) {
-                                toast.success("user assigned successfully")
-                                const { onProfileDelete } = this.props.onProfileDelete
-                                onProfileDelete()
-                                this.setState({ spin: false })
-                            } else if (res.data.status === false) {
-                                this.setState({ spin: false })
-                                toast.error(res.data.data.message.text)
-                            }
-                        }
-    
-    
-                    })
-                    .catch(function (error) {
-                        this.setState({ spin: false })
-                        // console.log(error.data);
-                    });
+
+    setrols() {
+        this.setState({ spin: true })
+        var headers = {
+            jwt: cookies.get("token"),
+        };
+        axios({
+            url: Host + `users/permissions/${this.props.ids}`,
+            method: "POST",
+            headers: headers,
+            data:{
+                roles_id:this.state.roles
             }
-            
-        }
-        else{
-            return toast.error("Select User First")
-        }
-       
+        })
+            .then(response => {
+            //   console.log('tok', response.data.data);
+              var arr =[];
+              for (let i = 0; i < response.data.data.length; i++) {
+                let obj = {
+                    value: response.data.data[i],
+                  }
+                  arr.push(obj);
+                  
+              }
+              this.setState({ data: arr })
+                this.setState({ spin: false })
+                
+            })
+            .catch(function (error) {
+                
+                this.setState({ spin: true })
+            });
+
     }
 
 
+    
 
 
 
     render() {
-       
-        return (
-            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }} >
-           
+        
 
-                <Component
+        return (
+            <div   >
+           
+           <Component
                     initialState={{
 
                         selected: []
@@ -97,7 +88,6 @@ class AssingUser extends React.Component {
                     {({ state, setState }) => (
                         <SelectMenu
                             isMultiSelect
-                            selected={state.selected}
                             title="Select multiple names"
                             titleView={({ close, title, headerHeight }) => {
                                 return (
@@ -109,23 +99,25 @@ class AssingUser extends React.Component {
                                         height={headerHeight}
                                         boxSizing="border-box"
                                     >
-                                        <Tooltip title="Assigned" onClick={() => {
-                                            this.assign_user();
+
+
+                                        <Tooltip title="Set" onClick={() => {
+                                            this.setrols();
                                         }}   >
-                                            <IconButton aria-label="Assigned">
+                                            <IconButton aria-label="Set">
                                                 <AssignmentTurnedInIcon style={{ color: '#da251e', cursor: 'pointer' }} />
                                             </IconButton>
                                         </Tooltip>
                                     </Pane>
                                 )
-                               
+                              
                             }}
                             options={this.props.users}
-                           
-
+                            selected={state.selected}
                             onSelect={item => {
                                 const selected = [...state.selected, item.value]
                                 this.setState({ id: selected })
+                              
                                 const selectedItems = selected
                                 const selectedItemsLength = selectedItems.length
                                 let selectedNames = ''
@@ -160,35 +152,14 @@ class AssingUser extends React.Component {
                                 
                             }}
                         >
-                            <Button>{state.name || <SupervisorAccountIcon />}</Button>
+                            <Button>{state.name || <LockOpenIcon />}</Button>
                         </SelectMenu>
                     )}
                 </Component>
 
 
-
-
-
-
-
-
-
-                {this.state.spin === true ? (
-                    <div style={{ width: "100%", position: "absolute" }}>
-                        <Lottie
-                            options={{
-                                animationData: loading
-                            }}
-                            width={300}
-                            height={150}
-                            position="absolute"
-                        />
-                    </div>
-                ) : null}
-
             </div>
         );
     }
 }
-
-export default AssingUser;
+export default Permitions;

@@ -6,26 +6,27 @@ import Cookies from "universal-cookie";
 import Host from "../../assets/js/Host";
 import Lottie from "lottie-react-web";
 import loading from '../../assets/js/loading.json';
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const cookies = new Cookies();
 class Changwpass extends React.Component {
     constructor(props) {
         super(props);
-     
+
         this.state = {
             value: {
-            data: [],
-            old_password: '',
-            new_password: '',
-            con_password:'',
-           
-        }};
+                data: [],
+                old_password: "",
+                new_password: '',
+                con_password: '',
+
+            }
+        };
     }
 
 
 
-   
+
 
 
 
@@ -34,12 +35,12 @@ class Changwpass extends React.Component {
         return (
             <div    >
 
-                <Component initialState={{ isShown: false ,spin:false }}    >
+                <Component initialState={{ isShown: false, spin: false }}    >
                     {({ state, setState }) => (
                         <Pane >
                             <Dialog
                                 isShown={state.isShown}
-                             
+
                                 onCloseComplete={() => setState({ isShown: false })}
                                 hasHeader={false}
                                 shouldCloseOnOverlayClick={false}
@@ -49,53 +50,54 @@ class Changwpass extends React.Component {
 
                                     if (this.state.new_password.length < 3) {
                                         toast.warning('password must be more than 3 char')
-                                      }
-                                      else if (this.state.con_password  !== this.state.new_password ) {
+                                    }
+                                    else if (this.state.con_password !== this.state.new_password) {
                                         toast.warning('please confirm password')
-                                      }
-                                    
-                                   
-else{
+                                    }
+                                    else {
+                                        setState({ spin: true })
+                                        var headers = {
+                                            jwt: cookies.get("token")
+                                        };
 
-
-                                    setState({ spin: true })
-                                    var headers = {
-                                        jwt: cookies.get("token")
-                                    };
-                                  
-                            
-                                    axios({
-                                        url: Host + `users/change_password`,
-                                        method: "PUT",
-                                        headers: headers,
-                                        data: {
-                                            user_id: this.props.ids,
-                                            old_password: this.state.old_password,
-                                            new_password: this.state.new_password,
-                                        },
-                                    })
-                            
-                                        .then(response => {
-                                            if (response.data.status===false) {
-                                                toast.error(response.data.data.text)
-                                                setState({ spin: false })
-                                            }
-                                            else if (response.data.status===true) {
-                                            toast.success("password updated successfully");
-                                            setState({isShown: false,spin:false })
-                                            }
-                                            
+if (this.state.old_password ===undefined) {
+    var old_password =""
+} else {
+  old_password =this.state.old_password
+}
+                                        axios({
+                                            url: Host + `users/change_password`,
+                                            method: "PUT",
+                                            headers: headers,
+                                            data: {
+                                                user_id: this.props.ids,
+                                                old_password: old_password,
+                                                new_password: this.state.new_password,
+                                            },
                                         })
-                                        .catch(function (error) {
-                                            setState({ spin: false });
-                                        
-                                        });
-                                }}}
+
+                                            .then(response => {
+                                                if (response.data.status === false) {
+                                                    toast.error(response.data.data.message.text)
+                                                    setState({ spin: false })
+                                                }
+                                                else if (response.data.status === true) {
+                                                    toast.success("password updated successfully");
+                                                    setState({ isShown: false, spin: false })
+                                                }
+
+                                            })
+                                            .catch(function (error) {
+                                                setState({ spin: false });
+
+                                            });
+                                    }
+                                }}
                             >
                                 <div >
                                     <div id='new_itemnav' >   Change Password </div>
                                     <div className='mod1'>
-                                        <div id='dailog' style={{marginTop:15}} >
+                                        <div id='dailog' style={{ marginTop: 15 }} >
                                             <div id='dialog_title' > Old Password   </div>
                                             <div style={{ width: '80%', textAlign: 'center' }} >
                                                 <input type='password' id='field2' placeholder=' ****** ' value={this.state.old_password} onChange={(e) =>
@@ -121,25 +123,26 @@ else{
                                         </div>
 
                                         {state.spin ? (
-                                         <div style={{ width: "100%",position: "absolute"}}>
-                                           <Lottie
-                                             options={{
-                                               animationData: loading
-                                             }}
-                                             width={300}
-                                             height={150}
-                                             position="absolute"
-                                           />
-                                         </div>
-                                       ) : null}
+                                            <div style={{ width: "100%", position: "absolute" }}>
+                                                <Lottie
+                                                    options={{
+                                                        animationData: loading
+                                                    }}
+                                                    width={300}
+                                                    height={150}
+                                                    position="absolute"
+                                                />
+                                            </div>
+                                        ) : null}
                                     </div>
                                 </div>
                             </Dialog>
 
-                            <div onClick={() =>{ setState({ isShown: true })
-                       
-                        
-                        }} id='pass_use' >
+                            <div onClick={() => {
+                                setState({ isShown: true })
+
+
+                            }} id='pass_use' >
 
                                 <i className="fas fa-cog"></i>
 
