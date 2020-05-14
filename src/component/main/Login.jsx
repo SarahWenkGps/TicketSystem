@@ -70,14 +70,15 @@ class Login extends Component {
                             />
 
                             <input
-                                id="field1"
+                                id="field12"
                                 name="text-input-name"
                                 type="password"
                                 placeholder="Password "
                                 required
                                 value={this.state.password}
                                 onChange={e => {
-                                    this.setState({ password: e.target.value });     
+                                    this.setState({ password: e.target.value });   
+                                    this.onEnter();  
                                 }}
                             />
                         </div>
@@ -127,7 +128,9 @@ class Login extends Component {
                                                         
                                                         let status = response.data.status
                                                         cookies.set("status",status)
-                                                  
+                                                        cookies.set("username",response.data.data.username)
+                                                        cookies.set("user_id",response.data.data.user_id)
+                                                        localStorage.setItem("roles", JSON.stringify(response.data.data.roles));
                                                         cookies.set("token", token, {
 
                                                             path: "/",
@@ -186,8 +189,22 @@ class Login extends Component {
 
                 </div>
             </div>
+            
         );
     }
+    onEnter(){
+        var input = document.getElementById("field12");
+      input.addEventListener("keyup", function(event) {
+      
+        if (event.keyCode === 13) {
+         
+          event.preventDefault();
+         
+          document.getElementById("sign_but").click();
+        }
+      });
+      }
 }
+
 
 export default Login;

@@ -19,9 +19,10 @@ import AssingUser from './AssignUser';
 import EditTask from './EditTask';
 import PersonIcon from '@material-ui/icons/Person';
 import Comments from './Comments';
+import Status from '../common/Status';
 import moment from 'moment';
 const cookies = new Cookies();
-
+const detectNewline = require('detect-newline');
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -99,9 +100,10 @@ export default function ControlledExpansionPanels(props) {
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1bh-content"
-            id="panel1bh-header" 
+            id="panel1bh-header"
           >
-            <div className={classes.heading}>{props.name}
+            <div className={classes.heading}>
+              {props.name}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
                 <div style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100' }} >
                   <PersonIcon style={{ fontSize: 14 }} /> {props.createdby} </div>
@@ -113,9 +115,14 @@ export default function ControlledExpansionPanels(props) {
                 null
               ) : (
                   <div id="parent">
-                    <AccessAlarmIcon style={{ color: '#da251e', cursor: 'pointer' }} />
+                     {moment().format('lll')>= moment(props.time).format("lll")?(
+                      <AccessAlarmIcon 
+                      style={{ color: '#da251e', cursor: 'pointer' }} />
+                      ):( <AccessAlarmIcon 
+                        style={{ color: 'green', cursor: 'pointer' }} />)}
+                    
                     <div id="hover-content" >
-                      {moment(props.time).format("YYYY-MM-DD")}
+                      {moment(props.time).format("lll")}
                     </div>
                   </div>
 
@@ -123,20 +130,23 @@ export default function ControlledExpansionPanels(props) {
 
             </div>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column',borderTop: '1px solid rgb(225, 227, 229)' }}  >
-            <div style={{ width: '100%', paddingBottom: 35, textAlign: 'end', fontSize: 16,paddingTop:10
-          
-          }}  >
-              {props.desc}
+          <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgb(225, 227, 229)' }}  >
+            <div style={{
+              width: '100%', paddingBottom: 35, textAlign: 'end', fontSize: 16, paddingTop: 10
+
+            }}  >
+
+              {props.desc.split('\n').map((i, n) => {
+                return <p key={n} >{i}</p>
+              })}
             </div>
 
 
 
             <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse' }} >
-              <AssingUser users={props.users} id={props.id} onProfileDelete={props} />
-
+             <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse',width:'50%' }} >
+              <AssingUser users={props.users} id={props.id} onProfileDelete={props} />  
               {props.assigners.length > 0 ? (
-
                 <Component initialState={{ spin: false }}>
                   {({ state, setState }) => (
                     <div>
@@ -215,18 +225,23 @@ export default function ControlledExpansionPanels(props) {
 
                 </Component>
 
-
               ) : (
                   null
                 )}
 
-              <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} />
+              <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} title={props.name} 
+              time={props.time} desc={props.desc} status={props.status} />
+</div>
+
+<Status status={props.status} onProfileDelete={props} id={props.id} />
+
+
             </div>
 
           </ExpansionPanelDetails>
 
           <div id='pan_main'  >
-            <div style={{ width: '50%' }} ><Comments id={props.id} onProfileDelete={props} /></div>
+            <div style={{ width: '50%' }} ><Comments id={props.id} onProfileDelete={props} comment={props.comment} /></div>
             <div style={{ width: '50%' }} ><Details id={props.id} onProfileDelete={props} /></div>
           </div>
 

@@ -77,7 +77,8 @@ class EditTask extends React.Component {
     );
     
 }}>sss,,,,,</button> */}
-                <Component initialState={{ isShown: false, spin: false, }}    >
+                <Component initialState={{ isShown: false, spin: false,time:this.props.time,
+                    description:this.props.desc,task_title:this.props.title,status_id:'',status:'' }}    >
                     {({ state, setState }) => (
                         <Pane >
                             <Dialog
@@ -99,15 +100,23 @@ class EditTask extends React.Component {
                                         method: "PUT",
                                         headers: headers,
                                         data: {
-                                            task_title: this.state.task_title,
-                                            description: this.state.description,
-                                            dead_time: this.state.startDate,
-                                            status_id: this.state.status_id
+                                            task_title:state.task_title,
+                                            description: state.description,
+                                            dead_time:this.state.startDate,
+                                            // status_id:state.status
                                         },
                                     })
 
                                         .then(res => {
-                                            // console.log(res.data);
+                                            axios({
+                                                url: Host + `tasks/change_status/${this.props.id}`,
+                                                method: "PUT",
+                                                headers: headers,
+                                                data: {
+                                                 
+                                                    status_id:state.status
+                                                },
+                                            })
 
 
                                             if (res.data.status === true) {
@@ -133,8 +142,8 @@ class EditTask extends React.Component {
                                         <div id='dailog' style={{ marginTop: 15, height: 'auto' }} >
                                             <div id='dialog_title' > Title    </div>
                                             <div style={{ width: '80%', textAlign: 'center',direction:'rtl' }} >
-                                                <input type='text' id='field2' style={{ width: '95%' }} value={this.state.task_title} onChange={(e) =>
-                                                    this.setState({ task_title: e.target.value })} />  </div>
+                                                <input type='text' id='field2' style={{ width: '95%' }} value={state.task_title} onChange={(e) =>
+                                                   setState({ task_title: e.target.value })} />  </div>
                                         </div>
                                     </div>
 
@@ -143,24 +152,25 @@ class EditTask extends React.Component {
                                         <div id='dailog' style={{ height: 'auto' }} >
                                             <div id='dialog_title' > Description    </div>
                                             <div style={{ width: '80%', textAlign: 'center' ,direction:'rtl'}} >
-                                                <textarea id='field3' value={this.state.description} onChange={(e) =>
-                                                    this.setState({ description: e.target.value })} />  </div>
+                                                <textarea id='field3' value={state.description} onChange={(e) =>
+                                                    setState({ description: e.target.value })} />  </div>
                                         </div>
 
 
-                                        <div id='dailog' >
+                                        {/* <div id='dailog' >
                                             <div id='dialog_title' >  Update Status  </div>
 
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
-                                                <Select onChange={e => { this.setState({ status_id: e.value }); }}
+                                                <Select onChange={e => { setState({ status: e.value }); }}
+                                                    defaultValue={state.status_id}
                                                     value={selectedOption}
                                                     styles={customStyles}
                                                     options={this.props.allstatus}
                                                 /> </div>
-                                        </div>
+                                        </div> */}
 
                                         <div id='dailog' style={{ marginTop: 15, height: 'auto' }} >
-                                            <div id='dialog_title' > Date    </div>
+                                            <div id='dialog_title' > Deadline Date    </div>
                                             <div style={{ width: '80%', textAlign: 'center' }} >
                                                 {/* <input type='date' id='field2' style={{ width: '95%' }} value={this.state.dead_time} onChange={(e) =>
                                                     this.setState({ dead_time: e.target.value })} />   */}
@@ -192,7 +202,14 @@ class EditTask extends React.Component {
                                 </div>
                             </Dialog>
 
-                            <Button onClick={() => { setState({ isShown: true }) }}  >  <i className="fas fa-edit" id="edit"></i></Button>
+                            <Button onClick={() => { setState({ isShown: true })
+                         let getIndex=this.props.allstatus.findIndex((element) => element.label === this.props.status)
+                         setState({status_id:this.props.allstatus[getIndex]})
+                         console.log(this.props.status);
+                         console.log(state.status_id);
+                         
+                         
+                        }}  >  <i className="fas fa-edit" id="edit"></i></Button>
                         </Pane>
                     )}
                 </Component>

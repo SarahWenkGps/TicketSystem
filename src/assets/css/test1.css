@@ -22,7 +22,7 @@
    /* height: 160px; */
 
 }
-#date_btn{
+#date_btn1{
   cursor: pointer;
   height: 43px;
   width: 100px;
@@ -34,9 +34,28 @@
   border-radius: 5px;
   color: #828282;
 }
-#date_btn:active{
-transform: scale(1.5);
+#date_btn{
+  cursor: pointer;
+  height: 43px;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(106, 170, 104);
+  border: 1px solid #e5e9f2;
+  border-radius: 5px;
+  color: #fff;
 }
+
+.MuiAppBar-root {
+  z-index: 2;
+}
+#date_btn:active{
+transform: scale(1.2);
+}
+#date_btn1:active{
+  transform: scale(1.2);
+  }
 #dash_filter{
   margin-bottom: 20px;
     display: flex;
@@ -72,6 +91,42 @@ transform: scale(1.5);
   min-width: 60%;
   color: #2e6b95;
 }
+#info_btn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #c32929d9;
+  width: 40%;
+  height: 30px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 500;
+}
+#info_btn:active{
+  transform: scale(1.09);
+}
+#rej_btn{
+  background-color: #d84e48;
+  color: #fff;
+  border-radius: 3px;
+  width: 60px;
+  text-align: center;
+}
+#accp_btn{
+  background-color: #76b57d;
+    color: #fff;
+    border-radius: 3px;
+    width: 60px;
+    text-align: center;
+}
+#info_btnMain{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
 #tit_task{
   background-color: #2e6b95;
     width: 90px;
@@ -101,6 +156,16 @@ transform: scale(1.5);
   flex-direction: column;
 }
 #field1 {
+  width: 80%;
+  /* height: 25px; */
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid #ababab;
+  padding: 5px;
+  margin-bottom: 10px;
+ 
+}
+#field12 {
   width: 80%;
   /* height: 25px; */
   border-radius: 5px;
@@ -446,7 +511,7 @@ thead{
   transform: scale(1.2);
 }
 #new_itemnav{
-    height: 60px;
+    height: 40px;
     font-size: 18px;
     background-color: #517c92;
     color: #fff;
@@ -467,7 +532,7 @@ thead{
   #col_dash {
     width: 33.33%;
     padding: 10px;
-    margin-bottom: 5%;
+    margin-bottom: 1%;
   }
 }
 
@@ -475,7 +540,7 @@ thead{
   #col_dash {
     width: 250px;
     padding: 10px;
-    margin-bottom: 5%;
+    margin-bottom: 1%;
   }
   .Sign_container{
     width: 50%;
@@ -486,7 +551,7 @@ thead{
   #col_dash {
     width: 80%;
     padding: 10px;
-    margin-bottom: 5%;
+    margin-bottom: 1%;
   }
   #min_circle {
     flex-direction: column;
@@ -516,6 +581,6 @@ thead{
   #col_dash {
     width: 250px;
     padding: 10px;
-    margin-bottom: 5%;
+    margin-bottom: 1%;
   }
 }

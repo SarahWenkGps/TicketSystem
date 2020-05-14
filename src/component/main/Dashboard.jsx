@@ -33,6 +33,7 @@ class Dashboard extends Component {
       statuses: [],
       archived: [],
       new1: [],
+      alldata:[],
       inprogress1: [],
       closed1: [],
       approved1: [],
@@ -45,9 +46,34 @@ class Dashboard extends Component {
     };
   }
   onDateChanges = (date, date2) => {
-    this.setState({date1:moment(date).format("X") * 1000,date2:moment(date2).format("X") * 1000})}
+    this.setState({date1:moment(date).format("X") * 1000,date2:moment(date2).format("X") * 1000})
+    var x = document.getElementById("date_btn");
+    x.style.backgroundColor = "#fff";
+    x.style.color="#828282";
+    var x = document.getElementById("date_btn1");
+    x.style.backgroundColor = "#fff";
+    x.style.color="#828282";
+  }
  
  
+    allTime(){
+      var x = document.getElementById("date_btn");
+      x.style.backgroundColor = "#fff";
+      x.style.color="#828282";
+      var y = document.getElementById("date_btn1");
+      y.style.backgroundColor = "rgb(106, 170, 104)";
+      y.style.color="#fff";
+    }
+
+    today(){
+      var x = document.getElementById("date_btn1");
+      x.style.backgroundColor = "#fff";
+      x.style.color="#828282";
+      var y = document.getElementById("date_btn");
+      y.style.backgroundColor = "rgb(106, 170, 104)";
+      y.style.color="#fff";
+    }
+
     componentDidMount() {
     var headers = {
       jwt: cookies.get("token"),
@@ -72,7 +98,7 @@ class Dashboard extends Component {
         // console.log(response.data);
        this.setState({data1:response.data.data.length})
         let data = response.data.data
-           
+     
         let newdata = data.filter(f =>
           f.status === 'new'
         )
@@ -80,10 +106,10 @@ class Dashboard extends Component {
           new1: newdata.length
         })
       
-        let assignedata = data.filter(f =>
+        let archiveddata = data.filter(f =>
           f.status === "archived")
         this.setState({
-          archived1: assignedata.length
+          archived1: archiveddata.length
         })
         let inprogressdata = data.filter(f =>
           f.status === "in progress")
@@ -133,7 +159,9 @@ class Dashboard extends Component {
               .then(response => {
                 // console.log(response.data.data);
                 let data = response.data.data
-
+                this.setState({
+                  alldata: data
+                }) 
                 let newdata = data.filter(f =>
                   f.status === 'new'
                 )
@@ -141,10 +169,10 @@ class Dashboard extends Component {
                   new: newdata
                 })
 
-                let assignedata = data.filter(f =>
+                let archiveddata = data.filter(f =>
                   f.status === "archived")
                 this.setState({
-                  archived: assignedata
+                  archived: archiveddata
                 })
                 let inprogressdata = data.filter(f =>
                   f.status === "in progress")
@@ -167,7 +195,7 @@ class Dashboard extends Component {
                 let obj = {
                   hash: [index + 1],
                   name: res.data.data[index].name,
-                  alltasks: this.state.rejected.length,
+                  alltasks: this.state.alldata.length,
                   new: this.state.new.length,
                   inprogress: this.state.inprogress.length,
                   closed: this.state.closed.length,
@@ -212,7 +240,7 @@ class Dashboard extends Component {
                 
                   {this.state.filter==='yes'?(
  <div style={{ display: 'flex' }}  >
-                    <RangePicker onDateSelected={this.onDateChanges}
+                    <RangePicker onDateSelected={this.onDateChanges} 
                       onClose={() => {
                         this.componentDidMount();
                       }} />
@@ -220,13 +248,15 @@ class Dashboard extends Component {
                       this.setState({ date1: 0, date2: 0 })
                       setTimeout(() => {
                         this.componentDidMount();
+                        this.allTime();
                       }, 200);
-                    }} id="date_btn" > All Day </div>
+                    }} id="date_btn1" > All Time </div>
 
                     <div onClick={() => {
                       this.setState({ date1: moment(moment().format('L')).format("X") * 1000, date2: 0 })
                       setTimeout(() => {
                         this.componentDidMount();
+                        this.today();
                       }, 200);
                     }} id="date_btn" > Today  </div>
 
@@ -315,38 +345,38 @@ class Dashboard extends Component {
                       <ReactMinimalPieChart
                         animate
                         animationDuration={500}
-                        animationEasing="ease-out"
+                        animationEasing="ease-out"                      
                         cx={50}
                         cy={50}
                         data={[
                           {
                             color: 'rgb(86, 178, 191)',
-                            title: 'One',
+                            title: `${this.state.new1}`,
                             value: this.state.new1
                           },
                           {
                             color: 'rgba(255, 142, 69, 0.94)',
-                            title: 'Two',
+                            title: `${this.state.inprogress1}`,
                             value: this.state.inprogress1
                           },
                           {
                             color: '#188718b5',
-                            title: 'Three',
+                            title: `${this.state.approved1}`,
                             value: this.state.approved1
                           },
                           {
                             color: 'gray',
-                            title: 'Foure',
+                            title: this.state.closed1,
                             value: this.state.closed1
                           },
                           {
                             color: 'black',
-                            title: 'Five',
+                            title: this.state.archived1,
                             value: this.state.archived1
                           },
                           {
                             color: '#da251e',
-                            title: 'Six',
+                            title: this.state.rejected1,
                             value: this.state.rejected1
                           }
 
@@ -355,7 +385,7 @@ class Dashboard extends Component {
                         labelPosition={50}
                         lengthAngle={-360}
                         lineWidth={100}
-                        paddingAngle={1}
+                        paddingAngle={0}
                         radius={50}
                         rounded={false}
 
@@ -387,7 +417,7 @@ class Dashboard extends Component {
                   </div>
 
 
-                  <div id='circle_div'  >
+                  <div id='circle_div' style={{display:'none'}}  >
                     <div id='left1' style={{ width: '30%' }} >
                       <div style={{ display: 'flex', padding: 5 }} >
                         <div style={{ width: 20, height: 20, marginRight: 10, backgroundColor: '#cd85fe' }} />
@@ -412,16 +442,10 @@ class Dashboard extends Component {
                             color: '#dfe0e042',
                             title: 'Two',
                             value: 100 - cookies.get("tasks")
-                          },
-                          // {
-                          //   color: '#56B2BF',
-                          //   title: 'Three',
-                          //   value: 20
-                          // }
+                          },       
                         ]}
 
                         label={false}
-                        // labelPosition={50}
                         lengthAngle={360}
                         lineWidth={40}
                         paddingAngle={0}
@@ -454,7 +478,9 @@ class Dashboard extends Component {
                       />
                     </div>
                   ) : (
-                      <DashTable data={this.state.Usersdata} />
+                      <DashTable data={this.state.Usersdata} date1={this.state.date1} date2={this.state.date2} />
+         
+                      // null
                     )}
 
                 </div>

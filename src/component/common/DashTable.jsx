@@ -1,7 +1,7 @@
 import React from 'react';
 import MaterialDatatable from "material-datatable";
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-
+import moment from 'moment';
 
 class DashTable extends React.Component{
   constructor(props) {
@@ -42,7 +42,7 @@ render() {
       { name: " # ", field: "hash" },
         { name: " Name  ", field: "name" },
         { name: "All Tasks  ", field: "alltasks" },
-        { name: "New", field: "alltasks" },
+        { name: "New", field: "new" },
         { name: "In Progress", field: "inprogress" },
         { name: "Closed", field: "closed" },
         { name: "Approved  ", field: "approved" },
@@ -65,7 +65,7 @@ render() {
   return (
   <div style={{width:'100%'}} >
  <MuiThemeProvider theme={this.getMuiTheme()}>
-        <MaterialDatatable title={"RECENT ACTIVITIES"} data={this.props.data} columns={columns} options={options} />
+        <MaterialDatatable title={`RECENT ACTIVITIES ${this.props.date1!=0 ?(moment(this.props.date1).format("L")):('')} - ${this.props.date2!=0 ?(  moment(this.props.date2).format("L")):('')}`} data={this.props.data} columns={columns} options={options} />
       </MuiThemeProvider>
   </div>
   );

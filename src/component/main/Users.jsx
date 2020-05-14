@@ -65,7 +65,7 @@ class Users extends Component {
       spin: false,
       dapts: [],
       dep_nm: '',
-
+      roles:[],
     };
 
   }
@@ -80,20 +80,16 @@ class Users extends Component {
         },
         MuiTableCell: {
           head: {
-
             color: '#2e6b95',
-            fontSize:'15px',
-            fontWeight:'700' 
+            fontSize: '15px',
+            fontWeight: '700'
           },
           root: {
             textAlign: 'center'
           }
         },
-     
       }
     });
-
-
 
   componentDidMount() {
     if (cookies.get("token")) {
@@ -116,7 +112,6 @@ class Users extends Component {
         let arr = [];
         for (let index = 0; index < res.data.data.length; index++) {
           let obj = {
-
             label: res.data.data[index].name,
             value: res.data.data[index].dep_id,
           }
@@ -126,12 +121,23 @@ class Users extends Component {
           dapts: arr
         });
         // console.log('sss', res.data.data);
-
       })
-
       .catch(err => {
         // console.log("error:", err);
       });
+
+
+
+    axios({
+      url: Host + `roles`,
+      method: "GET",
+      headers: headers,
+    })
+      .then(res => {
+        // console.log(res.data.data);
+        this.setState({ roles: res.data.data })
+      })
+
 
 
 
@@ -143,137 +149,136 @@ class Users extends Component {
       headers: headers,
     })
       .then(res => {
-        // console.log(res.data);
-        
-        if (res.data.status===false) {        
+        // console.log(res.data);       
+        if (res.data.status === false) {
           cookies.remove("token");
           window.location.href = "/"
         } else {
-        this.setState({ watt: "no" });
-        cookies.set("userslength", res.data.data.length)
-        let arr = [];
-        for (let index = 0; index < res.data.data.length; index++) {
-          let obj = {
-            hash:[index +1],
-            username: res.data.data[index].username,
-            name: res.data.data[index].name,
-            depa: res.data.data[index].department.name,
-            email: res.data.data[index].email,
-            Permitions:(<Permitions ids={res.data.data[index].user_id}  />),
-            pass: (<Changwpass ids={res.data.data[index].user_id} />),
+          this.setState({ watt: "no" });
+          cookies.set("userslength", res.data.data.length)
+          let arr = [];
+          for (let index = 0; index < res.data.data.length; index++) {
+            let obj = {
+              hash: [index + 1],
+              username: res.data.data[index].username,
+              name: res.data.data[index].name,
+              depa: (res.data.data[index].department.name==="unknown"?(null):(res.data.data[index].department.name)),
+              email: res.data.data[index].email,
+              Permitions: (<Permitions ids={res.data.data[index].user_id} roles={this.state.roles}  onProfileDelete={() => this.componentDidMount()} />),
+              pass: (<Changwpass ids={res.data.data[index].user_id} />),
 
-            status: (
-            
+              status: (
 
-              <Component initialState={{ isShown: true, spin: false }}>
-              {({ state, setState }) =>
-                 state.spin ? (
-               
-                  <div style={{display:'flex',justifyContent:'center',alignItems:'center'}} >  <Spinner size={16} /></div>
-                ) : res.data.data[index].enabled === 1 ? (
-                  <DoneIcon
-                    style={{
-                      color: "#5bb061",
-                      fontSize: 30,
-                      cursor: "pointer"
-                    }}
-                    onClick={() => {
-                      setState({ spin: true });
-                      var headers = {
-                        jwt: cookies.get("token")
-                      };
-                      axios({
-                        url: Host + `users/user/${res.data.data[index].user_id}`,
-                        method: "PUT",
-                        headers: headers,
-                        data: {
-                         name:'',
-                         email:'',
-                         department_id:'',
-                         enabled:0
-                        },
-                      })
-                        .then(response => {
-                          // console.log(response.data);
-                          if (response.data.status===false) {
-                            toast.error(response.data.data.message.text)
-                            setState({ spin: false })
-                        }
-                        else if (response.data.status===true) {
-                          toast.success("User Disables successfully");
-                          setState({ spin: false });
-                          this.componentDidMount();
-                        }
-                        })
-                        .catch(function(error) {
-                          setState({ spin: false });
-                         
-                        });
-                    
-                    }}
-                  />
-                ) : (
-                  <CloseIcon
-                    style={{
-                      color: "rgb(169, 16, 16)",
-                      fontSize: 30,
-                      cursor: "pointer"
-                    }}
-                    onClick={() => {
-                      setState({ spin: true });
-                   
-                      axios({
-                        url: Host + `users/user/${res.data.data[index].user_id}`,
-                        method: "PUT",
-                        headers: headers,
-                        data: {
-                         name:'',
-                         email:'',
-                         department_id:'',
-                         enabled:"1"
-                        },
-                      })
-                        .then(response => {
-                          if (response.data.status===false) {
-                            toast.error(response.data.data.message.text)
-                            setState({ spin: false })
-                        }
-                        else if (response.data.status===true) {
-                          toast.success("User enabled successfully");
-                          setState({ spin: false });
-                          this.componentDidMount();
-                        }
-                        })
-                        .catch(function(error) {
-                          setState({ spin: false });
-                         
-                        });
-                    }}
-                  />
-                )
-              }
-            </Component>
 
-            ),
+                <Component initialState={{ isShown: true, spin: false }}>
+                  {({ state, setState }) =>
+                    state.spin ? (
 
-            edit: (
-              <EditUser ids={res.data.data[index].user_id} onProfileDelete={() => this.componentDidMount()}
-                name={res.data.data[index].name} email={res.data.data[index].email}
-                department={res.data.data[index].department.name} status={res.data.data[index].enabled} data1={this.state.dapts} />
-            )
-          };
-          arr.push(obj);
-          // console.log('data11',this.state.arr);
+                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >  <Spinner size={16} /></div>
+                    ) : res.data.data[index].enabled === 1 ? (
+                      <DoneIcon
+                        style={{
+                          color: "#5bb061",
+                          fontSize: 30,
+                          cursor: "pointer"
+                        }}
+                        onClick={() => {
+                          setState({ spin: true });
+                          var headers = {
+                            jwt: cookies.get("token")
+                          };
+                          axios({
+                            url: Host + `users/user/${res.data.data[index].user_id}`,
+                            method: "PUT",
+                            headers: headers,
+                            data: {
+                              name: '',
+                              email: '',
+                              department_id: '',
+                              enabled: 0
+                            },
+                          })
+                            .then(response => {
+                              // console.log(response.data);
+                              if (response.data.status === false) {
+                                toast.error(response.data.data.message.text)
+                                setState({ spin: false })
+                              }
+                              else if (response.data.status === true) {
+                                toast.success("User Disables successfully");
+                                setState({ spin: false });
+                                this.componentDidMount();
+                              }
+                            })
+                            .catch(function (error) {
+                              setState({ spin: false });
+
+                            });
+
+                        }}
+                      />
+                    ) : (
+                          <CloseIcon
+                            style={{
+                              color: "rgb(169, 16, 16)",
+                              fontSize: 30,
+                              cursor: "pointer"
+                            }}
+                            onClick={() => {
+                              setState({ spin: true });
+
+                              axios({
+                                url: Host + `users/user/${res.data.data[index].user_id}`,
+                                method: "PUT",
+                                headers: headers,
+                                data: {
+                                  name: '',
+                                  email: '',
+                                  department_id: '',
+                                  enabled: "1"
+                                },
+                              })
+                                .then(response => {
+                                  if (response.data.status === false) {
+                                    toast.error(response.data.data.message.text)
+                                    setState({ spin: false })
+                                  }
+                                  else if (response.data.status === true) {
+                                    toast.success("User enabled successfully");
+                                    setState({ spin: false });
+                                    this.componentDidMount();
+                                  }
+                                })
+                                .catch(function (error) {
+                                  setState({ spin: false });
+
+                                });
+                            }}
+                          />
+                        )
+                  }
+                </Component>
+
+              ),
+
+              edit: (
+                <EditUser ids={res.data.data[index].user_id} onProfileDelete={() => this.componentDidMount()}
+                  name={res.data.data[index].name} email={res.data.data[index].email}
+                  department={res.data.data[index].department.name} status={res.data.data[index].enabled} data1={this.state.dapts} />
+              )
+            };
+            arr.push(obj);
+            // console.log('data11',this.state.arr);
+          }
+          this.setState({
+            Usersdata: arr
+          });
+
         }
-        this.setState({
-          Usersdata: arr
-        });
-
-      }
       })
       .catch(err => {
         // console.log("error:", err);
-        
+
 
       });
   }
@@ -289,7 +294,7 @@ class Users extends Component {
       { name: " Name  ", field: "name" },
       { name: " Department ", field: "depa" },
       { name: "Email", field: "email" },
-      {name:"Permitions", field:"Permitions"},
+      { name: "Permitions", field: "Permitions" },
       { name: " Password", field: "pass" },
       { name: " Status", field: "status" },
       { name: "Edit", field: "edit" },
@@ -375,14 +380,14 @@ class Users extends Component {
                                 })
                                   .then(response => {
                                     // console.log(response.data);
-                                    if (response.data.status===false) {
+                                    if (response.data.status === false) {
                                       toast.error(response.data.data.message.text)
                                       setState({ spin: false })
-                                  }
-                                  else if (response.data.status===true) {
-                                    setState({ isShown: false, spin: false })
-                                    this.componentDidMount();
-                                  }
+                                    }
+                                    else if (response.data.status === true) {
+                                      setState({ isShown: false, spin: false })
+                                      this.componentDidMount();
+                                    }
                                   })
                                   .catch(function (error) {
                                     setState({ spin: false })

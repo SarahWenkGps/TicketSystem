@@ -1,5 +1,5 @@
 import React from 'react';
-import {SelectMenu ,Pane, Button } from 'evergreen-ui';
+import { SelectMenu, Pane, Button } from 'evergreen-ui';
 import Component from '@reactions/component';
 import axios from "axios";
 import Cookies from "universal-cookie";
@@ -10,6 +10,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import IconButton from '@material-ui/core/IconButton';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
+import { toast } from "react-toastify";
 const cookies = new Cookies();
 
 
@@ -21,8 +22,8 @@ class Permitions extends React.Component {
         this.state = {
             spin: false,
             data: [],
-            roles:[],
-          
+            roles_id: [],
+
         };
     }
 
@@ -34,7 +35,7 @@ class Permitions extends React.Component {
 
 
 
-    setrols() {
+    setRoles() {
         this.setState({ spin: true })
         var headers = {
             jwt: cookies.get("token"),
@@ -43,45 +44,45 @@ class Permitions extends React.Component {
             url: Host + `users/permissions/${this.props.ids}`,
             method: "POST",
             headers: headers,
-            data:{
-                roles_id:this.state.roles
+            data: {
+                roles_id: this.state.roles_id
             }
         })
             .then(response => {
-            //   console.log('tok', response.data.data);
-              var arr =[];
-              for (let i = 0; i < response.data.data.length; i++) {
-                let obj = {
-                    value: response.data.data[i],
-                  }
-                  arr.push(obj);
-                  
-              }
-              this.setState({ data: arr })
-                this.setState({ spin: false })
-                
+                if (response.data.status === false) {
+                    toast.error(response.data.data.message.text)
+                    
+                }
+                else if (response.data.status === true) {
+
+                    toast.success("Updated Successfully");
+                    // setState({ isShown: false, spin: false })
+                 
+                    //  console.log('data',this.props.fun);
+                }
             })
             .catch(function (error) {
-                
+
                 this.setState({ spin: true })
             });
 
     }
 
 
-    
+
 
 
 
     render() {
-        
+
 
         return (
             <div   >
-           
-           <Component
-                    initialState={{
 
+                <Component
+                    initialState={{
+                        options: this.props.roles
+                        .map(label => ({ label:label.name, value: label.role_id })),
                         selected: []
                     }}
                 >
@@ -102,7 +103,7 @@ class Permitions extends React.Component {
 
 
                                         <Tooltip title="Set" onClick={() => {
-                                            this.setrols();
+                                            this.setRoles();
                                         }}   >
                                             <IconButton aria-label="Set">
                                                 <AssignmentTurnedInIcon style={{ color: '#da251e', cursor: 'pointer' }} />
@@ -110,14 +111,13 @@ class Permitions extends React.Component {
                                         </Tooltip>
                                     </Pane>
                                 )
-                              
+
                             }}
-                            options={this.props.users}
+                            options={state.options}
                             selected={state.selected}
                             onSelect={item => {
                                 const selected = [...state.selected, item.value]
-                                this.setState({ id: selected })
-                              
+                                this.setState({ roles_id: selected })
                                 const selectedItems = selected
                                 const selectedItemsLength = selectedItems.length
                                 let selectedNames = ''
@@ -148,8 +148,8 @@ class Permitions extends React.Component {
                                     selectedNames = selectedItemsLength.toString() + ' selected...'
                                 }
                                 setState({ selected: selectedItems, selectedNames })
-                                this.setState({ id: selectedItems })
-                                
+                                this.setState({ roles_id: selectedItems })
+
                             }}
                         >
                             <Button>{state.name || <LockOpenIcon />}</Button>

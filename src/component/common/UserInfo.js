@@ -1,0 +1,246 @@
+import React from 'react';
+import { Pane, Dialog } from 'evergreen-ui';
+import Component from '@reactions/component';
+import axios from "axios";
+import Cookies from "universal-cookie";
+import Host from "../../assets/js/Host";
+import Lottie from "lottie-react-web";
+import loading from '../../assets/js/loading.json';
+import { toast } from "react-toastify";
+import PersonIcon from '@material-ui/icons/Person';
+import "react-toastify/dist/ReactToastify.css";
+const cookies = new Cookies();
+class UserInfo extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            value: {
+                data: [],
+                old_password: "",
+                new_password: '',
+                con_password: '',
+                email:'',
+                name:'',
+                spin: false,
+                spin1: false,
+                isShown:false,          
+              }
+        };
+    }
+
+
+changepass(){
+    if (this.state.new_password.length < 3) {
+        toast.warning('password must be more than 3 char')
+    }
+    else if (this.state.con_password !== this.state.new_password) {
+        toast.warning('please confirm password')
+    }
+    else {
+        this.setState({ spin: true })
+        var headers = {
+            jwt: cookies.get("token")
+        };
+
+        if (this.state.old_password === undefined) {
+            var old_password = ""
+        } else {
+            old_password = this.state.old_password
+        }
+        axios({
+            url: Host + `users/change_password`,
+            method: "PUT",
+            headers: headers,
+            data: {
+                user_id: this.props.ids,
+                old_password: old_password,
+                new_password: this.state.new_password,
+            },
+        })
+
+            .then(response => {
+                if (response.data.status === false) {
+                    toast.error(response.data.data.message.text)
+                    this.setState({ spin: false })
+                }
+                else if (response.data.status === true) {
+                    toast.success("password updated successfully");
+                    this.setState({  spin: false })
+                }
+
+            })
+            .catch(function (error) {
+                this.setState({ spin: false });
+
+            });
+    }
+}
+
+
+changeInfo(){
+    this.setState({ spin1: true })
+
+    var headers = {
+      jwt: cookies.get("token")
+    };
+   
+
+    axios({
+      url: Host + `users/user/${this.props.ids}`,
+      method: "PUT",
+      headers: headers,
+      data: {
+       name:this.state.name,
+       email:this.state.email,
+      
+      },
+    })
+
+      .then(response => {
+
+
+        if (response.data.status===false) {
+          toast.error(response.data.data.message.text)
+          this.setState({ spin1: false })
+      }
+      else if (response.data.status===true) {
+
+        toast.success("Info updated successfully");
+                              this.setState({spin1:false })
+                            
+                            //  console.log('data',this.props.fun);
+      }                    
+      })
+      .catch(function (error) {
+        this.setState({ spin1: false });
+      });
+
+}
+
+
+    render() {
+        return (
+            <div    >
+
+                <Component initialState={{ isShown: false, spin: false }}    >
+                    {({ state, setState }) => (
+                        <Pane >
+                            <Dialog
+                                isShown={this.state.isShown}
+
+                                onCloseComplete={() => this.setState({ isShown: false })}
+                                hasHeader={false}
+                                hasFooter={false}
+                                // shouldCloseOnOverlayClick={false}
+                                confirmLabel="Save"
+                                cancelLabel="Cancel"
+                                onConfirm={() => {
+
+                                    }}
+                            >
+                                <div >
+                                    <div>
+                                    <div id='new_itemnav' >   Change Info </div>
+                                    <div className='mod1'>
+                                        <div id='dailog' style={{ marginTop: 15 }} >
+                                            <div id='dialog_title' > Name  </div>
+                                            <div style={{ width: '80%', textAlign: 'center' }} >
+                                                <input type='text' id='field2' placeholder=' Name ' value={this.state.name} onChange={(e) =>
+                                                    this.setState({ name: e.target.value })} />  </div>
+                                        </div>
+
+
+                                        <div id='dailog' >
+                                            <div id='dialog_title' >   Email  </div>
+
+                                            <div style={{ width: '80%', textAlign: 'center' }} >
+                                                <input type='email' id='field2' placeholder=' Email '
+                                                    value={this.state.email} onChange={(e) =>
+                                                        this.setState({ email: e.target.value })} /> </div>
+                                        </div>
+         
+                                        <div id='info_btnMain' >
+                                       <div id='info_btn' onClick={()=>{
+                                           this.changeInfo();
+                                       }}   >Save</div>
+                                       </div>
+                                        {this.state.spin1 ? (
+                                            <div style={{ width: "100%", position: "absolute" }}>
+                                                <Lottie
+                                                    options={{
+                                                        animationData: loading
+                                                    }}
+                                                    width={300}
+                                                    height={150}
+                                                    position="absolute"
+                                                />
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div id='new_itemnav' >   Change Password </div>
+                                    <div className='mod1'>
+                                        <div id='dailog' style={{ marginTop: 15 }} >
+                                            <div id='dialog_title' > Old Password   </div>
+                                            <div style={{ width: '80%', textAlign: 'center' }} >
+                                                <input type='password' id='field2' placeholder=' ****** ' value={this.state.old_password} onChange={(e) =>
+                                                    this.setState({ old_password: e.target.value })} />  </div>
+                                        </div>
+
+
+                                        <div id='dailog' >
+                                            <div id='dialog_title' >   New Password   </div>
+
+                                            <div style={{ width: '80%', textAlign: 'center' }} >
+                                                <input type='password' id='field2' placeholder=' ****** '
+                                                    value={this.state.new_password} onChange={(e) =>
+                                                        this.setState({ new_password: e.target.value })} /> </div>
+                                        </div>
+                                        <div id='dailog' >
+                                            <div id='dialog_title' >   Confirm  Password  </div>
+
+                                            <div style={{ width: '80%', textAlign: 'center' }} >
+                                                <input type='password' id='field2' placeholder=' ****** '
+                                                    value={this.state.con_password} onChange={(e) =>
+                                                        this.setState({ con_password: e.target.value })} /> </div>
+                                        </div>
+                                       <div id='info_btnMain' >
+                                       <div id='info_btn' onClick={()=>{
+                                           this.changepass();
+                                       }} >Save</div>
+                                       </div>
+
+                                        {this.state.spin ? (
+                                            <div style={{ width: "100%", position: "absolute" }}>
+                                                <Lottie
+                                                    options={{
+                                                        animationData: loading
+                                                    }}
+                                                    width={300}
+                                                    height={150}
+                                                    position="absolute"
+                                                />
+                                            </div>
+                                        ) : null}
+                                    </div>
+                                </div>
+                                </div>
+                            </Dialog>
+
+                            <div onClick={() => {
+                                this.setState({ isShown: true })}}  style={{minWidth:90}} >
+
+                             {cookies.get("username")}   <i className="fas fa-cog"  id='pass_use' ></i>
+
+                            </div>
+                        </Pane>
+                    )}
+                </Component>
+
+            </div>
+        );
+    }
+}
+export default UserInfo;

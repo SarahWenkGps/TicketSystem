@@ -84,7 +84,7 @@ class NewTask extends React.Component {
                 // console.log(response.data);
                 if (res.data.status === true) {
                 toast.success("user assigned successfully")
-                this.setState({isShown:false,spin:false})
+                this.setState({isShown:false,spin:false ,task_name:"",description:""})
                 }
                 else if (res.data.status === false) {
                     toast.error(res.data.data.message.text)
@@ -117,20 +117,16 @@ class NewTask extends React.Component {
                     main_task_id: '0'
                 },
             })
-
-
-            // console.log(res.data);
-
-
             if (res.data.status === true) {
                 if (this.state.user.length === undefined ) {
                     this.assign_user(res.data.data.task_id);
+
                 }
                 else {
                     const { onProfileDelete } = this.props
                     onProfileDelete()
                     toast.success('task created successfully')
-                    this.setState({isShown:false,spin:false})
+                    this.setState({isShown:false,spin:false,task_name:"",description:""})
                 }
 
 
@@ -232,8 +228,7 @@ class NewTask extends React.Component {
                                            <div id='dailog' style={{ marginTop: 15, height: 'auto' }} >
                                            <div id='dialog_title' > Date    </div>
                                            <div style={{ width: '80%', textAlign: 'center' }} >
-                                               {/* <input type='date' id='field2' style={{ width: '95%' }} value={this.state.dead_time} onChange={(e) =>
-                                                   this.setState({ dead_time: e.target.value })} />   */}
+                                         
                                                <DatePicker
                                                    selected={this.state.startDate}
                                                    onChange={this.handleChange}
