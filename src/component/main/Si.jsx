@@ -212,16 +212,17 @@ export default function PersistentDrawerLeft(props) {
                   <div id='nav_title' >   {rendertitile(props)} </div>
 
                   <div id='ss' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}  >
-                    {(cookies.get("role")) === "Designer" || (cookies.get("role")) === "Checker" ? (
-                      <div></div>) : (
-                        <Link to='/Notifications'>   <Box display="flex">
+                
+                      <div></div>
+                        <Link to='/Notifications'> 
+                          <Box display="flex">
                           <Box m={2}>
-                            <Badge badgeContent={8} color="secondary">
+                            <Badge badgeContent={ctx.value.noti} color="secondary">
                               <NotificationsIcon style={{ color: 'white' }} />
                             </Badge>
                           </Box>
                         </Box>
-                        </Link>)}
+                        </Link>
                         <UserInfo ids={cookies.get("user_id")} />
 
                     <Tooltip title="Logout" onClick={() => {

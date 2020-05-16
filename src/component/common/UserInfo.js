@@ -9,6 +9,7 @@ import loading from '../../assets/js/loading.json';
 import { toast } from "react-toastify";
 import PersonIcon from '@material-ui/icons/Person';
 import "react-toastify/dist/ReactToastify.css";
+import Context from "../../assets/js/context";
 const cookies = new Cookies();
 class UserInfo extends React.Component {
     constructor(props) {
@@ -24,7 +25,8 @@ class UserInfo extends React.Component {
                 name:'',
                 spin: false,
                 spin1: false,
-                isShown:false,          
+                isShown:false, 
+                       
               }
         };
     }
@@ -78,14 +80,31 @@ changepass(){
 }
 
 
+getinfo(){
+    var headers = {
+        jwt: cookies.get("token")
+      }; 
+    axios({
+        url: Host + `users/user/${cookies.get("user_id")}`,
+        method: "GET",
+        headers: headers,    
+      })
+      .then(response => {
+        console.log('data',response.data.data[0].name);
+        
+          this.setState({name:response.data.data[0].name ,
+            email:response.data.data[0].email})
+       
+      })
+}
+
+
+
 changeInfo(){
     this.setState({ spin1: true })
-
     var headers = {
       jwt: cookies.get("token")
-    };
-   
-
+    };   
     axios({
       url: Host + `users/user/${this.props.ids}`,
       method: "PUT",
@@ -108,7 +127,7 @@ changeInfo(){
 
         toast.success("Info updated successfully");
                               this.setState({spin1:false })
-                            
+                            this.getinfo()
                             //  console.log('data',this.props.fun);
       }                    
       })
@@ -121,9 +140,13 @@ changeInfo(){
 
     render() {
         return (
+            <Context.Consumer>
+            {ctx => {
+                return(
             <div    >
 
-                <Component initialState={{ isShown: false, spin: false }}    >
+                <Component initialState={{ isShown: false, spin: false,
+                name:'',email:'' }}    >
                     {({ state, setState }) => (
                         <Pane >
                             <Dialog
@@ -209,6 +232,8 @@ changeInfo(){
                                        <div id='info_btnMain' >
                                        <div id='info_btn' onClick={()=>{
                                            this.changepass();
+                                       
+                                           
                                        }} >Save</div>
                                        </div>
 
@@ -229,8 +254,14 @@ changeInfo(){
                                 </div>
                             </Dialog>
 
-                            <div onClick={() => {
-                                this.setState({ isShown: true })}}  style={{minWidth:90}} >
+                            <div  style={{minWidth:90}} onClick={() => {
+                                this.setState({ isShown: true })
+                                this.getinfo();
+                      
+                            
+                          
+                           
+                               }}   >
 
                              {cookies.get("username")}   <i className="fas fa-cog"  id='pass_use' ></i>
 
@@ -240,7 +271,10 @@ changeInfo(){
                 </Component>
 
             </div>
-        );
+       
+                )}}
+                </Context.Consumer>
+       );
     }
 }
 export default UserInfo;

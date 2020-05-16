@@ -156,15 +156,18 @@ class Users extends Component {
         } else {
           this.setState({ watt: "no" });
           cookies.set("userslength", res.data.data.length)
+      
           let arr = [];
           for (let index = 0; index < res.data.data.length; index++) {
+  
             let obj = {
               hash: [index + 1],
               username: res.data.data[index].username,
               name: res.data.data[index].name,
               depa: (res.data.data[index].department.name==="unknown"?(null):(res.data.data[index].department.name)),
               email: res.data.data[index].email,
-              Permitions: (<Permitions ids={res.data.data[index].user_id} roles={this.state.roles}  onProfileDelete={() => this.componentDidMount()} />),
+              Permitions: (<Permitions ids={res.data.data[index].user_id} roles={this.state.roles}  
+                 onProfileDelete={() => this.componentDidMount()} />),
               pass: (<Changwpass ids={res.data.data[index].user_id} />),
 
               status: (

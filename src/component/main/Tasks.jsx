@@ -328,7 +328,7 @@ class Tasks extends React.Component {
                           <Row style={{ width: '100%', display: 'flex' }}   >
 
                             {filter.map((item, i) => (
-                              <Col md={6} key={i}  >
+                              <Col md={6} key={i} id='noti_Get'  >
 
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}

@@ -5,9 +5,10 @@ import Context from './assets/js/context';
 import Login from './component/main/Login';
 import Si from './component/main/Si';
 import Host from './assets/js/Host';
-import { ToastContainer} from "react-toastify";
+import { ToastContainer, toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './assets/css/test1.css';
+import Home from './component/main/Home';
 import axios from "axios";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
@@ -27,6 +28,7 @@ class App extends React.Component{
       approved:'',
       rejected:'',
       archived:'',
+      noti:'',
     };
   }
 
@@ -40,6 +42,39 @@ componentDidMount(){
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
   };
+
+
+  axios({
+    url: Host + `/notifications`,
+    method: "GET",
+    headers: headers,
+  })
+    .then(res => {
+     
+this.setState({noti:res.data.data.length})
+    
+
+    })
+setInterval(() => {
+  axios({
+    url: Host + `/notifications`,
+    method: "GET",
+    headers: headers,
+  })
+    .then(res => {
+      if (res.data.data.length > this.state.noti) {
+        toast.warning("New Notifications")
+      }
+this.setState({noti:res.data.data.length})
+   
+
+
+    })
+}, 10000);
+
+
+
+
 
    axios({
     url: Host + `users/users`,
@@ -164,7 +199,7 @@ render() {
            }}} >
   <Switch> 
    <Route  exact path ='/' component={Login} />
-   <Route path ='/Home' component={Si}   />
+   <Route path ='/Home' component={Home}   />
    <Route path ='/Users' component={Si} />
    <Route path ='/Dashboard' component={Si} />
    <Route path ='/Tasks' component={Si} />

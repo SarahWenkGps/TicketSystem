@@ -50,9 +50,9 @@ class Dashboard extends Component {
     var x = document.getElementById("date_btn");
     x.style.backgroundColor = "#fff";
     x.style.color="#828282";
-    var x = document.getElementById("date_btn1");
-    x.style.backgroundColor = "#fff";
-    x.style.color="#828282";
+    var x2 = document.getElementById("date_btn1");
+    x2.style.backgroundColor = "#fff";
+    x2.style.color="#828282";
   }
  
  

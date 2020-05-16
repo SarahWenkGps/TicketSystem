@@ -76,9 +76,10 @@ class Login extends Component {
                                 placeholder="Password "
                                 required
                                 value={this.state.password}
+                                onKeyDown={(e) => this.onEnter(e)}
                                 onChange={e => {
                                     this.setState({ password: e.target.value });   
-                                    this.onEnter();  
+                                   
                                 }}
                             />
                         </div>
@@ -192,18 +193,12 @@ class Login extends Component {
             
         );
     }
-    onEnter(){
-        var input = document.getElementById("field12");
-      input.addEventListener("keyup", function(event) {
-      
+ 
+          onEnter(event){
         if (event.keyCode === 13) {
-         
-          event.preventDefault();
-         
-          document.getElementById("sign_but").click();
+            document.getElementById("sign_but").click();
         }
-      });
-      }
+  }
 }
 
 
