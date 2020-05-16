@@ -7,7 +7,9 @@ import Lottie from 'lottie-react-web';
 import Host from "../../assets/js/Host";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+//import login from '../common/login'
 const cookies = new Cookies();
+//var loginAction = new login();
 
 class Login extends Component {
     constructor(props) {
@@ -20,20 +22,10 @@ class Login extends Component {
         };
     }
 
-
-
-
-
-
-
     render() {
-
         return (
             <div id='main' >
-             
-              
-
-                <div id="login_main">
+              <div id="login_main">
                     <img src={require("../../assets/img/Logo.png")} alt="img" style={{ height: "125px" }}/>
 
                     <div
@@ -57,8 +49,7 @@ class Login extends Component {
                     >
                      
           </div>
-
-                    <div className="Sign_container" style={{ position: 'relative' }} >
+                    <div className="Sign_container" style={{ position: 'relative' }} > 
                         <div className="up_field">
                             <input
                                 id="field1"
@@ -76,9 +67,9 @@ class Login extends Component {
                                 placeholder="Password "
                                 required
                                 value={this.state.password}
+                                onKeyDown={(e) => this.onEnter(e)}
                                 onChange={e => {
-                                    this.setState({ password: e.target.value });   
-                                    this.onEnter();  
+                                    this.setState({ password: e.target.value });     
                                 }}
                             />
                         </div>
@@ -89,65 +80,10 @@ class Login extends Component {
                                     <div
                                         id="sign_but"
                                         onClick={(e) => {
-                                            if (this.state.username.length < 3) {
-                                                return (
-                                                    toast.error(`Username is short`)
-                                                );
-                                            }
-                                            else if (this.state.password.length < 3) {
-
-                                                return (
-                                                    toast.error(`Password must be more than 3 char`)
-                                                ); }
-                                                setState({ spin: true });
-
-                                         
-                                                axios({
-                                                    url: Host + `login`,
-                                                    method: "POST",
-
-                                                    data: {
-                                                        username: this.state.username, 
-                                                        password:this.state.password
-                                                      }
-
-                                                })
-                                                    .then(response => {
-                                                        // console.log(response.data);
-                                                        
-                                                        if (response.data.status===false) {
-                                                            toast.error(response.data.data.text)
-                                                            setState({ spin: false })
-                                                        }
-                                                        else if (response.data.status===true) {
-                                                            
-                                                      
-                                                        window.location.href = "/Dashboard";
-                                                        let token =response.data.data.token
-                                                        // console.log('token',response.data.data.token);
-                                                        
-                                                        let status = response.data.status
-                                                        cookies.set("status",status)
-                                                        cookies.set("username",response.data.data.username)
-                                                        cookies.set("user_id",response.data.data.user_id)
-                                                        localStorage.setItem("roles", JSON.stringify(response.data.data.roles));
-                                                        cookies.set("token", token, {
-
-                                                            path: "/",
-                                                            expires: new Date(Date.now() + 60480000)
-
-                                                        });
-                                                    
-                                                        setState({ spin: false })
-                                                     } })
-                                                    .catch(function (err) {
-                                                        setState({ spin: false });
-                                    //    console.log(err.data);
-                                       
-                                                    });
+                                           this.login(this.state,setState)
+                                           
                                             }                                        
                                         } >
-
                                         {state.spin === false ? (
                                             <div> Login  </div>
                                         ) : (
@@ -164,47 +100,71 @@ class Login extends Component {
                                            />
                                                     </div></div>
                                             )}
-
-
-
-
-
-
                                     </div>
-
-
                                 }
-
                             </Component>
-
-
-
-
-
                         </div>
                     </div>
-
-
-
-
                 </div>
             </div>
             
         );
     }
-    onEnter(){
-        var input = document.getElementById("field12");
-      input.addEventListener("keyup", function(event) {
-      
-        if (event.keyCode === 13) {
-         
-          event.preventDefault();
-         
-          document.getElementById("sign_but").click();
-        }
-      });
+    onEnter(event){
+            if (event.keyCode === 13) {
+                document.getElementById("sign_but").click();
+            }
       }
-}
+      
+   login(state,setState){  
+          if (state.username.length < 3) {
+            return (
+                toast.error(`Username is short`)
+            );
+        }
+        else if (state.password.length < 3) {      
+            return (
+                toast.error(`Password must be more than 3 char`)
+            ); }
+            setState({ spin: true });   
+      
+            axios({
+                url: Host + `login`,
+                method: "POST",   
+                data: {
+                    username: this.state.username, 
+                    password:this.state.password
+                  }
+            })
+                .then(response => {          
+                    if (response.data.status===false) {
+                        toast.error(response.data.data.text)
+                        setState({ spin: false })
+                    }
+                    else if (response.data.status===true) {                
+                        window.location.href = "/Dashboard";
+                        let token =response.data.data.token
+                        
+                        let status = response.data.status
+                        cookies.set("status",status)
+                        cookies.set("username",response.data.data.username)
+                        cookies.set("user_id",response.data.data.user_id)
+                        localStorage.setItem("roles", JSON.stringify(response.data.data.roles));
+                        cookies.set("token", token, {
+        
+                            path: "/",
+                            expires: new Date(Date.now() + 60480000)
+        
+                        });
+                    
+                        setState({ spin: false })
+                 } })
+                .catch(function (err) {
+                    setState({ spin: false });
+      
+                });
+            }
 
+}
 
 export default Login;
