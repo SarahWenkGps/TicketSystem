@@ -277,7 +277,7 @@ class Tasks extends React.Component {
 
                       <div id='searchdiv' >
                         <input type='text' onChange={this.handleInput} placeholder='Search' id='search' />
-                        <div style={{ display: 'flex' }}  >
+                        <div style={{ display: 'flex' ,marginLeft:'10%'}}  >
                           <RangePicker onDateSelected={this.onDateChanges}
                             onClose={() => {
                               this.componentDidMount();
@@ -315,7 +315,7 @@ class Tasks extends React.Component {
                           null
                         )}
 
-                      <Tabs defaultActiveKey="All Tasks" style={{ display: 'flex', width: '85%', justifyContent: 'space-between' }}  >
+                      <Tabs defaultActiveKey="All Tasks" style={{ display: 'flex', width: '98%', justifyContent: 'space-between' }}  >
                         <Tab eventKey="All Tasks" title="All Tasks" style={{ marginTop: 20 }} >
 
 
@@ -333,7 +333,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name}  />
+                                  createdby={item.issuer_user.name}  created_at={item.created_at} />
 
                               </Col>
                             ))}

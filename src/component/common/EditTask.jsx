@@ -10,6 +10,7 @@ import loading from '../../assets/js/loading.json';
 import "react-toastify/dist/ReactToastify.css";
 import Select from 'react-select';
 import DatePicker from "react-datepicker";
+import { registerLocale, setDefaultLocale } from  "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 // import moment from 'moment';
@@ -177,11 +178,19 @@ class EditTask extends React.Component {
                                                 <DatePicker
                                                     selected={this.state.startDate}
                                                     onChange={this.handleChange}
-                                                    timeInputLabel="Time:"
-                                                    dateFormat="MM/dd/yyyy h:mm aa"
-                                                    showTimeInput
+                                                    // timeInputLabel="Time:"
+                                                    // dateFormat="MM/dd/yyyy h:mm aa"
+                                                    // showTimeInput
+                                                    // timeFormat="hh:mm aa"
+                                                    locale="ar-iq"
+                                                    showTimeSelect
+                                                    timeFormat="p"
+                                                    timeIntervals={15}
+                                                    dateFormat="Pp"
+                                                    registerLocale='ar-iq'
                                                     minDate={new Date()}
                                                 />
+
                                             </div>
                                         </div>
                                         {state.spin ? (

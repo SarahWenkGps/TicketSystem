@@ -84,6 +84,8 @@ class NewTask extends React.Component {
                 // console.log(response.data);
                 if (res.data.status === true) {
                 toast.success("user assigned successfully")
+                const { onProfileDelete } = this.props
+                onProfileDelete()
                 this.setState({isShown:false,spin:false ,task_name:"",description:""})
                 }
                 else if (res.data.status === false) {
@@ -233,7 +235,7 @@ class NewTask extends React.Component {
                                                    selected={this.state.startDate}
                                                    onChange={this.handleChange}
                                                    timeInputLabel="Time:"
-                                                   dateFormat="MM/dd/yyyy h:mm aa"
+                                                   dateFormat="MM/dd/yyyy h:mm aa zz"
                                                 //    showTimeInput
                                                   
                                                />

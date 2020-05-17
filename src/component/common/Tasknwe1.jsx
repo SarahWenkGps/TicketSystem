@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
   heading: {
     fontSize: '18px',
-    flexBasis: '50%',
+    flexBasis: '70%',
     flexShrink: 0,
     color: '#2e6b95',
     fontWeight: '600'
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
-    flexBasis: '50%',
+    flexBasis: '30%',
     textAlign: 'end',
   },
 
@@ -104,10 +104,12 @@ export default function ControlledExpansionPanels(props) {
           >
             <div className={classes.heading}>
               {props.name}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
+              <div style={{ display: 'flex',  justifyContent: 'center' ,flexDirection:'column'}} >
                 <div style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100' }} >
-                  <PersonIcon style={{ fontSize: 14 }} /> {props.createdby} </div>
-
+                  <PersonIcon style={{ fontSize: 14 }} /> {props.createdby} 
+                  </div>
+        <div style={{ color: 'rgb(127, 127, 127)', fontSize: 10, fontWeight: '100' }}   > 
+          {moment(props.created_at).format("lll")}  </div>
               </div>
             </div>
             <div className={classes.secondaryHeading}>
@@ -123,6 +125,7 @@ export default function ControlledExpansionPanels(props) {
                     
                     <div id="hover-content" >
                       {moment(props.time).format("lll")}
+                     {/* { props.time} */}
                     </div>
                   </div>
 
