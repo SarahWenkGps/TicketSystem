@@ -106,7 +106,8 @@ class NewTask extends React.Component {
         };
         try {
          if (this.state.checked === true) {
-             var dead_time= this.state.startDate
+            var correctedDeadTime = this.state.startDate.getTime() + (3 * 60 * 60 * 1000); //add three hours
+            var dead_time = new Date(correctedDeadTime);
          }
          if (this.state.task_name.length <5 ) {
            return  toast.error("Title must be more than 5 char")

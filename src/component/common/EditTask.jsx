@@ -96,6 +96,9 @@ class EditTask extends React.Component {
                                         jwt: cookies.get("token")
                                     };
 
+                                    var milliseconds = this.state.startDate.getTime() + (3 * 60 * 60 * 1000); //add three hours
+                                    var correctedDeadTime = new Date(milliseconds);
+
                                     axios({
                                         url: Host + `tasks/task/${this.props.id}`,
                                         method: "PUT",
@@ -103,7 +106,7 @@ class EditTask extends React.Component {
                                         data: {
                                             task_title:state.task_title,
                                             description: state.description,
-                                            dead_time:this.state.startDate,
+                                            dead_time:correctedDeadTime,
                                             // status_id:state.status
                                         },
                                     })
