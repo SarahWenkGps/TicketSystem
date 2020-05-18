@@ -21,6 +21,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import Comments from './Comments';
 import Status from '../common/Status';
 import moment from 'moment';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 const cookies = new Cookies();
 const detectNewline = require('detect-newline');
 const useStyles = makeStyles((theme) => ({
@@ -60,37 +61,37 @@ export default function ControlledExpansionPanels(props) {
 
       <div style={{ marginTop: 20 }}  >
         {props.status === "approved" ? (
-          <div id='tit_task' style={{ backgroundColor: '#188718b5' }} >{props.status} </div>
+          <div id='tit_task' style={{ backgroundColor: '#188718b5' }} >Approved </div>
         ) : (
             null
           )}
         {props.status === "rejected" ? (
-          <div id='tit_task' style={{ backgroundColor: '#da251e' }} >{props.status} </div>
+          <div id='tit_task' style={{ backgroundColor: '#da251e' }} >Rejected</div>
         ) : (
             null
           )}
         {props.status === "closed" ? (
-          <div id='tit_task' style={{ backgroundColor: 'gray' }} >{props.status} </div>
+          <div id='tit_task' style={{ backgroundColor: 'gray' }} >Closed </div>
         ) : (
             null
           )}
         {props.status === "new" ? (
-          <div id='tit_task' style={{ backgroundColor: '#2e6b95' }} >{props.status} </div>
+          <div id='tit_task' style={{ backgroundColor: '#2e6b95' }} >New </div>
         ) : (
             null
           )}
         {props.status === "in progress" ? (
-          <div id='tit_task' style={{ backgroundColor: '#f06105cc' }} >{props.status} </div>
+          <div id='tit_task' style={{ backgroundColor: '#f06105cc' }} > In progress </div>
         ) : (
             null
           )}
         {props.status === "assigned" ? (
-          <div id='tit_task' style={{ backgroundColor: '#d5ad00d4' }} >{props.status} </div>
+          <div id='tit_task' style={{ backgroundColor: '#d5ad00d4' }} > Assigned </div>
         ) : (
             null
           )}
         {props.status === "archived" ? (
-          <div id='tit_task' style={{ backgroundColor: 'black' }} >{props.status} </div>
+          <div id='tit_task' style={{ backgroundColor: 'black' }} > Archived </div>
         ) : (
             null
           )}
@@ -108,6 +109,7 @@ export default function ControlledExpansionPanels(props) {
                 <div style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100' }} >
                   <PersonIcon style={{ fontSize: 14 }} /> {props.createdby} 
                   </div>
+                   {props.assigners.length >0 ?(  <div  style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100' }}  >   <PeopleAltIcon style={{ fontSize: 12 }} />    {props.assigners[0].name} </div> ):(null)}     
         <div style={{ color: 'rgb(127, 127, 127)', fontSize: 10, fontWeight: '100' }}   > 
           {moment(props.created_at).format("lll")}  </div>
               </div>
@@ -148,7 +150,7 @@ export default function ControlledExpansionPanels(props) {
 
             <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse' }} >
              <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse',width:'50%' }} >
-              <AssingUser users={props.users} id={props.id} onProfileDelete={props} />  
+              <AssingUser users={props.users} id={props.id} onProfileDelete={props} assigned={props.assigned} />  
               {props.assigners.length > 0 ? (
                 <Component initialState={{ spin: false }}>
                   {({ state, setState }) => (
@@ -234,6 +236,7 @@ export default function ControlledExpansionPanels(props) {
 
               <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} title={props.name} 
               time={props.time} desc={props.desc} status={props.status} />
+              
 </div>
 
 <Status status={props.status} onProfileDelete={props} id={props.id} />
@@ -244,7 +247,7 @@ export default function ControlledExpansionPanels(props) {
           </ExpansionPanelDetails>
 
           <div id='pan_main'  >
-            <div style={{ width: '50%' }} ><Comments id={props.id} onProfileDelete={props} comment={props.comment} /></div>
+            <div style={{ width: '50%' }} ><Comments id={props.id} onProfileDelete={props} comment={props.comment} comments_count={props.comments_count}  /></div>
             <div style={{ width: '50%' }} ><Details id={props.id} onProfileDelete={props} /></div>
           </div>
 

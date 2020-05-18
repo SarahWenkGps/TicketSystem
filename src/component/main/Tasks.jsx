@@ -44,6 +44,7 @@ class Tasks extends React.Component {
       allday: '',
       spin: false,
       commentLenght: [],
+    
     }
     this.filterRef = React.createRef();
   }
@@ -61,9 +62,10 @@ class Tasks extends React.Component {
     var headers = {
       jwt: cookies.get("token"),
     };
-
-
-
+this.getTasks();
+setInterval(() => {
+  this.getTasks();
+}, 100000);
     axios({
       url: Host + `tasks/statuses`,
       method: "GET",
@@ -74,7 +76,6 @@ class Tasks extends React.Component {
         let arr = [];
         for (let index = 0; index < res.data.data.length; index++) {
           let obj = {
-
             label: res.data.data[index].status_name,
             value: res.data.data[index].status_id,
           }
@@ -83,71 +84,7 @@ class Tasks extends React.Component {
         this.setState({
           statuses: arr
         });
-
-
       })
-
-
-
-    axios({
-      url: Host + `tasks/tasks?params={"from_date":${this.state.date1},"to_date":${this.state.date2}}`,
-      method: "GET",
-      headers: headers,
-
-    })
-
-
-      .then(response => {
-
-      
-        this.setState({ watt: "no" });
-        this.setState({ spin: false })
-        if (response.data.status === false) {
-          cookies.remove("token");
-          window.location.href = "/"
-        } else {
-
-
-          this.setState({ tasks: response.data.data })
-
-          let data = response.data.data
-
-          let newdata = data.filter(f =>
-            f.status === 'new'
-          )
-          this.setState({
-            new: newdata
-          })
-
-          let assignedata = data.filter(f =>
-            f.status === "archived")
-          this.setState({
-            archived: assignedata
-          })
-          let inprogressdata = data.filter(f =>
-            f.status === "in progress")
-          this.setState({
-            inprogress: inprogressdata
-          })
-          let closeddata = data.filter(f =>
-            f.status === "closed")
-          this.setState({
-            closed: closeddata
-          })
-          let approveddata = data.filter(f =>
-            f.status === "approved")
-          this.setState({ approved: approveddata })
-
-          let rejecteddata = data.filter(f =>
-            f.status === "rejected")
-          this.setState({ rejected: rejecteddata })
-
-        }
-
-      })
-      .catch(function (error) {
-        this.setState({ spin: false })
-      });
 
     axios({
       url: Host + `users/users`,
@@ -159,7 +96,6 @@ class Tasks extends React.Component {
         for (let index = 0; index < res.data.data.length; index++) {
 
           let obj = {
-
             label: res.data.data[index].name,
             value: res.data.data[index].user_id,
           }
@@ -174,7 +110,66 @@ class Tasks extends React.Component {
       });
   }
 
- 
+ getTasks(){
+  var headers = {
+    jwt: cookies.get("token"),
+  };
+  axios({
+    url: Host + `tasks/tasks?params={"from_date":${this.state.date1},"to_date":${this.state.date2}}`,
+    method: "GET",
+    headers: headers,
+
+  })
+    .then(response => {  
+      this.setState({ watt: "no" });
+      this.setState({ spin: false })
+      if (response.data.status === false) {
+        cookies.remove("token");
+        window.location.href = "/"
+      } else {
+
+
+        this.setState({ tasks: response.data.data })
+
+        let data = response.data.data
+
+        let newdata = data.filter(f =>
+          f.status === 'new'
+        )
+        this.setState({
+          new: newdata
+        })
+
+        let assignedata = data.filter(f =>
+          f.status === "archived")
+        this.setState({
+          archived: assignedata
+        })
+        let inprogressdata = data.filter(f =>
+          f.status === "in progress")
+        this.setState({
+          inprogress: inprogressdata
+        })
+        let closeddata = data.filter(f =>
+          f.status === "closed")
+        this.setState({
+          closed: closeddata
+        })
+        let approveddata = data.filter(f =>
+          f.status === "approved")
+        this.setState({ approved: approveddata })
+
+        let rejecteddata = data.filter(f =>
+          f.status === "rejected")
+        this.setState({ rejected: rejecteddata })
+
+      }
+
+    })
+    .catch(function (error) {
+     
+    });
+ }
 
 
 
@@ -333,7 +328,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name}  created_at={item.created_at} />
+                                  createdby={item.issuer_user.name}  created_at={item.created_at}  assigned={item.assigners.map((p,i)=>(p.user_id))}  comments_count={item.comments_count}   />
 
                               </Col>
                             ))}
@@ -351,7 +346,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} commentLenght={this.state.commentLenght} />
+                                  createdby={item.issuer_user.name} created_at={item.created_at}  assigned={item.assigners.map((p,i)=>(p.user_id))}  comments_count={item.comments_count}  />
                               </Col>
                             ))}
                           </Row>
@@ -365,7 +360,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name}  commentLenght={this.state.commentLenght}/>
+                                  createdby={item.issuer_user.name}  created_at={item.created_at}  assigned={item.assigners.map((p,i)=>(p.user_id))}  comments_count={item.comments_count}    />
                               </Col>
                             ))}
                           </Row>
@@ -378,7 +373,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} commentLenght={this.state.commentLenght} />
+                                  createdby={item.issuer_user.name} created_at={item.created_at}  assigned={item.assigners.map((p,i)=>(p.user_id))}  comments_count={item.comments_count}  />
                               </Col>
                             ))}
                           </Row>
@@ -390,7 +385,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} commentLenght={this.state.commentLenght} />
+                                  createdby={item.issuer_user.name} created_at={item.created_at}  assigned={item.assigners.map((p,i)=>(p.user_id))}  comments_count={item.comments_count}  />
                               </Col>
                             ))}
                           </Row>
@@ -402,7 +397,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} commentLenght={this.state.commentLenght}/>
+                                  createdby={item.issuer_user.name} created_at={item.created_at}  assigned={item.assigners.map((p,i)=>(p.user_id))}  comments_count={item.comments_count}   />
                               </Col>
                             ))}
                           </Row>
@@ -414,7 +409,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name}commentLenght={this.state.commentLenght} />
+                                  createdby={item.issuer_user.name} created_at={item.created_at}  assigned={item.assigners.map((p,i)=>(p.user_id))}  comments_count={item.comments_count}  />
                               </Col>
                             ))}
                           </Row>

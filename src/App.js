@@ -55,7 +55,7 @@ componentDidMount(){
     .then(res => {
      
 this.setState({noti:res.data.data.length})
-this.showNotifications();
+
 
     })
 setInterval(() => {
@@ -66,7 +66,7 @@ setInterval(() => {
   })
     .then(res => {
       if (res.data.data.length > this.state.noti) {
-        toast.warning("New Notifications")
+       
         this.showNotifications();
       }
 this.setState({noti:res.data.data.length})
@@ -215,7 +215,7 @@ render() {
           body="   "
           icon="icon.png"
           tag="abcdef"
-          timeout="200000"
+         
           interaction={true}
           onClick={event => this.handleClick(event)}
         />
