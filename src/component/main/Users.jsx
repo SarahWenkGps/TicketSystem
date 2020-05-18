@@ -390,6 +390,7 @@ class Users extends Component {
                                     else if (response.data.status === true) {
                                       setState({ isShown: false, spin: false })
                                       this.componentDidMount();
+                                      this.setState({username:"",password:"",dep_nm:"",email:"",name:""})
                                     }
                                   })
                                   .catch(function (error) {

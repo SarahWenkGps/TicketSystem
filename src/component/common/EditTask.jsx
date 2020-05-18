@@ -10,6 +10,7 @@ import loading from '../../assets/js/loading.json';
 import "react-toastify/dist/ReactToastify.css";
 import Select from 'react-select';
 import DatePicker from "react-datepicker";
+import { registerLocale, setDefaultLocale } from  "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 // import moment from 'moment';
@@ -77,8 +78,8 @@ class EditTask extends React.Component {
     );
     
 }}>sss,,,,,</button> */}
-                <Component initialState={{ isShown: false, spin: false,time:this.props.time,
-                    description:this.props.desc,task_title:this.props.title,status_id:'',status:'' }}    >
+                <Component initialState={{ isShown: false, spin: false,time:'',
+                    description:'',task_title:'',status_id:'',status:'' }}    >
                     {({ state, setState }) => (
                         <Pane >
                             <Dialog
@@ -180,11 +181,19 @@ class EditTask extends React.Component {
                                                 <DatePicker
                                                     selected={this.state.startDate}
                                                     onChange={this.handleChange}
-                                                    timeInputLabel="Time:"
-                                                    dateFormat="MM/dd/yyyy h:mm aa"
-                                                    showTimeInput
+                                                    // timeInputLabel="Time:"
+                                                    // dateFormat="MM/dd/yyyy h:mm aa"
+                                                    // showTimeInput
+                                                    // timeFormat="hh:mm aa"
+                                                    locale="ar-iq"
+                                                    showTimeSelect
+                                                    timeFormat="p"
+                                                    timeIntervals={15}
+                                                    dateFormat="Pp"
+                                                    registerLocale='ar-iq'
                                                     minDate={new Date()}
                                                 />
+
                                             </div>
                                         </div>
                                         {state.spin ? (
@@ -207,7 +216,8 @@ class EditTask extends React.Component {
 
                             <Button onClick={() => { setState({ isShown: true })
                          let getIndex=this.props.allstatus.findIndex((element) => element.label === this.props.status)
-                         setState({status_id:this.props.allstatus[getIndex]})
+                         setState({status_id:this.props.allstatus[getIndex] , time:this.props.time ,description:this.props.desc ,task_title:this.props.title
+                        })
                          console.log(this.props.status);
                          console.log(state.status_id);
                          

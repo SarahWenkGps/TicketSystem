@@ -84,6 +84,8 @@ class NewTask extends React.Component {
                 // console.log(response.data);
                 if (res.data.status === true) {
                 toast.success("user assigned successfully")
+                const { onProfileDelete } = this.props
+                onProfileDelete()
                 this.setState({isShown:false,spin:false ,task_name:"",description:""})
                 }
                 else if (res.data.status === false) {
@@ -98,7 +100,7 @@ class NewTask extends React.Component {
 
 
     newtask = async () => {
-        this.setState({spin:true})
+       
         var headers = {
             jwt: cookies.get("token")
         };
@@ -107,6 +109,15 @@ class NewTask extends React.Component {
             var correctedDeadTime = this.state.startDate.getTime() + (3 * 60 * 60 * 1000); //add three hours
             var dead_time = new Date(correctedDeadTime);
          }
+         if (this.state.task_name.length <5 ) {
+           return  toast.error("Title must be more than 5 char")
+           
+           
+         }
+         if (this.state.description.length < 10) {
+            return  toast.error("Description must be more than 10 char")
+         }
+         this.setState({spin:true})
             let res = await axios({
                 url: Host + `tasks/task`,
                 method: "POST",
@@ -120,7 +131,7 @@ class NewTask extends React.Component {
             })
             if (res.data.status === true) {
                 if (this.state.user.length === undefined ) {
-                    this.assign_user(res.data.data.task_id);
+                    this.assign_user(res.data.data.data.task_id);
 
                 }
                 else {
@@ -234,7 +245,7 @@ class NewTask extends React.Component {
                                                    selected={this.state.startDate}
                                                    onChange={this.handleChange}
                                                    timeInputLabel="Time:"
-                                                   dateFormat="MM/dd/yyyy h:mm aa"
+                                                   dateFormat="MM/dd/yyyy h:mm aa zz"
                                                 //    showTimeInput
                                                   
                                                />
