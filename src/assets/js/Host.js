@@ -1,7 +1,7 @@
 const 
 
 
-// host="https://ticket-system-is.herokuapp.com/"
-host="https://www.iraq-gis.com/ticket/"
+host="http://iraq-gis.com:3001/"
+// host="https://www.iraq-gis.com/ticket/"
 
  export default host;

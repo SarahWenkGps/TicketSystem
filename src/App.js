@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import './assets/css/test1.css';
 import Home from './component/main/Home';
 import axios from "axios";
+import ReactNotifications from 'react-browser-notifications';
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 class App extends React.Component{
@@ -30,6 +31,8 @@ class App extends React.Component{
       archived:'',
       noti:'',
     };
+    this.showNotifications = this.showNotifications.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
 componentDidMount(){
@@ -45,25 +48,26 @@ componentDidMount(){
 
 
   axios({
-    url: Host + `/notifications`,
+    url: Host + `notifications`,
     method: "GET",
     headers: headers,
   })
     .then(res => {
      
 this.setState({noti:res.data.data.length})
-    
+this.showNotifications();
 
     })
 setInterval(() => {
   axios({
-    url: Host + `/notifications`,
+    url: Host + `notifications`,
     method: "GET",
     headers: headers,
   })
     .then(res => {
       if (res.data.data.length > this.state.noti) {
         toast.warning("New Notifications")
+        this.showNotifications();
       }
 this.setState({noti:res.data.data.length})
    
@@ -176,8 +180,20 @@ axios({
      
 //     });
 // }
+showNotifications() {
+  // If the Notifications API is supported by the browser
+  // then show the notification
+  if(this.n.supported()) this.n.show();
+}
+handleClick(event) {
+  // Do something here such as
+  // console.log("Notification Clicked") OR
+  // window.focus() OR
+  // window.open("http://www.google.com")
 
-
+  // Lastly, Close the notification
+  this.n.close(event.target.tag);
+}
 
 render() {
   return (
@@ -192,6 +208,16 @@ render() {
           pauseOnVisibilityChange
           draggable
           pauseOnHover
+        />
+           <ReactNotifications
+          onRef={ref => (this.n = ref)} // Required
+          title="New Notifications " // Required
+          body="   "
+          icon="icon.png"
+          tag="abcdef"
+          timeout="200000"
+          interaction={true}
+          onClick={event => this.handleClick(event)}
         />
     <Context.Provider value={{
            value: this.state,

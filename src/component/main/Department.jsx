@@ -220,7 +220,7 @@ class Departmant extends Component {
       }
       else if (response.data.status===true) {
         toast.success("Department added successfully");
-        setState({ spin: false,dep_name:"" , isShown: false}); 
+        setState({ spin: false,Department:"" , isShown: false}); 
         this.componentDidMount();
       }
       })

@@ -36,7 +36,7 @@ class Notifications extends React.Component {
     };
 
     axios({
-      url: Host + `/notifications`,
+      url: Host + `notifications`,
       method: "GET",
       headers: headers,
     })

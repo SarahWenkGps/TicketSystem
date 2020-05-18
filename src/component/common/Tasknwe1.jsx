@@ -96,7 +96,7 @@ export default function ControlledExpansionPanels(props) {
           )}
 
         <ExpansionPanel
-          style={{ backgroundColor: 'rgba(241, 237, 237, 0.42)', minHeight: 80, display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey' }} >
+          style={{ backgroundColor: 'rgba(241, 237, 237, 0.42)',  display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey' }} >
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1bh-content"
@@ -135,7 +135,7 @@ export default function ControlledExpansionPanels(props) {
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgb(225, 227, 229)' }}  >
             <div style={{
-              width: '100%', paddingBottom: 35, textAlign: 'end', fontSize: 16, paddingTop: 10
+              width: '100%', paddingBottom: 35, textAlign: 'end', fontSize: 16, paddingTop: 10,height:150,overflow:'auto'
 
             }}  >
 

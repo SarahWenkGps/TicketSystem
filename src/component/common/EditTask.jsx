@@ -78,8 +78,8 @@ class EditTask extends React.Component {
     );
     
 }}>sss,,,,,</button> */}
-                <Component initialState={{ isShown: false, spin: false,time:this.props.time,
-                    description:this.props.desc,task_title:this.props.title,status_id:'',status:'' }}    >
+                <Component initialState={{ isShown: false, spin: false,time:'',
+                    description:'',task_title:'',status_id:'',status:'' }}    >
                     {({ state, setState }) => (
                         <Pane >
                             <Dialog
@@ -213,7 +213,8 @@ class EditTask extends React.Component {
 
                             <Button onClick={() => { setState({ isShown: true })
                          let getIndex=this.props.allstatus.findIndex((element) => element.label === this.props.status)
-                         setState({status_id:this.props.allstatus[getIndex]})
+                         setState({status_id:this.props.allstatus[getIndex] , time:this.props.time ,description:this.props.desc ,task_title:this.props.title
+                        })
                          console.log(this.props.status);
                          console.log(state.status_id);
                          

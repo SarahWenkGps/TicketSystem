@@ -19,6 +19,7 @@
     "moment-range": "^4.0.2",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
+    "react-browser-notifications": "^1.0.14",
     "react-datepicker": "^2.14.1",
     "react-dom": "^16.13.1",
     "react-minimal-pie-chart": "^7.1.0",

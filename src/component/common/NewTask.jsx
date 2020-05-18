@@ -100,7 +100,7 @@ class NewTask extends React.Component {
 
 
     newtask = async () => {
-        this.setState({spin:true})
+       
         var headers = {
             jwt: cookies.get("token")
         };
@@ -108,6 +108,15 @@ class NewTask extends React.Component {
          if (this.state.checked === true) {
              var dead_time= this.state.startDate
          }
+         if (this.state.task_name.length <5 ) {
+           return  toast.error("Title must be more than 5 char")
+           
+           
+         }
+         if (this.state.description.length < 10) {
+            return  toast.error("Description must be more than 10 char")
+         }
+         this.setState({spin:true})
             let res = await axios({
                 url: Host + `tasks/task`,
                 method: "POST",
@@ -121,7 +130,7 @@ class NewTask extends React.Component {
             })
             if (res.data.status === true) {
                 if (this.state.user.length === undefined ) {
-                    this.assign_user(res.data.data.task_id);
+                    this.assign_user(res.data.data.data.task_id);
 
                 }
                 else {

@@ -55,7 +55,7 @@ render() {
         print: false,
         responsive: "scroll",
         rowCursorHand: false,
-        sort: false,
+        sort: true,
         filter: false,
          rowsPerPageOptions:[5,10,50,100],
         download:false,
