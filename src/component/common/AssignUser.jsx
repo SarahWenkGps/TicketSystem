@@ -116,6 +116,7 @@ class AssingUser extends React.Component {
                                                 <AssignmentTurnedInIcon style={{ color: '#da251e', cursor: 'pointer' }} />
                                             </IconButton>
                                         </Tooltip>
+                                   
                                     </Pane>
                                 )
                                

@@ -97,7 +97,7 @@ export default function ControlledExpansionPanels(props) {
           )}
 
         <ExpansionPanel
-          style={{ backgroundColor: 'rgba(241, 237, 237, 0.42)',  display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey' }} >
+          style={{ backgroundColor: 'rgba(241, 237, 237, 0.42)', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey' }} >
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1bh-content"
@@ -105,13 +105,11 @@ export default function ControlledExpansionPanels(props) {
           >
             <div className={classes.heading}>
               {props.name}
-              <div style={{ display: 'flex',  justifyContent: 'center' ,flexDirection:'column'}} >
-                <div style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100' }} >
-                  <PersonIcon style={{ fontSize: 14 }} /> {props.createdby} 
-                  </div>
-                   {props.assigners.length >0 ?(  <div  style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100' }}  >   <PeopleAltIcon style={{ fontSize: 12 }} />    {props.assigners[0].name} </div> ):(null)}     
-        <div style={{ color: 'rgb(127, 127, 127)', fontSize: 10, fontWeight: '100' }}   > 
-          {moment(props.created_at).format("lll")}  </div>
+              <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }} >
+                <div style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100' }} > <PersonIcon style={{ fontSize: 14 }} /> {props.createdby}</div>
+                {props.assigners.length > 0 ? (<div style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100' }}  >   <PeopleAltIcon style={{ fontSize: 14 }} />    {props.assigners[0].name} {props.assigners.length >1 ?(
+                <span id='OthersParent' > +  {props.assigners.length-1} Others <span id='OthersContent' > {props.assigners.map((p,i)=>(<div key={i}  > {p.name} </div>))}  </span> </span>):(null)} </div>) : (null)}
+                <div style={{ color: 'rgb(127, 127, 127)', fontSize: 10, fontWeight: '100' }}   > {moment(props.created_at).format("lll")}  </div>
               </div>
             </div>
             <div className={classes.secondaryHeading}>
@@ -119,15 +117,14 @@ export default function ControlledExpansionPanels(props) {
                 null
               ) : (
                   <div id="parent">
-                     {moment().format('lll')>= moment(props.time).format("lll")?(
-                      <AccessAlarmIcon 
-                      style={{ color: '#da251e', cursor: 'pointer' }} />
-                      ):( <AccessAlarmIcon 
-                        style={{ color: 'green', cursor: 'pointer' }} />)}
-                    
+                    {moment().format('lll') >= moment(props.time).format("lll") ? (
+                      <AccessAlarmIcon
+                        style={{ color: '#da251e', cursor: 'pointer' }} />
+                    ) : (<AccessAlarmIcon
+                      style={{ color: 'green', cursor: 'pointer' }} />)}
+
                     <div id="hover-content" >
                       {moment(props.time).format("lll")}
-                     {/* { props.time} */}
                     </div>
                   </div>
 
@@ -136,10 +133,7 @@ export default function ControlledExpansionPanels(props) {
             </div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgb(225, 227, 229)' }}  >
-            <div style={{
-              width: '100%', paddingBottom: 35, textAlign: 'end', fontSize: 16, paddingTop: 10,height:150,overflow:'auto'
-
-            }}  >
+            <div style={{ width: '100%', paddingBottom: 35, textAlign: 'end', fontSize: 16, paddingTop: 10, height: 150, overflow: 'auto' }}  >
 
               {props.desc.split('\n').map((i, n) => {
                 return <p key={n} >{i}</p>
@@ -149,97 +143,97 @@ export default function ControlledExpansionPanels(props) {
 
 
             <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse' }} >
-             <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse',width:'50%' }} >
-              <AssingUser users={props.users} id={props.id} onProfileDelete={props} assigned={props.assigned} />  
-              {props.assigners.length > 0 ? (
-                <Component initialState={{ spin: false }}>
-                  {({ state, setState }) => (
-                    <div>
-                      <Popover
-                        content={
-                          <Pane
-                            width={240}
-                            height={240}
-                            overflow="auto"
-                            display="flex"
-                            alignItems="center"
-                            backgroundColor="#dfe0e0c9"
-                            flexDirection="column"
-                          >
+              <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', width: '50%' }} >
+                <AssingUser users={props.users} id={props.id} onProfileDelete={props} assigned={props.assigned} />
+                {props.assigners.length > 0 ? (
+                  <Component initialState={{ spin: false }}>
+                    {({ state, setState }) => (
+                      <div>
+                        <Popover
+                          content={
+                            <Pane
+                              width={240}
+                              height={240}
+                              overflow="auto"
+                              display="flex"
+                              alignItems="center"
+                              backgroundColor="#FFF"
+                              flexDirection="column"
+                              color="#2e6b95"
+                              padding="5px"
+                            >
 
-                            {props.assigners.map((item, i) => (
-                              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 20, borderBottom: '1px solid #9e9c9c', width: '100%', padding: 5 }}  >
-                                {item.name}
-                                <i className="far fa-trash-alt" id="del" onClick={() => {
-                                  setState({ spin: true })
-                                  var headers = {
-                                    "Content-Type": "application/json",
-                                    jwt: cookies.get("token")
-                                  };
-                                  axios({
-                                    url: Host + `tasks/unassign/${props.id}`,
-                                    method: "POST",
-                                    headers: headers,
-                                    data: {
-                                      user_id: item.user_id
-                                    }
-                                  })
-                                    .then(response => {
-                                      if (response.data.status === false) {
-                                        toast.error(response.data.data.message.text)
-                                        // console.log(response.data);
-                                        setState({ spin: false })
-
-                                      }
-                                      else if (response.data.status === true) {
-                                        // console.log(response.data);
-                                        toast.success("deleted successfully")
-                                        const { onProfileDelete } = props
-                                        onProfileDelete();
-                                        setState({ spin: false })
+                              {props.assigners.map((item, i) => (
+                                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 20, borderBottom: '1px solid #9e9c9c', width: '100%', padding: 5 }}  >
+                                  {item.name}
+                                  <i className="far fa-trash-alt" id="del" onClick={() => {
+                                    setState({ spin: true })
+                                    var headers = {
+                                      "Content-Type": "application/json",
+                                      jwt: cookies.get("token")
+                                    };
+                                    axios({
+                                      url: Host + `tasks/unassign/${props.id}`,
+                                      method: "POST",
+                                      headers: headers,
+                                      data: {
+                                        user_id: item.user_id
                                       }
                                     })
-                                    .catch(function (err) {
-                                      // console.log(err);
-                                      setState({ spin: false })
-                                    });
-                                }}
-                                ></i>
+                                      .then(response => {
+                                        if (response.data.status === false) {
+                                          toast.error(response.data.data.message.text)
+                                          // console.log(response.data);
+                                          setState({ spin: false })
+                                        } else if (response.data.status === true) {
+                                          // console.log(response.data);
+                                          toast.success("deleted successfully")
+                                          const { onProfileDelete } = props
+                                          onProfileDelete();
+                                          setState({ spin: false })
+                                        }
+                                      })
+                                      .catch(err => {
+                                        // console.log(err);
+                                        setState({ spin: false })
+                                      });
+                                  }}
+                                  ></i>
 
-                              </div>
+                                </div>
 
-                            ))}
-                          </Pane>
-                        } >
-                        <Button style={{ marginRight: 10 }}  >Assigners </Button>
-                      </Popover>
-                      {state.spin === true ? (
-                        <div style={{ position: "absolute", zIndex: 20 }}>
-                          <Lottie
-                            options={{
-                              animationData: loading
-                            }}
-                            width={300}
-                            height={150}
-                            position="absolute"
-                          />
-                        </div>
-                      ) : null}
-                    </div>
+                              ))}
+                            </Pane>
+                          } >
+                          <Button style={{ marginRight: 10 }}  >Assigners </Button>
+                        </Popover>
+                        {state.spin === true ? (
+                          <div style={{ position: "absolute", zIndex: 20 }}>
+                            <Lottie
+                              options={{
+                                animationData: loading
+                              }}
+                              width={300}
+                              height={150}
+                              position="absolute"
+                            />
+                          </div>
+                        ) : null}
+                      </div>
+                    )}
+
+                  </Component>
+
+                ) : (
+                    null
                   )}
 
-                </Component>
+                <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} title={props.name}
+                  time={props.time} desc={props.desc} status={props.status} />
 
-              ) : (
-                  null
-                )}
+              </div>
 
-              <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} title={props.name} 
-              time={props.time} desc={props.desc} status={props.status} />
-              
-</div>
-
-<Status status={props.status} onProfileDelete={props} id={props.id} />
+              <Status status={props.status} onProfileDelete={props} id={props.id} />
 
 
             </div>
@@ -247,7 +241,7 @@ export default function ControlledExpansionPanels(props) {
           </ExpansionPanelDetails>
 
           <div id='pan_main'  >
-            <div style={{ width: '50%' }} ><Comments id={props.id} onProfileDelete={props} comment={props.comment} comments_count={props.comments_count}  /></div>
+            <div style={{ width: '50%' }} ><Comments id={props.id} onProfileDelete={props} comment={props.comment} comments_count={props.comments_count} /></div>
             <div style={{ width: '50%' }} ><Details id={props.id} onProfileDelete={props} /></div>
           </div>
 

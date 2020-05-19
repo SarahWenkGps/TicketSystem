@@ -66,6 +66,7 @@ class Users extends Component {
       dapts: [],
       dep_nm: '',
       roles:[],
+      con_password:'',
     };
 
   }
@@ -346,16 +347,27 @@ class Users extends Component {
                               cancelLabel="Cancel"
                               onConfirm={() => {
                                 if (this.state.username.length < 3) {
-                                  toast.warning('userename must be more than 3 char')
+                               return   toast.warning('userename must be more than 3 char')
                                 }
-                                if (this.state.name.length < 3) {
-                                  toast.warning('name must be more than 3 char')
+                                  if (this.state.name.length < 3) {
+                                    return  toast.warning('name must be more than 3 char')
                                 }
-                                if (this.state.password.length < 3) {
-                                  toast.warning('password must be more than 3 char')
+                                  if (this.state.password.length < 3) {
+                                    return  toast.warning('password must be more than 3 char')
                                 }
+                                if (this.state.email.length < 5) {
+                                  return  toast.warning('mail must be more than 5 char')
+                              }
+                                 if (this.state.con_password !== this.state.password) {
+                                  return   toast.warning('please confirm password')
+                              }
 
-
+                              var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                              if (reg.test(this.state.email) == false) 
+                              {
+                                return  toast.warning('Invalid Email Address');
+                                 
+                              }
                                 setState({ spin: true })
 
 
@@ -390,7 +402,7 @@ class Users extends Component {
                                     else if (response.data.status === true) {
                                       setState({ isShown: false, spin: false })
                                       this.componentDidMount();
-                                      this.setState({username:"",password:"",dep_nm:"",email:"",name:""})
+                                      this.setState({username:"",password:"",dep_nm:"",email:"",name:"",con_password:""})
                                     }
                                   })
                                   .catch(function (error) {
@@ -411,11 +423,7 @@ class Users extends Component {
                                         value={this.state.username}
                                         onChange={e => {
                                           this.setState({ username: e.target.value })
-                                          if (e.target.value.length < 4) {
-                                            setState({ errorsname: true });
-                                          } else {
-                                            setState({ errorsname: false });
-                                          }
+                                        
                                         }} />
                                     </div>
                                   </div>
@@ -444,7 +452,6 @@ class Users extends Component {
                                   </div>
                                   <div id='dailog' >
                                     <div id='dialog_title' > Password </div>
-
                                     <div style={{ width: "80%", textAlign: "center" }}>
                                       <input
                                         type="password"
@@ -452,13 +459,18 @@ class Users extends Component {
                                         placeholder="******"
                                         value={this.state.password}
                                         onChange={e => {
-                                          this.setState({ password: e.target.value })
-
-
-                                        }}
+                                          this.setState({ password: e.target.value }) }}
                                       />
                                     </div>
                                   </div>
+
+                                  <div id='dailog' >
+                                            <div id='dialog_title' >   Confirm  Password  </div>
+                                           <div style={{ width: '80%', textAlign: 'center' }} >
+                                                <input type='password' id='field2' placeholder=' ****** '
+                                                    value={this.state.con_password} onChange={(e) =>
+                                                        this.setState({ con_password: e.target.value })} /> </div>
+                                        </div>
 
                                   <div id='dailog' >
                                     <div id='dialog_title'> Email </div>
