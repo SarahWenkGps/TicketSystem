@@ -217,7 +217,7 @@ render() {
            <ReactNotifications
           onRef={ref => (this.n = ref)} // Required
           title="New Notifications " // Required
-          body={ 'sssss' ,this.state.desc}
+          body= ' '
           icon="icon.png"
           tag="abcdef"
          
