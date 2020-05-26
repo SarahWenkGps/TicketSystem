@@ -25,12 +25,6 @@ class Changwpass extends React.Component {
     }
 
 
-
-
-
-
-
-
     render() {
         return (
             <div    >
@@ -40,7 +34,6 @@ class Changwpass extends React.Component {
                         <Pane >
                             <Dialog
                                 isShown={state.isShown}
-
                                 onCloseComplete={() => setState({ isShown: false })}
                                 hasHeader={false}
                                 shouldCloseOnOverlayClick={false}
@@ -50,21 +43,19 @@ class Changwpass extends React.Component {
 
                                     if (this.state.new_password.length < 3) {
                                         toast.warning('password must be more than 3 char')
-                                    }
-                                    else if (this.state.con_password !== this.state.new_password) {
+                                    } else if (this.state.con_password !== this.state.new_password) {
                                         toast.warning('please confirm password')
-                                    }
-                                    else {
+                                    } else {
                                         setState({ spin: true })
                                         var headers = {
                                             jwt: cookies.get("token")
                                         };
 
-if (this.state.old_password ===undefined) {
-    var old_password =""
-} else {
-  old_password =this.state.old_password
-}
+                                        if (this.state.old_password === undefined) {
+                                            var old_password = ""
+                                        } else {
+                                            old_password = this.state.old_password
+                                        }
                                         axios({
                                             url: Host + `users/change_password`,
                                             method: "PUT",
@@ -80,8 +71,7 @@ if (this.state.old_password ===undefined) {
                                                 if (response.data.status === false) {
                                                     toast.error(response.data.data.message.text)
                                                     setState({ spin: false })
-                                                }
-                                                else if (response.data.status === true) {
+                                                } else if (response.data.status === true) {
                                                     toast.success("password updated successfully");
                                                     setState({ isShown: false, spin: false })
                                                 }
@@ -95,7 +85,7 @@ if (this.state.old_password ===undefined) {
                                 }}
                             >
                                 <div >
-                                    <div id='new_itemnav' >   Change Password </div>
+                                    <div id='new_itemnav' > Change Password </div>
                                     <div className='mod1'>
                                         <div id='dailog' style={{ marginTop: 15 }} >
                                             <div id='dialog_title' > Old Password   </div>
@@ -103,11 +93,8 @@ if (this.state.old_password ===undefined) {
                                                 <input type='password' id='field2' placeholder=' ****** ' value={this.state.old_password} onChange={(e) =>
                                                     this.setState({ old_password: e.target.value })} />  </div>
                                         </div>
-
-
                                         <div id='dailog' >
                                             <div id='dialog_title' >   New Password   </div>
-
                                             <div style={{ width: '80%', textAlign: 'center' }} >
                                                 <input type='password' id='field2' placeholder=' ****** '
                                                     value={this.state.new_password} onChange={(e) =>
@@ -115,8 +102,7 @@ if (this.state.old_password ===undefined) {
                                         </div>
                                         <div id='dailog' >
                                             <div id='dialog_title' >   Confirm  Password  </div>
-
-                                            <div style={{ width: '80%', textAlign: 'center' }} >
+                                           <div style={{ width: '80%', textAlign: 'center' }} >
                                                 <input type='password' id='field2' placeholder=' ****** '
                                                     value={this.state.con_password} onChange={(e) =>
                                                         this.setState({ con_password: e.target.value })} /> </div>
@@ -138,15 +124,7 @@ if (this.state.old_password ===undefined) {
                                 </div>
                             </Dialog>
 
-                            <div onClick={() => {
-                                setState({ isShown: true })
-
-
-                            }} id='pass_use' >
-
-                                <i className="fas fa-cog"></i>
-
-                            </div>
+                            <div onClick={() => { setState({ isShown: true }) }} id='pass_use' > <i className="fas fa-cog"></i> </div>
                         </Pane>
                     )}
                 </Component>

@@ -47,13 +47,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ControlledExpansionPanels(props) {
   const classes = useStyles();
-  // const [ setExpanded] = React.useState(false);
+  const [ expanded,setExpanded] =  React.useState('panel1');
 
-  // const handleChange = (panel) => (event, isExpanded) => {
-  //   setExpanded(isExpanded ? panel : false);
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
 
 
-  // };
+  };
   return (
 
     <div className="ControlledExpansionPanels"  >
@@ -96,8 +96,8 @@ export default function ControlledExpansionPanels(props) {
             null
           )}
 
-        <ExpansionPanel
-          style={{ backgroundColor: 'rgba(241, 237, 237, 0.42)', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey' }} >
+        <ExpansionPanel square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}
+          style={{ backgroundColor: '#FFF3F3', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey' }} >
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1bh-content"

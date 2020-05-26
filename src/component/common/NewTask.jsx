@@ -84,7 +84,9 @@ class NewTask extends React.Component {
                 // console.log(response.data);
                 if (res.data.status === true) {
                 toast.success("user assigned successfully")
-                this.setState({isShown:false,spin:false ,task_name:"",description:""})
+                const { onProfileDelete } = this.props
+                onProfileDelete()
+                this.setState({isShown:false,spin:false ,task_name:"",description:"",startDate:""})
                 }
                 else if (res.data.status === false) {
                     toast.error(res.data.data.message.text)
@@ -98,14 +100,24 @@ class NewTask extends React.Component {
 
 
     newtask = async () => {
-        this.setState({spin:true})
+       
         var headers = {
             jwt: cookies.get("token")
         };
         try {
-         if (this.state.checked === true) {
-             var dead_time= this.state.startDate
+         if (this.state.checked === true) {        
+                var milliseconds = this.state.startDate.getTime() + (3 * 60 * 60 * 1000); //add three hours
+                var correctedDeadTime = new Date(milliseconds);  
          }
+         if (this.state.task_name.length <5 ) {
+           return  toast.error("Title must be more than 5 char")
+           
+           
+         }
+         if (this.state.description.length < 10) {
+            return  toast.error("Description must be more than 10 char")
+         }
+         this.setState({spin:true})
             let res = await axios({
                 url: Host + `tasks/task`,
                 method: "POST",
@@ -113,20 +125,20 @@ class NewTask extends React.Component {
                 data: {
                     task_name: this.state.task_name,
                     description: this.state.description,
-                    dead_time: dead_time,
+                    dead_time: correctedDeadTime,
                     main_task_id: '0'
                 },
             })
             if (res.data.status === true) {
                 if (this.state.user.length === undefined ) {
-                    this.assign_user(res.data.data.task_id);
+                    this.assign_user(res.data.data.data.task_id);
 
                 }
                 else {
                     const { onProfileDelete } = this.props
                     onProfileDelete()
                     toast.success('task created successfully')
-                    this.setState({isShown:false,spin:false,task_name:"",description:""})
+                    this.setState({isShown:false,spin:false,task_name:"",description:"",startDate:""})
                 }
 
 
@@ -229,12 +241,16 @@ class NewTask extends React.Component {
                                            <div id='dialog_title' > Date    </div>
                                            <div style={{ width: '80%', textAlign: 'center' }} >
                                          
-                                               <DatePicker
+                                               <DatePicker                                            
                                                    selected={this.state.startDate}
-                                                   onChange={this.handleChange}
-                                                   timeInputLabel="Time:"
-                                                   dateFormat="MM/dd/yyyy h:mm aa"
-                                                //    showTimeInput
+                                                   onChange={this.handleChange}                                               
+                                                   locale="ar-iq"
+                                                   showTimeSelect
+                                                   timeFormat="p"
+                                                   timeIntervals={15}
+                                                   dateFormat="Pp"
+                                                   registerLocale='ar-iq'
+                                                   minDate={new Date()}
                                                   
                                                />
                                            </div>

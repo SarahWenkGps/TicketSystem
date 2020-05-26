@@ -241,7 +241,7 @@ class Comments extends React.Component {
                                
                                 
                             }}
-                                id='coment1' >Comments {this.props.comment} </Button>
+                                id='coment1' >Comments {this.props.comments_count} </Button>
                         </Pane>
                     )}
                 </Component>

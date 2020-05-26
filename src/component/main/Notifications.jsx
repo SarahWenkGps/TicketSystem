@@ -20,6 +20,7 @@ class Notifications extends React.Component {
       watt: "yes",
       spin: false,
       check: "",
+      redirect: false
     };
   }
 
@@ -36,7 +37,7 @@ class Notifications extends React.Component {
     };
 
     axios({
-      url: Host + `/notifications`,
+      url: Host + `notifications`,
       method: "GET",
       headers: headers,
     })
@@ -69,7 +70,17 @@ class Notifications extends React.Component {
       })
   }
 
+  setRead(data) {
+    var headers = {
+      jwt: cookies.get("token"),
+    };
+    axios({
+      url: Host + `notifications/read_notification/${data}`,
+      method: "POST",
+      headers: headers,
 
+    })
+  }
 
   render() {
     return (
@@ -86,9 +97,13 @@ class Notifications extends React.Component {
      
      
      <div>
-
+{/* {this.renderRedirect()} */}
 
         <div>
+
+          {/* <button onClick={()=>{
+        this.setRedirect()
+          }} >nnnnn</button> */}
           {this.state.data.length > 0 ? (
             <div id='clear_noti' onClick={() => {
               this.clearNoti();
@@ -97,7 +112,10 @@ class Notifications extends React.Component {
         </div>
         <Row style={{ width: '100%', display: 'flex' }}   >
           {this.state.data.map((p, i) => (
-            <Col md={6} key={i}  >
+            <Col md={6} key={i}  onClick={()=>{
+              window.location.href = `/Tasks?id=${p.task_id}`
+              this.setRead(p.activity_id);
+                }}   >
 
               <Noti type={p.type} id={p.task_id} note={p.note} commenter={p.commenter} time={p.date_time}
                 user_updater={p.user_updater} assign_from={p.assign_from} assign_to={p.assign_to} activity_id={p.activity_id} onProfileDelete={() => this.componentDidMount()}

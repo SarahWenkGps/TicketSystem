@@ -90,16 +90,29 @@ class EditUser extends React.Component {
                 shouldCloseOnOverlayClick={false}
                 confirmLabel="Save"
                 cancelLabel="Cancel"
-                onConfirm={() => {
+                onConfirm={() => {    
+           
+                       if (state.name.length < 3) {
+                         return  toast.warning('name must be more than 3 char')
+                     }
+                  
+                     if (state.email.length < 5) {
+                       return  toast.warning('mail must be more than 5 char')
+                   }
+              
+                   var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                   if (reg.test(state.email) == false) 
+                   {
+                     return  toast.warning('Invalid Email Address');
+                      
+                   }
 
-                 
+
+
                   setState({ spin: true })
-
                   var headers = {
                     jwt: cookies.get("token")
-                  };
-                 
-              
+                  };                           
                   axios({
                     url: Host + `users/user/${this.props.ids}`,
                     method: "PUT",
@@ -113,14 +126,10 @@ class EditUser extends React.Component {
                   })
               
                     .then(response => {
-
-
                       if (response.data.status===false) {
                         toast.error(response.data.data.message.text)
                         setState({ spin: false })
-                    }
-                    else if (response.data.status===true) {
-
+                    } else if (response.data.status===true) {
                       toast.success("Info updated successfully");
                                             setState({isShown: false,spin:false })
                                             const { onProfileDelete } = this.props
@@ -169,24 +178,17 @@ class EditUser extends React.Component {
                         Department
                                   </div>
 
-                      <div style={{ width: "80%", textAlign: "center" , display:'flex',alignItems:'center',justifyContent:'center' }}>
-               
+                      <div style={{ width: "80%", textAlign: "center" , display:'flex',alignItems:'center',justifyContent:'center' }}>               
                       <Select onChange={e => { setState({ dep_nm: e.value }); }}
                                                     defaultValue={state.depas}
                                                    value={selectedOption}
                                                     styles={customStyles}
                                                     options={this.props.data1}
                                                 />
-
-
                       </div>
                     </div>
-
                     <div id='dailog' >
-                      <div id='dialog_title' >
-                        Status
-                                  </div>
-
+                      <div id='dialog_title' >  Status</div>
                       <div style={{ width: "80%", textAlign: "center" }}>
                         <select
                           type="text"
@@ -205,9 +207,6 @@ class EditUser extends React.Component {
                         </select>
                       </div>
                     </div>
-
-
-
                     {state.spin ? (
                       <div style={{ width: "100%", position: "absolute" }}>
                         <Lottie
@@ -223,7 +222,6 @@ class EditUser extends React.Component {
                   </div>
                 </div>
               </Dialog>
-
               <div
                 onClick={() =>{ 
                   setState({ isShown: true })

@@ -21,11 +21,18 @@ class AssingUser extends React.Component {
 
             data: [],
             id: '',
-            spin: false
+            spin: false,
+            assigned :this.props.assigned
         };
     }
 
+    add(){
+console.log(this.props.assigned);
+this.setState({assigned:this.props.assigned})
+  
 
+
+    }
 
     assign_user() {
         if (this.state.id.length > 0) {
@@ -91,9 +98,10 @@ class AssingUser extends React.Component {
                 <Component
                     initialState={{
 
-                        selected: []
+                        selected: this.state.assigned
                     }}
                 >
+
                     {({ state, setState }) => (
                         <SelectMenu
                             isMultiSelect
@@ -116,6 +124,7 @@ class AssingUser extends React.Component {
                                                 <AssignmentTurnedInIcon style={{ color: '#da251e', cursor: 'pointer' }} />
                                             </IconButton>
                                         </Tooltip>
+                                   
                                     </Pane>
                                 )
                                
@@ -140,6 +149,8 @@ class AssingUser extends React.Component {
                                     selected,
                                     selectedNames
                                 })
+                         
+                                
                             }}
                             onDeselect={item => {
                                 const deselectedItemIndex = state.selected.indexOf(item.value)
@@ -160,7 +171,9 @@ class AssingUser extends React.Component {
                                 
                             }}
                         >
-                            <Button>{state.name || <SupervisorAccountIcon />}</Button>
+                            <Button onMouseOver={()=>{
+                                this.add();
+                            }}  ><SupervisorAccountIcon /></Button>
                         </SelectMenu>
                     )}
                 </Component>

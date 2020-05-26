@@ -329,15 +329,15 @@ class Dashboard extends Component {
                     <div id='left1' >
                       <div style={{ display: 'flex', padding: 5 }} >
                         <div style={{ width: 20, height: 20, marginRight: 10, backgroundColor: 'rgb(86, 178, 191)' }} />
-                        <div> New Tasks  </div>
+                        <div> New Tasks <span style={{color:'rgb(86, 178, 191)'}} > {this.state.new1}  </span>  </div>
                       </div>
                       <div style={{ display: 'flex', padding: 5 }}>
                         <div style={{ width: 20, height: 20, marginRight: 10, backgroundColor: '#f06105cc' }} />
-                        <div> Inprogress Tasks</div>
+                        <div> Inprogress Tasks  <span style={{color:'#f06105cc'}} >  {this.state.inprogress1} </span>   </div>
                       </div>
                       <div style={{ display: 'flex', padding: 5 }}>
                         <div style={{ width: 20, height: 20, marginRight: 10, backgroundColor: '#188718b5' }} />
-                        <div> Approved Tasks</div>
+                        <div> Approved Tasks  <span style={{color:'#188718b5'}} >  {this.state.approved1} </span>    </div>
                       </div>
 
                     </div>
@@ -402,15 +402,15 @@ class Dashboard extends Component {
                     <div id='left1' >
                       <div style={{ display: 'flex', padding: 5 }} >
                         <div style={{ width: 20, height: 20, marginRight: 10, backgroundColor: 'gray' }} />
-                        <div> Closed Tasks</div>
+                        <div> Closed Tasks <span style={{color:'gray'}} > {this.state.closed1}  </span>     </div>
                       </div>
                       <div style={{ display: 'flex', padding: 5 }}>
                         <div style={{ width: 20, height: 20, marginRight: 10, backgroundColor: '#da251e' }} />
-                        <div> Rejected Tasks</div>
+                        <div> Rejected Tasks  <span style={{color:'#da251e'}} >  {this.state.rejected1}  </span>    </div>
                       </div>
                       <div style={{ display: 'flex', padding: 5 }}>
                         <div style={{ width: 20, height: 20, marginRight: 10, backgroundColor: 'black' }} />
-                        <div> Archived Tasks</div>
+                        <div> Archived Tasks <span style={{color:'black'}} >{this.state.archived1}   </span>      </div>
                       </div>
 
                     </div>

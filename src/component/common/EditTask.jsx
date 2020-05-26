@@ -10,6 +10,7 @@ import loading from '../../assets/js/loading.json';
 import "react-toastify/dist/ReactToastify.css";
 import Select from 'react-select';
 import DatePicker from "react-datepicker";
+import { registerLocale, setDefaultLocale } from  "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 // import moment from 'moment';
@@ -73,12 +74,12 @@ class EditTask extends React.Component {
         return (
             <div style={{ marginRight: 10 }}  >
                 {/* <button onClick={()=>{
-    console.log('s', onProfileDelete()
+    console.log('s',this.state.startDate===''
     );
     
 }}>sss,,,,,</button> */}
-                <Component initialState={{ isShown: false, spin: false,time:this.props.time,
-                    description:this.props.desc,task_title:this.props.title,status_id:'',status:'' }}    >
+                <Component initialState={{ isShown: false, spin: false,time:'',
+                    description:'',task_title:'',status_id:'',status:'' }}    >
                     {({ state, setState }) => (
                         <Pane >
                             <Dialog
@@ -94,6 +95,11 @@ class EditTask extends React.Component {
                                     var headers = {
                                         jwt: cookies.get("token")
                                     };
+                                    if (this.state.startDate!=='') {
+                                        var milliseconds = this.state.startDate.getTime() + (3 * 60 * 60 * 1000); //add three hours
+                                        var correctedDeadTime = new Date(milliseconds);  
+                                    }
+                                   
 
                                     axios({
                                         url: Host + `tasks/task/${this.props.id}`,
@@ -102,7 +108,7 @@ class EditTask extends React.Component {
                                         data: {
                                             task_title:state.task_title,
                                             description: state.description,
-                                            dead_time:this.state.startDate,
+                                            dead_time:correctedDeadTime,
                                             // status_id:state.status
                                         },
                                     })
@@ -112,20 +118,16 @@ class EditTask extends React.Component {
                                                 url: Host + `tasks/change_status/${this.props.id}`,
                                                 method: "PUT",
                                                 headers: headers,
-                                                data: {
-                                                 
+                                                data: {                                             
                                                     status_id:state.status
                                                 },
                                             })
-
-
                                             if (res.data.status === true) {
                                                 setState({ isShown: false, spin: false })
                                                 toast.success('task updated successfully')
                                                 const { onProfileDelete } = this.props.onProfileDelete
                                                 onProfileDelete()
-                                            }
-                                            else if (res.data.status === false) {
+                                            } else if (res.data.status === false) {
                                                 toast.error(res.data.data.message.text)
                                                 setState({ spin: false })
                                             }
@@ -176,12 +178,16 @@ class EditTask extends React.Component {
                                                     this.setState({ dead_time: e.target.value })} />   */}
                                                 <DatePicker
                                                     selected={this.state.startDate}
-                                                    onChange={this.handleChange}
-                                                    timeInputLabel="Time:"
-                                                    dateFormat="MM/dd/yyyy h:mm aa"
-                                                    showTimeInput
+                                                    onChange={this.handleChange}                                               
+                                                    locale="ar-iq"
+                                                    showTimeSelect
+                                                    timeFormat="p"
+                                                    timeIntervals={15}
+                                                    dateFormat="Pp"
+                                                    registerLocale='ar-iq'
                                                     minDate={new Date()}
                                                 />
+
                                             </div>
                                         </div>
                                         {state.spin ? (
@@ -204,7 +210,8 @@ class EditTask extends React.Component {
 
                             <Button onClick={() => { setState({ isShown: true })
                          let getIndex=this.props.allstatus.findIndex((element) => element.label === this.props.status)
-                         setState({status_id:this.props.allstatus[getIndex]})
+                         setState({status_id:this.props.allstatus[getIndex] , time:this.props.time ,description:this.props.desc ,task_title:this.props.title
+                        })
                          console.log(this.props.status);
                          console.log(state.status_id);
                          

@@ -11,6 +11,7 @@ import { Redirect } from "react-router-dom";
 import Tasknwe1 from '../common/Tasknwe1';
 import RangePicker from "react-range-picker";
 import moment from 'moment';
+import Task_noti from '../../component/common/Task_noti';
 import Context from "../../assets/js/context";
 const cookies = new Cookies();
 
@@ -44,6 +45,7 @@ class Tasks extends React.Component {
       allday: '',
       spin: false,
       commentLenght: [],
+      noti:[],
     }
     this.filterRef = React.createRef();
   }
@@ -61,9 +63,10 @@ class Tasks extends React.Component {
     var headers = {
       jwt: cookies.get("token"),
     };
-
-
-
+    this.getTasks();
+    setInterval(() => {
+      this.getTasks();
+    }, 100000);
     axios({
       url: Host + `tasks/statuses`,
       method: "GET",
@@ -74,7 +77,6 @@ class Tasks extends React.Component {
         let arr = [];
         for (let index = 0; index < res.data.data.length; index++) {
           let obj = {
-
             label: res.data.data[index].status_name,
             value: res.data.data[index].status_id,
           }
@@ -83,23 +85,62 @@ class Tasks extends React.Component {
         this.setState({
           statuses: arr
         });
-
-
       })
 
+    axios({
+      url: Host + `users/users`,
+      method: "GET",
+      headers: headers,
+    })
+      .then(res => {
+        let arr = [];
+        for (let index = 0; index < res.data.data.length; index++) {
+
+          let obj = {
+            label: res.data.data[index].name,
+            value: res.data.data[index].user_id,
+          }
+          arr.push(obj);
+        }
+        this.setState({
+          users: arr
+        });
+      })
+      .catch(err => {
+        // console.log("error:", err);
+      });
+    
+    
+    
+      const urlParams = new URLSearchParams(window.location.search);
+      const myParam = urlParams.get('id');
+      axios
+        .get(Host + `tasks/task/${myParam}?params={"from_date":0,"to_date":0}`, {
+          headers: headers,
+        })
+        .then(res => {
+       this.setState({noti:res.data.data})
+   
+       
+        })
+    
+   
+    }
 
 
+  
+
+  getTasks() {
+    var headers = {
+      jwt: cookies.get("token"),
+    };
     axios({
       url: Host + `tasks/tasks?params={"from_date":${this.state.date1},"to_date":${this.state.date2}}`,
       method: "GET",
       headers: headers,
 
     })
-
-
       .then(response => {
-
-      
         this.setState({ watt: "no" });
         this.setState({ spin: false })
         if (response.data.status === false) {
@@ -146,35 +187,9 @@ class Tasks extends React.Component {
 
       })
       .catch(function (error) {
-        this.setState({ spin: false })
-      });
 
-    axios({
-      url: Host + `users/users`,
-      method: "GET",
-      headers: headers,
-    })
-      .then(res => {
-        let arr = [];
-        for (let index = 0; index < res.data.data.length; index++) {
-
-          let obj = {
-
-            label: res.data.data[index].name,
-            value: res.data.data[index].user_id,
-          }
-          arr.push(obj);
-        }
-        this.setState({
-          users: arr
-        });
-      })
-      .catch(err => {
-        // console.log("error:", err);
       });
   }
-
- 
 
 
 
@@ -265,10 +280,7 @@ class Tasks extends React.Component {
 
                   <div id="apfot" ref={this.myRef}  >
 
-                    {/* <button onClick={()=>{
-  console.log(this.state.date1 ==='' && this.state.allday ==='' );
- ;
-}} >ffff</button> */}
+            
                     <div style={{
                       display: 'flex', flexDirection: 'column', justifyContent: 'center'
                       , width: '100%'
@@ -277,7 +289,7 @@ class Tasks extends React.Component {
 
                       <div id='searchdiv' >
                         <input type='text' onChange={this.handleInput} placeholder='Search' id='search' />
-                        <div style={{ display: 'flex' }}  >
+                        <div style={{ display: 'flex', marginLeft: '10%' }}  >
                           <RangePicker onDateSelected={this.onDateChanges}
                             onClose={() => {
                               this.componentDidMount();
@@ -315,17 +327,21 @@ class Tasks extends React.Component {
                           null
                         )}
 
-                      <Tabs defaultActiveKey="All Tasks" style={{ display: 'flex', width: '85%', justifyContent: 'space-between' }}  >
+                      <Tabs defaultActiveKey="All Tasks" style={{ display: 'flex', width: '98%', justifyContent: 'space-between' }}  >
                         <Tab eventKey="All Tasks" title="All Tasks" style={{ marginTop: 20 }} >
-
-
-
-
-
                           <NewTask onProfileDelete={() => this.componentDidMount()} users={this.state.users} key={1} />
-
-
                           <Row style={{ width: '100%', display: 'flex' }}   >
+
+{this.state.noti.length >0 ?(
+    <Col md={6}   >
+
+    <Task_noti  id='nnn'  name={this.state.noti[0].task_title} time={this.state.noti[0].dead_time} desc={this.state.noti[0].description}
+      created_at={this.state.noti[0].created_at} id={this.state.noti[0].task_id} users={this.state.users} assigners={this.state.noti[0].assigners}
+      onProfileDelete={() => this.componentDidMount()} status={this.state.noti[0].status} allstatus={this.state.statuses}
+      createdby={this.state.noti[0].issuer_user.name} created_at={this.state.noti[0].created_at} assigned={this.state.noti[0].assigners.map((p, i) => (p.user_id))} comments_count={this.state.noti[0].comments_count} />
+
+  </Col>
+):(null)}
 
                             {filter.map((item, i) => (
                               <Col md={6} key={i} id='noti_Get'  >
@@ -333,7 +349,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name}  />
+                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
 
                               </Col>
                             ))}
@@ -351,7 +367,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} commentLenght={this.state.commentLenght} />
+                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
                               </Col>
                             ))}
                           </Row>
@@ -365,7 +381,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name}  commentLenght={this.state.commentLenght}/>
+                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
                               </Col>
                             ))}
                           </Row>
@@ -378,7 +394,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} commentLenght={this.state.commentLenght} />
+                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
                               </Col>
                             ))}
                           </Row>
@@ -390,7 +406,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} commentLenght={this.state.commentLenght} />
+                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
                               </Col>
                             ))}
                           </Row>
@@ -402,7 +418,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} commentLenght={this.state.commentLenght}/>
+                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
                               </Col>
                             ))}
                           </Row>
@@ -414,7 +430,7 @@ class Tasks extends React.Component {
                                 <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                                   created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
                                   onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name}commentLenght={this.state.commentLenght} />
+                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
                               </Col>
                             ))}
                           </Row>

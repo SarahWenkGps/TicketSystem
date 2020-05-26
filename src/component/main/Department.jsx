@@ -97,7 +97,8 @@ class Departmant extends Component {
               className="far fa-trash-alt"
               id="del"
               onClick={() => {
-                this.delete(res.data.data[index].dep_id);
+                // this.delete(res.data.data[index].dep_id);
+                if(window.confirm('Delete the Department?')){this.delete(res.data.data[index].dep_id)};
               }}
             ></i>)
           };
@@ -220,8 +221,7 @@ class Departmant extends Component {
       }
       else if (response.data.status===true) {
         toast.success("Department added successfully");
- setState({ spin: false });
-  setState({ isShown: false });
+        setState({ spin: false,Department:"" , isShown: false}); 
         this.componentDidMount();
       }
       })

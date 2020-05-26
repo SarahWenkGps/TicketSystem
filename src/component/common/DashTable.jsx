@@ -54,12 +54,12 @@ render() {
         selectableRows: false,
         print: false,
         responsive: "scroll",
-        rowCursorHand: false,
-        sort: false,
+        rowCursorHand: true,
+        sort: true,
         filter: false,
          rowsPerPageOptions:[5,10,50,100],
-        download:false,
-  
+        download:true,
+        rowHover:true
       };
     
   return (
