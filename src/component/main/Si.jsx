@@ -309,8 +309,8 @@ export default function PersistentDrawerLeft(props) {
                   </List>
                 </NavLink>)}
 
-                {(cookies.get("role")) === "Designer" || (cookies.get("role")) === "Checker" || (cookies.get("role")) === "Storekeeper" ? (
-                  null) : (<NavLink to='/Tasks' activeClassName='active' >
+               
+                <NavLink to='/Tasks' activeClassName='active' >
                     <List className='sidefect' style={{ paddingBottom: 0 }} >
 
                       <ListItem >
@@ -319,15 +319,9 @@ export default function PersistentDrawerLeft(props) {
                       </ListItem>
 
                     </List>
-                  </NavLink>)}
+                  </NavLink>
 
 
-
-
-
-
-                {(cookies.get("role")) === "Designer" || (cookies.get("role")) === "Checker" ? (
-                  null) : (
                     <NavLink to='/Notifications' activeClassName='active' >
                       <List className='sidefect' style={{ paddingBottom: 0 }} >
 
@@ -337,7 +331,7 @@ export default function PersistentDrawerLeft(props) {
                         </ListItem>
 
                       </List>
-                    </NavLink>)}
+                    </NavLink>
 
 
               </div>

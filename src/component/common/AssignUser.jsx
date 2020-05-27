@@ -26,14 +26,7 @@ class AssingUser extends React.Component {
         };
     }
 
-    add(){
-console.log(this.props.assigned);
-this.setState({assigned:this.props.assigned})
-  
-
-
-    }
-
+   
     assign_user() {
         if (this.state.id.length > 0) {
             this.setState({ spin: true })
@@ -98,7 +91,7 @@ this.setState({assigned:this.props.assigned})
                 <Component
                     initialState={{
 
-                        selected: this.state.assigned
+                        selected:this.props.assigned 
                     }}
                 >
 
@@ -172,7 +165,8 @@ this.setState({assigned:this.props.assigned})
                             }}
                         >
                             <Button onMouseOver={()=>{
-                                this.add();
+                             
+                                setState({selected:this.props.assigned})
                             }}  ><SupervisorAccountIcon /></Button>
                         </SelectMenu>
                     )}

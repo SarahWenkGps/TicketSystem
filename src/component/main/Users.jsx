@@ -150,7 +150,7 @@ class Users extends Component {
       headers: headers,
     })
       .then(res => {
-        console.log(res.data.data);       
+        // console.log(res.data.data);       
         if (res.data.status === false) {
           cookies.remove("token");
           window.location.href = "/"
@@ -173,12 +173,9 @@ class Users extends Component {
               pass: (<Changwpass ids={res.data.data[index].user_id} />),
 
               status: (
-
-
                 <Component initialState={{ isShown: true, spin: false }}>
                   {({ state, setState }) =>
                     state.spin ? (
-
                       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >  <Spinner size={16} /></div>
                     ) : res.data.data[index].enabled === 1 ? (
                       <DoneIcon
@@ -193,13 +190,10 @@ class Users extends Component {
                             jwt: cookies.get("token")
                           };
                           axios({
-                            url: Host + `users/user/${res.data.data[index].user_id}`,
+                            url: Host + `users/user/status/${res.data.data[index].user_id}`,
                             method: "PUT",
                             headers: headers,
-                            data: {
-                              name: '',
-                              email: '',
-                              department_id: '',
+                            data: {                            
                               enabled: 0
                             },
                           })
@@ -214,12 +208,7 @@ class Users extends Component {
                                 setState({ spin: false });
                                 this.componentDidMount();
                               }
-                            })
-                            .catch(function (error) {
-                              setState({ spin: false });
-
-                            });
-
+                            })                          
                         }}
                       />
                     ) : (
@@ -233,13 +222,10 @@ class Users extends Component {
                               setState({ spin: true });
 
                               axios({
-                                url: Host + `users/user/${res.data.data[index].user_id}`,
+                                url: Host + `users/user/status/${res.data.data[index].user_id}`,
                                 method: "PUT",
                                 headers: headers,
                                 data: {
-                                  name: '',
-                                  email: '',
-                                  department_id: '',
                                   enabled: "1"
                                 },
                               })
@@ -253,17 +239,11 @@ class Users extends Component {
                                     setState({ spin: false });
                                     this.componentDidMount();
                                   }
-                                })
-                                .catch(function (error) {
-                                  setState({ spin: false });
-
-                                });
+                                })                            
                             }}
                           />
-                        )
-                  }
+                        ) }
                 </Component>
-
               ),
 
               edit: (

@@ -189,10 +189,7 @@ transform: scale(1.2);
   margin-bottom: 10px;
  
 }
-p{
-  text-align: justify;
-  text-justify: inter-word;
-}
+
 #notification_main{
   background-color: #808181;
   height: 100px;
@@ -331,7 +328,17 @@ p{
   margin-bottom: 10px;
  
 }
-
+.btn_lang{
+  width: 30px;
+  text-align: center;
+  font-size: 10px;
+  color: red;
+  font-weight: 600;
+  background-color: #dfe0e0;
+}
+.MuiFab-primary:hover {
+  background-color: red;
+}
 #tasknew{
   cursor: pointer;
     font-size: 20px;

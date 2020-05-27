@@ -68,6 +68,9 @@ class Comments extends React.Component {
         var headers = {
             jwt: cookies.get("token")
         };
+        if (this.state.comment.length ===0) {
+           return toast.error("Add comment First") 
+        }
         axios({
             url: Host + `comments/comment`,
             method: "POST",
@@ -156,6 +159,9 @@ class Comments extends React.Component {
                                                                             var headers = {
                                                                                 jwt: cookies.get("token")
                                                                             };
+                                                                            if (state.comment2.length ===0) {
+                                                                                return toast.error("Add comment First") 
+                                                                             }
                                                                             axios({
                                                                                 url: Host + `comments/comment/${item.comment_id}`,
                                                                                 method: "PUT",

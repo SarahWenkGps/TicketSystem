@@ -73,7 +73,7 @@ changepass(){
 
             })
             .catch(function (error) {
-                this.setState({ spin: false });
+             
 
             });
     }
@@ -101,6 +101,20 @@ getinfo(){
 
 
 changeInfo(){
+    if (this.state.name.length < 3) {
+        return  toast.warning('name must be more than 3 char')
+    }
+ 
+    if (this.state.email.length < 5) {
+      return  toast.warning('mail must be more than 5 char')
+  }
+
+  var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+  if (reg.test(this.state.email) == false) 
+  {
+    return  toast.warning('Invalid Email Address');
+     
+  }
     this.setState({ spin1: true })
     var headers = {
       jwt: cookies.get("token")
@@ -132,7 +146,7 @@ changeInfo(){
       }                    
       })
       .catch(function (error) {
-        this.setState({ spin1: false });
+      
       });
 
 }

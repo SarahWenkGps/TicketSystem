@@ -107,8 +107,6 @@ class EditUser extends React.Component {
                       
                    }
 
-
-
                   setState({ spin: true })
                   var headers = {
                     jwt: cookies.get("token")
@@ -121,7 +119,6 @@ class EditUser extends React.Component {
                      name:state.name,
                      email:state.email,
                      department_id:state.dep_nm,
-                     enabled:state.status
                     },
                   })
               
@@ -187,26 +184,7 @@ class EditUser extends React.Component {
                                                 />
                       </div>
                     </div>
-                    <div id='dailog' >
-                      <div id='dialog_title' >  Status</div>
-                      <div style={{ width: "80%", textAlign: "center" }}>
-                        <select
-                          type="text"
-                          id="field2"
-                          placeholder="Status"
-                          value={state.status}
-                          onChange={e =>
-                          setState({
-                              status: e.target.value
-                            })
-                          }
-                        >
-                          <option value="-">- </option>
-                          <option value="1">enabled</option>
-                          <option value="0">  disabled </option>
-                        </select>
-                      </div>
-                    </div>
+              
                     {state.spin ? (
                       <div style={{ width: "100%", position: "absolute" }}>
                         <Lottie
@@ -231,7 +209,7 @@ class EditUser extends React.Component {
                   name: this.props.name,
                   email:this.props.email,
                   department:this.props.department,
-                  status:this.props.status,
+            
                 })
                 }}
 

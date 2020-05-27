@@ -28,7 +28,9 @@
     "react-scripts": "^3.4.1",
     "react-select": "^3.1.0",
     "react-toastify": "^5.5.0",
-    "universal-cookie": "^4.0.3"
+    "react-web-notification": "^0.8.0",
+    "universal-cookie": "^4.0.3",
+    "use-browser-notifications": "^0.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
