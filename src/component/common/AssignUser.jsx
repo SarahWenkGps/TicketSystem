@@ -141,9 +141,7 @@ class AssingUser extends React.Component {
                                 setState({
                                     selected,
                                     selectedNames
-                                })
-                         
-                                
+                                })                                                       
                             }}
                             onDeselect={item => {
                                 const deselectedItemIndex = state.selected.indexOf(item.value)

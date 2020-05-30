@@ -22,7 +22,7 @@ class Permitions extends React.Component {
         this.state = {
             spin: false,
             data: [],
-            roles_id: [0],
+            roles_id:this.props.permitions,
 
         };
     }

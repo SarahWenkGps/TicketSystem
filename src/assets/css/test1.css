@@ -329,12 +329,16 @@ transform: scale(1.2);
  
 }
 .btn_lang{
-  width: 30px;
-  text-align: center;
-  font-size: 10px;
-  color: red;
-  font-weight: 600;
-  background-color: #dfe0e0;
+    text-align: center;
+    color: #828282;
+    border: none;
+    background-color: #f6f4f4;
+}
+
+.filter_span{
+  color: gray;
+    font-weight: 700;
+    font-size: 18px;
 }
 .MuiFab-primary:hover {
   background-color: red;
@@ -347,7 +351,9 @@ transform: scale(1.2);
     width: 20%;
 }
 
-
+button{
+  outline: none;
+}
 .down_field {
   width: 100%;
   display: flex;

@@ -7,6 +7,8 @@ import Component from '@reactions/component';
 import Lottie from "lottie-react-web";
 import loading from '../../assets/js/loading.json';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
+import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 import axios from "axios";
 import { Popover, Pane, Button } from 'evergreen-ui';
 import Cookies from "universal-cookie";
@@ -139,13 +141,13 @@ export default function ControlledExpansionPanels(props) {
                 var t = document.createTextNode("p {text-align: start;}");
                 x.appendChild(t);
                 document.head.appendChild(x);
-              }} >EN</button>
+              }} > <FormatAlignLeftIcon   style={{fontSize:16}}  /> </button>
               <button className='btn_lang' onClick={() => {
                 var x = document.createElement("STYLE");
                 var t = document.createTextNode("p {text-align: end;}");
                 x.appendChild(t);
                 document.head.appendChild(x);
-              }} >Ar</button>
+              }} ><FormatAlignRightIcon  style={{fontSize:16}}  /></button>
             </div>
             <div id='lang' style={{ width: '100%', paddingBottom: 35, fontSize: 16, paddingTop: 10, height: 150, overflow: 'auto' }}  >
 

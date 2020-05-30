@@ -1,5 +1,7 @@
 import React from 'react';
 import { Tab, Tabs, Row, Col } from 'react-bootstrap';
+import Component from "@reactions/component";
+import { Checkbox, SelectMenu, Button } from 'evergreen-ui';
 import loading from '../../assets/js/loading.json';
 import axios from "axios";
 import Cookies from "universal-cookie";
@@ -45,7 +47,21 @@ class Tasks extends React.Component {
       allday: '',
       spin: false,
       commentLenght: [],
-      noti:[],
+      noti: [],
+      status1: 'new',
+      checked: true,
+      status2: 'in progress',
+      checked2: true,
+      status3: 'closed',
+      checked3: true,
+      status4: 'approved',
+      checked4: true,
+      status5: 'rejected',
+      checked5: true,
+      status6: 'archived',
+      checked6: true,
+      selected_AssignFrom: '',
+      selected_AssignTo:''
     }
     this.filterRef = React.createRef();
   }
@@ -109,26 +125,26 @@ class Tasks extends React.Component {
       .catch(err => {
         // console.log("error:", err);
       });
-    
-    
-    
-      const urlParams = new URLSearchParams(window.location.search);
-      const myParam = urlParams.get('id');
-      axios
-        .get(Host + `tasks/task/${myParam}?params={"from_date":0,"to_date":0}`, {
-          headers: headers,
-        })
-        .then(res => {
-       this.setState({noti:res.data.data})
-   
-       
-        })
-    
-   
-    }
 
 
-  
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const myParam = urlParams.get('id');
+    axios
+      .get(Host + `tasks/task/${myParam}?params={"from_date":0,"to_date":0}`, {
+        headers: headers,
+      })
+      .then(res => {
+        this.setState({ noti: res.data.data })
+
+
+      })
+
+
+  }
+
+
+
 
   getTasks() {
     var headers = {
@@ -230,40 +246,33 @@ class Tasks extends React.Component {
   render() {
     let filter = this.state.tasks.filter((dog) => {
 
-      return (dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search))
+      return (
+        (dog.task_title.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+          dog.status.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+          dog.issuer_user.name.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+          dog.created_at.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+          dog.assigners.map((p, i) => (p.name)).toString().toLowerCase().includes(this.state.search.toString().toLowerCase())) &&
+        (dog.status === this.state.status1 || dog.status === this.state.status2 || dog.status === this.state.status3 ||
+          dog.status === this.state.status4 || dog.status === this.state.status5 || dog.status === this.state.status6
+          ) && 
+          
+     (  
+        //  dog.assigners.map((p, i) => (p.user_id)).toString().toLowerCase().includes(this.state.selected_AssignTo)  ||
+      dog.issuer_user.id.toString().toLowerCase().includes(this.state.selected_AssignFrom)
+      ) &&
+(
+  dog.assigners.map((p, i) => (p.user_id)).toString().toLowerCase().includes(this.state.selected_AssignTo)
+)
+
+
+      )
+
+
+
 
     })
 
-    let filter2 = this.state.new.filter((dog) => {
 
-      return (dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search))
-
-    })
-    let filter3 = this.state.inprogress.filter((dog) => {
-
-      return (dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search))
-
-    })
-    let filter4 = this.state.closed.filter((dog) => {
-
-      return (dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search))
-
-    })
-    let filter5 = this.state.approved.filter((dog) => {
-
-      return (dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search))
-
-    })
-    let filter6 = this.state.rejected.filter((dog) => {
-
-      return (dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search))
-
-    })
-    let filter7 = this.state.archived.filter((dog) => {
-
-      return (dog.task_title.includes(this.state.search) || dog.status.includes(this.state.search))
-
-    })
     return (
       <Context.Consumer>
         {ctx => {
@@ -276,21 +285,132 @@ class Tasks extends React.Component {
             ) {
               return (
                 <div >
+              
+                  <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }} >
+
+                    <Checkbox
+                      label="New"
+                      checked={this.state.checked}
+                      onChange={e => {
+                        this.setState({ checked: e.target.checked })
+                        console.log(this.state.checked);
+
+                        if (this.state.checked === false) {
+                          this.setState({ status1: 'new' })
+                          console.log(this.state.status1);
+                        } else {
+                          this.setState({ status1: '' })
+                          console.log(this.state.status1 === undefined);
+                        }
+                      }}
+                    />
+                    <Checkbox
+                      label="In Progress"
+                      checked={this.state.checked2}
+                      onChange={e => {
+                        console.log(this.state.checked2);
+                        this.setState({ checked2: e.target.checked })
+                        if (this.state.checked2 === false) {
+                          this.setState({ status2: 'in progress' })
+                        } else {
+                          this.setState({ status2: '' })
+                        }
+                      }}
+                    />
+                    <Checkbox
+                      label="Closed"
+                      checked={this.state.checked3}
+                      onChange={e => {
+                        this.setState({ checked3: e.target.checked })
+                        if (this.state.checked3 === false) {
+                          this.setState({ status3: 'closed' })
+                        } else {
+                          this.setState({ status3: '' })
+                        }
+                      }}
+                    />
+                    <Checkbox
+                      label="Approved"
+                      checked={this.state.checked4}
+                      onChange={e => {
+                        this.setState({ checked4: e.target.checked })
+                        if (this.state.checked4 === false) {
+                          this.setState({ status4: 'approved' })
+                        } else {
+                          this.setState({ status4: '' })
+                        }
+                      }}
+                    />
+                    <Checkbox
+                      label="Rejected"
+                      checked={this.state.checked5}
+                      onChange={e => {
+                        this.setState({ checked5: e.target.checked })
+                        if (this.state.checked5 === false) {
+                          this.setState({ status5: 'rejected' })
+                        } else {
+                          this.setState({ status5: '' })
+                        }
+                      }}
+                    />
+                    <Checkbox
+                      label="Archived"
+                      checked={this.state.checked6}
+                      onChange={e => {
+                        this.setState({ checked6: e.target.checked })
+                        if (this.state.checked6 === false) {
+                          this.setState({ status6: 'archived' })
+                        } else {
+                          this.setState({ status6: '' })
+                        }
+                      }}
+                    /></div>
+
+                  <div style={{ display: 'flex' }}  >
+                    <Component initialState={{ selected: null ,lab:""}}>
+                      {({ setState, state }) => (
+                        <SelectMenu
+                          title="Select name"
+                          options={this.state.users}
+                          selected={state.selected}
+                          onSelect={item => {
+                            setState({ selected: item.value,lab:item.label })
+                            this.setState({ selected_AssignFrom: item.value })
+                          }}
+                        >
+                          <Button>{state.lab || 'Created By '}</Button>
+                        </SelectMenu>
+                      )}
+                    </Component>
+                    <Component initialState={{ selected: null,lab:"" }}>
+                      {({ setState, state }) => (
+                        <SelectMenu
+                          title="Select name"
+                          options={this.state.users}
+                          selected={state.selected}
+                          onSelect={item => {
+                            setState({ selected: item.value,lab:item.label })
+                            this.setState({ selected_AssignTo: item.value })
+                          }}
+                        >
+                          <Button>{state.lab || 'Assigned To'}</Button>
+                        </SelectMenu>
+                      )}
+                    </Component>
+                  </div>
+
+
+
+
 
 
                   <div id="apfot" ref={this.myRef}  >
-
-            
-                    <div style={{
-                      display: 'flex', flexDirection: 'column', justifyContent: 'center'
-                      , width: '100%'
-                    }}>
-
-
+                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
                       <div id='searchdiv' >
                         <input type='text' onChange={this.handleInput} placeholder='Search' id='search' />
                         <div style={{ display: 'flex', marginLeft: '10%' }}  >
                           <RangePicker onDateSelected={this.onDateChanges}
+                            selectTime={true}
                             onClose={() => {
                               this.componentDidMount();
                             }} />
@@ -309,7 +429,6 @@ class Tasks extends React.Component {
                               this.today();
                             }, 200);
                           }} id="date_btn" > Today  </div>
-
                         </div>
                       </div>
 
@@ -327,122 +446,34 @@ class Tasks extends React.Component {
                           null
                         )}
 
-                      <Tabs defaultActiveKey="All Tasks" style={{ display: 'flex', width: '98%', justifyContent: 'space-between' }}  >
-                        <Tab eventKey="All Tasks" title="All Tasks" style={{ marginTop: 20 }} >
-                          <NewTask onProfileDelete={() => this.componentDidMount()} users={this.state.users} key={1} />
-                          <Row style={{ width: '100%', display: 'flex' }}   >
 
-{this.state.noti.length >0 ?(
-    <Col md={6}   >
+                      <NewTask onProfileDelete={() => this.componentDidMount()} users={this.state.users} key={1} />
+                      <span className='filter_span' > {filter.length} Tasks </span>
+                      <Row style={{ width: '100%', display: 'flex' }}   >
+                        {this.state.noti.length > 0 ? (
+                          <Col md={6}   >
+                            <Task_noti id='nnn' name={this.state.noti[0].task_title} time={this.state.noti[0].dead_time} desc={this.state.noti[0].description} id={this.state.noti[0].task_id}
+                              users={this.state.users} assigners={this.state.noti[0].assigners} onProfileDelete={() => this.componentDidMount()}
+                              status={this.state.noti[0].status} allstatus={this.state.statuses} createdby={this.state.noti[0].issuer_user.name}
+                              created_at={this.state.noti[0].created_at} assigned={this.state.noti[0].assigners.map((p, i) => (p.user_id))}
+                              comments_count={this.state.noti[0].comments_count} />
+                          </Col>
+                        ) : (null)}
 
-    <Task_noti  id='nnn'  name={this.state.noti[0].task_title} time={this.state.noti[0].dead_time} desc={this.state.noti[0].description}
-      created_at={this.state.noti[0].created_at} id={this.state.noti[0].task_id} users={this.state.users} assigners={this.state.noti[0].assigners}
-      onProfileDelete={() => this.componentDidMount()} status={this.state.noti[0].status} allstatus={this.state.statuses}
-      createdby={this.state.noti[0].issuer_user.name} created_at={this.state.noti[0].created_at} assigned={this.state.noti[0].assigners.map((p, i) => (p.user_id))} comments_count={this.state.noti[0].comments_count} />
+                        {filter.map((item, i) => (
+                          <Col md={6} key={i} id='noti_Get'  >
+                            <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
+                              id={item.task_id} users={this.state.users} assigners={item.assigners}
+                              onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
+                              createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
 
-  </Col>
-):(null)}
+                          </Col>
+                        ))}
 
-                            {filter.map((item, i) => (
-                              <Col md={6} key={i} id='noti_Get'  >
-
-                                <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
-                                  created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
-                                  onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
-
-                              </Col>
-                            ))}
-
-                          </Row>
-
-                        </Tab>
-
-                        <Tab eventKey="new" title="New">
-
-                          <Row style={{ width: '100%', display: 'flex' }}   >
-                            {filter2.map((item, i) => (
-
-                              <Col md={6} key={i}  >
-                                <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
-                                  created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
-                                  onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
-                              </Col>
-                            ))}
-                          </Row>
-                        </Tab>
-                        <Tab eventKey="In progress" title=" In progress">
-
-                          <Row style={{ width: '100%', display: 'flex' }}   >
-                            {filter3.map((item, i) => (
-
-                              <Col md={6} key={i}  >
-                                <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
-                                  created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
-                                  onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
-                              </Col>
-                            ))}
-                          </Row>
-                        </Tab>
-                        <Tab eventKey="Closed" title=" Closed">
-                          <Row style={{ width: '100%', display: 'flex' }}   >
-                            {filter4.map((item, i) => (
-                              <Col md={6} key={i}  >
-
-                                <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
-                                  created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
-                                  onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
-                              </Col>
-                            ))}
-                          </Row>
-                        </Tab>
-                        <Tab eventKey="Approved" title=" Approved">
-                          <Row style={{ width: '100%', display: 'flex' }}   >
-                            {filter5.map((item, i) => (
-                              <Col md={6} key={i}  >
-                                <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
-                                  created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
-                                  onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
-                              </Col>
-                            ))}
-                          </Row>
-                        </Tab>
-                        <Tab eventKey="reject" title="Rejected" >
-                          <Row style={{ width: '100%', display: 'flex' }}   >
-                            {filter6.map((item, i) => (
-                              <Col md={6} key={i}  >
-                                <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
-                                  created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
-                                  onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
-                              </Col>
-                            ))}
-                          </Row>
-                        </Tab>
-                        <Tab eventKey="Archived" title="Archived">
-                          <Row style={{ width: '100%', display: 'flex' }}   >
-                            {filter7.map((item, i) => (
-                              <Col md={6} key={i}  >
-                                <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
-                                  created_at={item.created_at} id={item.task_id} users={this.state.users} assigners={item.assigners}
-                                  onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                                  createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
-                              </Col>
-                            ))}
-                          </Row>
-                        </Tab>
-
-                      </Tabs>
-
+                      </Row>
                     </div>
-
                   </div>
                 </div>
-
               );
             } else if (this.state.check === "" || this.state.watt === "yes") {
               return (
