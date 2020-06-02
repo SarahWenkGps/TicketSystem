@@ -15,6 +15,7 @@ import RangePicker from "react-range-picker";
 import moment from 'moment';
 import Task_noti from '../../component/common/Task_noti';
 import Context from "../../assets/js/context";
+import { ChromePicker } from 'react-color'
 const cookies = new Cookies();
 
 class Tasks extends React.Component {
@@ -61,7 +62,9 @@ class Tasks extends React.Component {
       status6: 'archived',
       checked6: true,
       selected_AssignFrom: '',
-      selected_AssignTo:''
+      selected_AssignTo: '',
+      selected_taskType: '',
+      type: [],
     }
     this.filterRef = React.createRef();
   }
@@ -126,7 +129,27 @@ class Tasks extends React.Component {
         // console.log("error:", err);
       });
 
-
+    axios({
+      url: Host + `task_types`,
+      method: "GET",
+      headers: headers,
+    })
+      .then(res => {
+        if (res.data.status === false) {
+          cookies.remove("token");
+          window.location.href = "/"
+        } else {
+          let arr = [];
+          for (let index = 0; index < res.data.data.length; index++) {
+            let obj = {
+              label: res.data.data[index].name,
+              value: res.data.data[index].task_type_id,
+            }
+            arr.push(obj)
+          }
+          this.setState({ type: arr })
+        }
+      })
 
     const urlParams = new URLSearchParams(window.location.search);
     const myParam = urlParams.get('id');
@@ -254,16 +277,18 @@ class Tasks extends React.Component {
           dog.assigners.map((p, i) => (p.name)).toString().toLowerCase().includes(this.state.search.toString().toLowerCase())) &&
         (dog.status === this.state.status1 || dog.status === this.state.status2 || dog.status === this.state.status3 ||
           dog.status === this.state.status4 || dog.status === this.state.status5 || dog.status === this.state.status6
-          ) && 
-          
-     (  
-        //  dog.assigners.map((p, i) => (p.user_id)).toString().toLowerCase().includes(this.state.selected_AssignTo)  ||
-      dog.issuer_user.id.toString().toLowerCase().includes(this.state.selected_AssignFrom)
-      ) &&
-(
-  dog.assigners.map((p, i) => (p.user_id)).toString().toLowerCase().includes(this.state.selected_AssignTo)
-)
+        ) &&
 
+        (
+          dog.issuer_user.id.toString().toLowerCase().includes(this.state.selected_AssignFrom)
+        ) &&
+        (
+          dog.assigners.map((p, i) => (p.user_id)).toString().toLowerCase().includes(this.state.selected_AssignTo)
+        )
+        && (
+          // dog.task_type.toString().toLowerCase().includes(this.state.selected_taskType)
+       dog.task_type!==null?(dog.task_type.toString().toLowerCase().includes(this.state.selected_taskType)):(<div></div>)
+        )
 
       )
 
@@ -285,7 +310,7 @@ class Tasks extends React.Component {
             ) {
               return (
                 <div >
-              
+
                   <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }} >
 
                     <Checkbox
@@ -367,36 +392,130 @@ class Tasks extends React.Component {
                     /></div>
 
                   <div style={{ display: 'flex' }}  >
-                    <Component initialState={{ selected: null ,lab:""}}>
-                      {({ setState, state }) => (
+                    <Component initialState={{ selected: '' }} >
+                      {({ state, setState }) => (
                         <SelectMenu
-                          title="Select name"
-                          options={this.state.users}
+                          isMultiSelect
                           selected={state.selected}
+                          title="Select names"
+                          options={this.state.users}
                           onSelect={item => {
-                            setState({ selected: item.value,lab:item.label })
+                            const selected = [state.selected, item.value]
                             this.setState({ selected_AssignFrom: item.value })
+                            const selectedItems = selected
+                            const selectedItemsLength = selectedItems.length
+                            let selectedNames = ''
+                            setState({
+                              selected,
+                              selectedNames
+                            })
+                          }}
+                          onDeselect={item => {
+                            const deselectedItemIndex = state.selected.indexOf(item.value)
+                            const selectedItems = state.selected.filter(
+                              (_item, i) => i !== deselectedItemIndex
+                            )
+                            const selectedItemsLength = selectedItems.length
+                            let selectedNames = ''
+                            if (selectedItemsLength === 0) {
+                              selectedNames = ''
+                            } else if (selectedItemsLength === 1) {
+                              selectedNames = selectedItems.toString()
+                            } else if (selectedItemsLength > 1) {
+                              selectedNames = selectedItemsLength.toString() + ' selected...'
+                            }
+                            setState({ selected: selectedItems, selectedNames })
+                            this.setState({ selected_AssignFrom: "" })
                           }}
                         >
-                          <Button>{state.lab || 'Created By '}</Button>
+                          <Button  >{'Created By '}</Button>
                         </SelectMenu>
                       )}
                     </Component>
-                    <Component initialState={{ selected: null,lab:"" }}>
-                      {({ setState, state }) => (
+                    <Component initialState={{ selected: '' }} >
+                      {({ state, setState }) => (
                         <SelectMenu
-                          title="Select name"
-                          options={this.state.users}
+                          isMultiSelect
                           selected={state.selected}
+                          title="Select names"
+                          options={this.state.users}
                           onSelect={item => {
-                            setState({ selected: item.value,lab:item.label })
+                            const selected = [state.selected, item.value]
                             this.setState({ selected_AssignTo: item.value })
+                            const selectedItems = selected
+                            const selectedItemsLength = selectedItems.length
+                            let selectedNames = ''
+                            setState({
+                              selected,
+                              selectedNames
+                            })
+                          }}
+                          onDeselect={item => {
+                            const deselectedItemIndex = state.selected.indexOf(item.value)
+                            const selectedItems = state.selected.filter(
+                              (_item, i) => i !== deselectedItemIndex
+                            )
+                            const selectedItemsLength = selectedItems.length
+                            let selectedNames = ''
+                            if (selectedItemsLength === 0) {
+                              selectedNames = ''
+                            } else if (selectedItemsLength === 1) {
+                              selectedNames = selectedItems.toString()
+                            } else if (selectedItemsLength > 1) {
+                              selectedNames = selectedItemsLength.toString() + ' selected...'
+                            }
+                            setState({ selected: selectedItems, selectedNames })
+                            this.setState({ selected_AssignTo: "" })
                           }}
                         >
-                          <Button>{state.lab || 'Assigned To'}</Button>
+                          <Button  >{'Assigned To '}</Button>
                         </SelectMenu>
                       )}
                     </Component>
+                    <Component initialState={{ selected: '' }} >
+                      {({ state, setState }) => (
+                        <SelectMenu
+                          isMultiSelect
+                          selected={state.selected}
+                          title="Select names"
+                          options={this.state.type}
+                          onSelect={item => {
+                            const selected = [state.selected, item.value]
+                            this.setState({ selected_taskType: item.label })
+                            const selectedItems = selected
+                            const selectedItemsLength = selectedItems.length
+                            let selectedNames = ''
+                            setState({
+                              selected,
+                              selectedNames
+                            })
+                          }}
+                          onDeselect={item => {
+                            const deselectedItemIndex = state.selected.indexOf(item.value)
+                            const selectedItems = state.selected.filter(
+                              (_item, i) => i !== deselectedItemIndex
+                            )
+                            const selectedItemsLength = selectedItems.length
+                            let selectedNames = ''
+                            if (selectedItemsLength === 0) {
+                              selectedNames = ''
+                            } else if (selectedItemsLength === 1) {
+                              selectedNames = selectedItems.toString()
+                            } else if (selectedItemsLength > 1) {
+                              selectedNames = selectedItemsLength.toString() + ' selected...'
+                            }
+                            setState({ selected: selectedItems, selectedNames })
+                            this.setState({ selected_taskType: "" })
+                          }}
+                        >
+                          <Button>{'Task Type'}</Button>
+                        </SelectMenu>
+                      )}
+                    </Component>
+
+                  
+
+
                   </div>
 
 
@@ -447,25 +566,26 @@ class Tasks extends React.Component {
                         )}
 
 
-                      <NewTask onProfileDelete={() => this.componentDidMount()} users={this.state.users} key={1} />
+                      <NewTask onProfileDelete={() => this.componentDidMount()} users={this.state.users} key={1} type={this.state.type} />
                       <span className='filter_span' > {filter.length} Tasks </span>
                       <Row style={{ width: '100%', display: 'flex' }}   >
                         {this.state.noti.length > 0 ? (
-                          <Col md={6}   >
+                          <Col md={6} style={{ marginTop: 40 }}   >
                             <Task_noti id='nnn' name={this.state.noti[0].task_title} time={this.state.noti[0].dead_time} desc={this.state.noti[0].description} id={this.state.noti[0].task_id}
                               users={this.state.users} assigners={this.state.noti[0].assigners} onProfileDelete={() => this.componentDidMount()}
                               status={this.state.noti[0].status} allstatus={this.state.statuses} createdby={this.state.noti[0].issuer_user.name}
                               created_at={this.state.noti[0].created_at} assigned={this.state.noti[0].assigners.map((p, i) => (p.user_id))}
-                              comments_count={this.state.noti[0].comments_count} />
+                              comments_count={this.state.noti[0].comments_count}  type={this.state.type} task_type={this.state.noti[0].task_type} monitor={this.state.noti[0].monitor}   />
                           </Col>
                         ) : (null)}
 
                         {filter.map((item, i) => (
-                          <Col md={6} key={i} id='noti_Get'  >
-                            <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
+                          <Col md={6} key={i} id='noti_Get'  style={{ marginTop: 40 }}    >
+                            <Tasknwe1  name={item.task_title} time={item.dead_time} desc={item.description}
                               id={item.task_id} users={this.state.users} assigners={item.assigners}
                               onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
-                              createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count} />
+                              createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count}
+                              type={this.state.type} task_type={item.task_type} monitor={item.monitor} />
 
                           </Col>
                         ))}

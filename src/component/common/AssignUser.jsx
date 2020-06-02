@@ -20,7 +20,7 @@ class AssingUser extends React.Component {
         this.state = {
 
             data: [],
-            id: '',
+            id: [],
             spin: false,
             assigned :this.props.assigned
         };
@@ -32,26 +32,20 @@ class AssingUser extends React.Component {
             this.setState({ spin: true })
             var headers = {
                 jwt: cookies.get("token")
-            };
-            var counter= 0;
-            for (var i = 0; i < this.state.id.length; i++) {
-               
+            };                          
                 axios({
                     url: Host + `tasks/assign/${this.props.id}`,
                     method: "POST",
                     headers: headers,
                     data: {
-                        user_id: this.state.id[i],
+                        users_id: this.state.id,
     
                     },
                 })
     
                     .then(res => {
-                        counter++;
-                        // console.log('ff',res);
-                        // console.log('this.state.id.length',this.state.id.length);
-                        // console.log('counter',counter);
-                        if (this.state.id.length === counter) {
+                  
+                    
                             if (res.data.status === true) {
                                 toast.success("user assigned successfully")
                                 const { onProfileDelete } = this.props.onProfileDelete
@@ -61,7 +55,7 @@ class AssingUser extends React.Component {
                                 this.setState({ spin: false })
                                 toast.error(res.data.data.message.text)
                             }
-                        }
+                    
     
     
                     })
@@ -69,7 +63,7 @@ class AssingUser extends React.Component {
                         this.setState({ spin: false })
                         // console.log(error.data);
                     });
-            }
+          
             
         }
         else{

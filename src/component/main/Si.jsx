@@ -21,7 +21,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Redirect } from 'react-router-dom';
 import Context from '../../assets/js/context';
-import Home from './Home';
+import Task_type from './Task_type';
 import Users from './Users';
 import Tasks from './Tasks';
 import UserInfo from '../common/UserInfo';
@@ -32,8 +32,8 @@ import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
 function rendertitile(props) {
-  if (props.match.path === '/Home') {
-    return (<div> Main  </div>)
+  if (props.match.path === '/Task_type') {
+    return (<div> Task Type  </div>)
   }
 
   else if (props.match.path === '/Users') {
@@ -154,8 +154,8 @@ export default function PersistentDrawerLeft(props) {
     setOpen(false);
   };
   const renderPage = (props) => {
-    if (props.match.path === '/Home') {
-      return (<Home />)
+    if (props.match.path === '/Task_type') {
+      return (<Task_type />)
     }
     else if (props.match.path === '/Users') {
       return (<Users />)
@@ -321,7 +321,16 @@ export default function PersistentDrawerLeft(props) {
                     </List>
                   </NavLink>
 
+                  <NavLink to='/Task_type' activeClassName='active' >
+                    <List className='sidefect' style={{ paddingBottom: 0 }} >
 
+                      <ListItem >
+                        <img src={require('../../assets/img/list.png')} alt='img' id='side_img' />
+                        <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Task Type</span></ListItemText>
+                      </ListItem>
+
+                    </List>
+                  </NavLink>
                     <NavLink to='/Notifications' activeClassName='active' >
                       <List className='sidefect' style={{ paddingBottom: 0 }} >
 

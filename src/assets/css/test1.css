@@ -350,7 +350,20 @@ transform: scale(1.2);
     font-weight: 500;
     width: 20%;
 }
-
+.task_type_style{
+  width: 100%;
+  background-color: #dfe0e0;
+  border-radius: 3px;
+  /* box-shadow: 1px 1px 0px 0px #c7c7c7; */
+  text-align: center;
+  color: #5F5C6D;
+  /* font-size: 17px; */
+  font-weight: 700;
+}
+#head_task{
+  display: flex;
+  
+}
 button{
   outline: none;
 }

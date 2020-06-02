@@ -51,13 +51,15 @@ class NewTask extends React.Component {
             data: [],
             checked: '',
             task_name: '',
-            user: '',
+            user: [],
             description: '',
             dead_time: '',
             startDate: new Date(),
             isShown: false,
             spin: false,
-            id: ''
+            id: '',           
+            type_id:'',
+            moniter:''
         };
     }
 
@@ -67,41 +69,46 @@ class NewTask extends React.Component {
         });
     };
 
+
+  
+
     assign_user(id) {
         var headers = {
             jwt: cookies.get("token")
         };
-        var counter= 0;
-        for (var i = 0; i < this.state.user.length; i++) {
-        axios({
-            url: Host + `tasks/assign/${id}`,
-            method: "POST",
-            headers: headers,
-            data: {
-                user_id: this.state.user[i],
+       
+      
+            axios({
+                url: Host + `tasks/assign/${id}`,
+                method: "POST",
+                headers: headers,
+                data: {
+                    users_id: this.state.user,
 
-            },
-        })
-
-            .then(res => {
-                counter++;
-                // console.log(response.data);
-                if (this.state.user.length === counter) {
-                if (res.data.status === true) {
-                    toast.success("user assigned successfully")
-                    const { onProfileDelete } = this.props
-                    onProfileDelete()
-                    this.setState({ isShown: false, spin: false, task_name: "", description: "", startDate: "" })
-                }
-                else if (res.data.status === false) {
-                    toast.error(res.data.data.message.text)
-                    this.setState({ spin: false })
-                }}
+                },
             })
-            .catch(function (error) {
-                this.setState({ spin: false })
-            });
-    }}
+
+                .then(res => {
+                 
+                    // console.log(response.data);
+                 
+                        if (res.data.status === true) {
+                            toast.success("user assigned successfully")
+                            const { onProfileDelete } = this.props
+                            onProfileDelete()
+                            this.setState({ isShown: false, spin: false, task_name: "", description: "", startDate: "" })
+                        }
+                        else if (res.data.status === false) {
+                            toast.error(res.data.data.message.text)
+                            this.setState({ spin: false })
+                        }
+                  
+                })
+                .catch(function (error) {
+                    this.setState({ spin: false })
+                });
+        
+    }
 
 
     newtask = async () => {
@@ -131,19 +138,31 @@ class NewTask extends React.Component {
                     task_name: this.state.task_name,
                     description: this.state.description,
                     dead_time: correctedDeadTime,
-                    main_task_id: '0'
+                    main_task_id: '0',
+                    task_type_id:this.state.type_id
                 },
             })
             if (res.data.status === true) {
                 if (this.state.user.length > 0) {
                     this.assign_user(res.data.data.data.task_id);
-
+                }
+                if (this.state.moniter.length > 0) {
+                    this.moniter(res.data.data.data.task_id);
+                    axios({
+                        url: Host + `tasks/assign/monitor/${res.data.data.data.task_id}`,
+                        method: "PUT",
+                        headers: headers,
+                        data: {
+                            monitor_user_id: this.state.moniter,
+        
+                        },
+                    })
                 }
                 else {
                     const { onProfileDelete } = this.props
                     onProfileDelete()
                     toast.success('task created successfully')
-                    this.setState({ isShown: false, spin: false, task_name: "", description: "", startDate: "" })
+                    this.setState({ isShown: false, spin: false, task_name: "", description: "", startDate: "" ,moniter:""})
                 }
 
 
@@ -211,67 +230,103 @@ class NewTask extends React.Component {
                                                 <textarea id='field3' value={this.state.description} onChange={(e) =>
                                                     this.setState({ description: e.target.value })} />  </div>
                                         </div>
+                                        <div id='dailog' >
+                                            <div id='dialog_title' >  Task type </div>
+                                            <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
+                                                <Component initialState={{ selected: null }}>
+                                                    {({ setState, state }) => (
+                                                        <SelectMenu
+                                                            title="Select type"
+                                                            options={this.props.type}
+                                                            selected={state.selected}
+                                                            onSelect={item => {
+                                                                setState({ selected: item.value })
+                                                                this.setState({type_id:item.value})
+                                                            }}
+                                                        >
+                                                            <Button  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ 'Select Type...'}</Button>
+                                                        </SelectMenu>
+                                                    )}
+                                                </Component>
+                                            </div>
+                                        </div>
 
 
                                         <div id='dailog' >
                                             <div id='dialog_title' >  Assign to </div>
 
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
-{/* <button onClick={()=>{
-    console.log(this.state.user.length);
-    console.log(this.state.user);
-}} >ddd</button> */}
-                                            <Component initialState={{ selected: '' }} >
-                                            {({ state, setState }) => (
-                                                <SelectMenu
-                                                    isMultiSelect
-                                                    selected={state.selected}
-                                                    title="Select multiple names"
-                                                    options={this.props.users}
-                                                    onSelect={item => {
-                                                        const selected = [...state.selected, item.value]
-                                                        this.setState({ user: selected })
-                                                        const selectedItems = selected
-                                                        const selectedItemsLength = selectedItems.length
-                                                        let selectedNames = ''
-                                                        if (selectedItemsLength === 0) {
-                                                            selectedNames = ''
-                                                        } else if (selectedItemsLength === 1) {
-                                                            selectedNames = selectedItems.toString()
-                                                        } else if (selectedItemsLength > 1) {
-                                                            selectedNames = selectedItemsLength.toString() + ' selected...'
-                                                        }
-                                                        setState({
-                                                            selected,
-                                                            selectedNames
-                                                        })
-                                                    }}
-                                                    onDeselect={item => {
-                                                        const deselectedItemIndex = state.selected.indexOf(item.value)
-                                                        const selectedItems = state.selected.filter(
-                                                            (_item, i) => i !== deselectedItemIndex
-                                                        )
-                                                        const selectedItemsLength = selectedItems.length
-                                                        let selectedNames = ''
-                                                        if (selectedItemsLength === 0) {
-                                                            selectedNames = ''
-                                                        } else if (selectedItemsLength === 1) {
-                                                            selectedNames = selectedItems.toString()
-                                                        } else if (selectedItemsLength > 1) {
-                                                            selectedNames = selectedItemsLength.toString() + ' selected...'
-                                                        }
-                                                        setState({ selected: selectedItems, selectedNames })
-                                                        this.setState({ user: selectedItems })
+                                                <Component initialState={{ selected: '' }} >
+                                                    {({ state, setState }) => (
+                                                        <SelectMenu
+                                                            isMultiSelect
+                                                            selected={state.selected}
+                                                            title="Select multiple names"
+                                                            options={this.props.users}
+                                                            onSelect={item => {
+                                                                const selected = [...state.selected, item.value]
+                                                                this.setState({ user: selected })
+                                                                const selectedItems = selected
+                                                                const selectedItemsLength = selectedItems.length
+                                                                let selectedNames = ''
+                                                                if (selectedItemsLength === 0) {
+                                                                    selectedNames = ''
+                                                                } else if (selectedItemsLength === 1) {
+                                                                    selectedNames = selectedItems.toString()
+                                                                } else if (selectedItemsLength > 1) {
+                                                                    selectedNames = selectedItemsLength.toString() + ' selected...'
+                                                                }
+                                                                setState({
+                                                                    selected,
+                                                                    selectedNames
+                                                                })
+                                                            }}
+                                                            onDeselect={item => {
+                                                                const deselectedItemIndex = state.selected.indexOf(item.value)
+                                                                const selectedItems = state.selected.filter(
+                                                                    (_item, i) => i !== deselectedItemIndex
+                                                                )
+                                                                const selectedItemsLength = selectedItems.length
+                                                                let selectedNames = ''
+                                                                if (selectedItemsLength === 0) {
+                                                                    selectedNames = ''
+                                                                } else if (selectedItemsLength === 1) {
+                                                                    selectedNames = selectedItems.toString()
+                                                                } else if (selectedItemsLength > 1) {
+                                                                    selectedNames = selectedItemsLength.toString() + ' selected...'
+                                                                }
+                                                                setState({ selected: selectedItems, selectedNames })
+                                                                this.setState({ user: selectedItems })
 
-                                                    }}
-                                                >
-                                                    <Button style={{width:'95%',outline:'none',display:'flex',justifyContent:'center'}}  >Assigm to... </Button>
-                                                </SelectMenu>
-                                            )}
-                                        </Component>
+                                                            }}
+                                                        >
+                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >Assign to... </Button>
+                                                        </SelectMenu>
+                                                    )}
+                                                </Component>
                                             </div>
                                         </div>
 
+                                        <div id='dailog' >
+                                            <div id='dialog_title' >  Task Moniter  </div>
+                                            <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
+                                                <Component initialState={{ selected: null }}>
+                                                    {({ setState, state }) => (
+                                                        <SelectMenu
+                                                            title="Select Moniter"
+                                                            options={this.props.users}
+                                                            selected={state.selected}
+                                                            onSelect={item => {
+                                                                setState({ selected: item.value })
+                                                                this.setState({moniter:item.value})
+                                                            }}
+                                                        >
+                                                            <Button  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ 'Select Moniter'}</Button>
+                                                        </SelectMenu>
+                                                    )}
+                                                </Component>
+                                            </div>
+                                        </div>
 
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '50%' }}>
                                             <span style={{ color: '#517c92', marginBottom: '.5rem', fontWeight: '600', fontSize: 15 }}>Set Deadline</span>
@@ -288,17 +343,6 @@ class NewTask extends React.Component {
 
                                             </Component>
                                         </div>
-
-
-                                       
-
-
-
-
-
-
-
-
 
                                         {this.state.checked === true ? (
                                             <div id='dailog' style={{ marginTop: 15, height: 'auto' }} >

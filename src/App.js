@@ -8,7 +8,6 @@ import Host from './assets/js/Host';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './assets/css/test1.css';
-import Home from './component/main/Home';
 import axios from "axios";
 import ReactNotifications from 'react-browser-notifications';
 import img from './assets/img/Logo.png';
@@ -240,7 +239,7 @@ class App extends React.Component {
         }} >
           <Switch>
             <Route exact path='/' component={Login} />
-            <Route path='/Home' component={Home} />
+        <Route path='/Task_type' component={Si} />
             <Route path='/Users' component={Si} />
             <Route path='/Dashboard' component={Si} />
             <Route path='/Tasks' component={Si} />

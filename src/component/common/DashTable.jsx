@@ -57,7 +57,7 @@ render() {
         rowCursorHand: true,
         sort: true,
         filter: false,
-         rowsPerPageOptions:[5,10,50,100],
+         rowsPerPageOptions:[15,30,50,100],
         download:true,
         rowHover:true
       };

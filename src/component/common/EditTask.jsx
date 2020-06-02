@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pane, Dialog, Button } from 'evergreen-ui';
+import { Pane, Dialog, Button,SelectMenu } from 'evergreen-ui';
 import Component from '@reactions/component';
 import axios from "axios";
 import Cookies from "universal-cookie";
@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import Lottie from "lottie-react-web";
 import loading from '../../assets/js/loading.json';
 import "react-toastify/dist/ReactToastify.css";
-import Select from 'react-select';
 import DatePicker from "react-datepicker";
 import { registerLocale, setDefaultLocale } from  "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -56,7 +55,9 @@ class EditTask extends React.Component {
             description: '',
             dead_time: '',
             status_id: '',
-            startDate: ''
+            startDate: '',
+            type_id:'',
+            moniter:[]
         };
     }
 
@@ -79,7 +80,7 @@ class EditTask extends React.Component {
     
 }}>sss,,,,,</button> */}
                 <Component initialState={{ isShown: false, spin: false,time:'',
-                    description:'',task_title:'',status_id:'',status:'' }}    >
+                    description:'',task_title:'',status_id:'',status:'',task_type1:'' }}    >
                     {({ state, setState }) => (
                         <Pane >
                             <Dialog
@@ -101,7 +102,7 @@ class EditTask extends React.Component {
                                     }
                                    
 
-                                    axios({
+                                     axios({
                                         url: Host + `tasks/task/${this.props.id}`,
                                         method: "PUT",
                                         headers: headers,
@@ -109,20 +110,24 @@ class EditTask extends React.Component {
                                             task_title:state.task_title,
                                             description: state.description,
                                             dead_time:correctedDeadTime,
-                                            // status_id:state.status
+                                            task_type_id:this.state.type_id
                                         },
                                     })
 
                                         .then(res => {
-                                            axios({
-                                                url: Host + `tasks/change_status/${this.props.id}`,
-                                                method: "PUT",
-                                                headers: headers,
-                                                data: {                                             
-                                                    status_id:state.status
-                                                },
-                                            })
+                                        
                                             if (res.data.status === true) {
+                                             if (this.state.moniter.length === undefined) {
+                                                axios({
+                                                    url: Host + `tasks/assign/monitor/${this.props.id}`,
+                                                    method: "PUT",
+                                                    headers: headers,
+                                                    data: {
+                                                        monitor_user_id:this.state.moniter,                                   
+                                                    },
+                                                })  
+                                             }
+                                                                                                                                                                                      
                                                 setState({ isShown: false, spin: false })
                                                 toast.success('task updated successfully')
                                                 const { onProfileDelete } = this.props.onProfileDelete
@@ -158,18 +163,49 @@ class EditTask extends React.Component {
                                                     setState({ description: e.target.value })} />  </div>
                                         </div>
 
-
-                                        {/* <div id='dailog' >
-                                            <div id='dialog_title' >  Update Status  </div>
+                                        <div id='dailog' >
+                                            <div id='dialog_title' >  Task type </div>
 
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
-                                                <Select onChange={e => { setState({ status: e.value }); }}
-                                                    defaultValue={state.status_id}
-                                                    value={selectedOption}
-                                                    styles={customStyles}
-                                                    options={this.props.allstatus}
-                                                /> </div>
-                                        </div> */}
+                                                <Component initialState={{ selected: state.task_type1 }}>
+                                                    {({ setState, state }) => (
+                                                        <SelectMenu
+                                                            title="Select type"
+                                                            options={this.props.type}
+                                                            selected={state.selected}
+                                                            onSelect={item => {
+                                                                setState({ selected: item.value })
+                                                                this.setState({type_id:item.value})
+                                                            }}
+                                                        >
+                                                            <Button  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ 'Select Type...'}</Button>
+                                                        </SelectMenu>
+                                                    )}
+                                                </Component>
+                                            </div>
+                                        </div>
+                                        <div id='dailog' >
+                                            <div id='dialog_title' >  Task Moniter  </div>
+                                            <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
+                                                <Component initialState={{ selected: null }}>
+                                                    {({ setState, state }) => (
+                                                        <SelectMenu
+                                                            title="Select Moniter"
+                                                            options={this.props.users}
+                                                            selected={state.selected}
+                                                            onSelect={item => {
+                                                                setState({ selected: item.value })
+                                                                this.setState({moniter:item.value})
+                                                             
+                                                            }}
+                                                        >
+                                                            <Button  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ 'Select Moniter'}</Button>
+                                                        </SelectMenu>
+                                                    )}
+                                                </Component>
+                                            </div>
+                                        </div>
+                                   
 
                                         <div id='dailog' style={{ marginTop: 15, height: 'auto' }} >
                                             <div id='dialog_title' > Deadline Date    </div>
@@ -210,10 +246,13 @@ class EditTask extends React.Component {
 
                             <Button onClick={() => { setState({ isShown: true })
                          let getIndex=this.props.allstatus.findIndex((element) => element.label === this.props.status)
-                         setState({status_id:this.props.allstatus[getIndex] , time:this.props.time ,description:this.props.desc ,task_title:this.props.title
+                         let getIndex1=this.props.type.findIndex((element) => element.label === this.props.task_type)
+                         setState({status_id:this.props.allstatus[getIndex] , time:this.props.time ,description:this.props.desc ,task_title:this.props.title,
+                            type:this.props.type,task_type1:this.props.type[getIndex1]
                         })
-                         console.log(this.props.status);
-                         console.log(state.status_id);
+               console.log(state.task_type1);
+               
+                     
                          
                          
                         }}  >  <i className="fas fa-edit" id="edit"></i></Button>

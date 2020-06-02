@@ -18,7 +18,7 @@ import EditUser from '../common/EditUser';
 import loading from '../../assets/js/loading.json';
 import Permitions from '../common/Permitions';
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-
+import moment from 'moment';
 const cookies = new Cookies();
 const customStyles = {
   option: (provided, state) => ({
@@ -67,6 +67,9 @@ class Users extends Component {
       dep_nm: '',
       roles:[],
       con_password:'',
+      TelePhone:'',
+      phone:'',
+      Birthdate:'',
     };
 
   }
@@ -167,6 +170,9 @@ class Users extends Component {
               name: res.data.data[index].name,
               depa: (res.data.data[index].department.name==="unknown"?(null):(res.data.data[index].department.name)),
               email: res.data.data[index].email,
+              ip_phone:res.data.data[index].ip_phone,
+              phone:res.data.data[index].phone,
+              birthdate:(res.data.data[index].birthdate===null?(null):(moment(res.data.data[index].birthdate).format('L'))),
               Permitions: (<Permitions ids={res.data.data[index].user_id} roles={this.state.roles}  permitions={res.data.data[index].premissions.map((p,i)=>(
                 p.role_id ))}
                 onProfileDelete1={() => this.componentDidMount()}/>),
@@ -249,7 +255,8 @@ class Users extends Component {
               edit: (
                 <EditUser ids={res.data.data[index].user_id} onProfileDelete={() => this.componentDidMount()}
                   name={res.data.data[index].name} email={res.data.data[index].email}
-                  department={res.data.data[index].department.name} status={res.data.data[index].enabled} data1={this.state.dapts} />
+                  department={res.data.data[index].department.name} status={res.data.data[index].enabled} data1={this.state.dapts}
+                  phone={res.data.data[index].phone}  ip_phone={res.data.data[index].ip_phone}  birthdate={res.data.data[index].birthdate}  />
               )
             };
             arr.push(obj);
@@ -279,6 +286,9 @@ class Users extends Component {
       { name: " Name  ", field: "name" },
       { name: " Department ", field: "depa" },
       { name: "Email", field: "email" },
+      { name: "Telephone", field: "ip_phone" },
+      { name: "Phone", field: "phone" },
+      { name: "Birthdate", field: "birthdate" },
       { name: "Permitions", field: "Permitions" },
       { name: " Password", field: "pass" },
       { name: " Status", field: "status" },
@@ -371,6 +381,9 @@ class Users extends Component {
                                     department_id: this.state.dep_nm,
                                     email: this.state.email,
                                     name: this.state.name,
+                                    phone:this.state.phone,
+                                    ip_phone:this.state.TelePhone,
+                                    birthdate:this.state.Birthdate
 
                                   }
                                 })
@@ -383,7 +396,7 @@ class Users extends Component {
                                     else if (response.data.status === true) {
                                       setState({ isShown: false, spin: false })
                                       this.componentDidMount();
-                                      this.setState({username:"",password:"",dep_nm:"",email:"",name:"",con_password:""})
+                                      this.setState({username:"",password:"",dep_nm:"",email:"",name:"",con_password:"",phone:"",Birthdate:"",TelePhone:""})
                                     }
                                   })
                                   .catch(function (error) {
@@ -410,15 +423,8 @@ class Users extends Component {
                                   </div>
 
                                   <div id='dailog'>
-                                    <div id='dialog_title'>
-                                      Name
-                                  </div>
-                                    <div
-                                      style={{
-                                        width: "80%",
-                                        textAlign: "center"
-                                      }}
-                                    >
+                                    <div id='dialog_title'>Name</div>
+                                    <div style={{ width: "80%", textAlign: "center" }}>
                                       <input
                                         type="text"
                                         id="field2"
@@ -466,12 +472,40 @@ class Users extends Component {
                                     </div>
                                   </div>
 
-
                                   <div id='dailog' >
-                                    <div id='dialog_title' >
-                                      Department
+                                    <div id='dialog_title'> Phone </div>
+                                    <div style={{ width: "80%", textAlign: "center" }}>
+                                      <input type="number" id="field2" placeholder="964**********"
+                                        value={this.state.phone}
+                                        onChange={e => {
+                                          this.setState({ phone: e.target.value })
+                                        }} />
+                                    </div>
                                   </div>
 
+                                  <div id='dailog' >
+                                    <div id='dialog_title'> TelePhone </div>
+                                    <div style={{ width: "80%", textAlign: "center" }}>
+                                      <input type="number" id="field2" placeholder="***"
+                                        value={this.state.TelePhone}
+                                        onChange={e => {
+                                          this.setState({ TelePhone: e.target.value })
+                                        }} />
+                                    </div>
+                                  </div>
+                                  <div id='dailog' >
+                                    <div id='dialog_title'> Birthdate </div>
+                                    <div style={{ width: "80%", textAlign: "center" }}>
+                                      <input type="date" id="field2" placeholder="Birthdate"
+                                        value={this.state.Birthdate}
+                                        onChange={e => {
+                                          this.setState({ Birthdate: e.target.value })
+                                        }} />
+                                    </div>
+                                  </div>
+
+                                  <div id='dailog' >
+                                    <div id='dialog_title' > Department </div>
                                     <div style={{ width: "80%", textAlign: "center", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                       <Select onChange={e => { this.setState({ dep_nm: e.value }); }}
                                         value={selectedOption}
