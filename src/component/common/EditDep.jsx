@@ -84,7 +84,8 @@ class Edit_Dep extends React.Component {
                                           //  console.log('data',this.props.fun);
                     }                    
                     })
-                    .catch(function (error) {
+                    .catch(err => {
+                      toast.error("Network Error")
                       setState({ spin: false });
                     });
 

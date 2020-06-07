@@ -23,7 +23,8 @@ import { Redirect } from 'react-router-dom';
 import Context from '../../assets/js/context';
 import Task_type from './Task_type';
 import Users from './Users';
-import Tasks from './Tasks';
+import Tasks from './Tasks/Tasks';
+import NoteTask from './Tasks/NoteTask';
 import UserInfo from '../common/UserInfo';
 import Department from './Department';
 import Dashboard from './Dashboard';
@@ -53,6 +54,9 @@ function rendertitile(props) {
 
 
   else if (props.match.path === '/Tasks') {
+    return (<div>  Tasks   </div>)
+  }
+  else if (props.match.path === '/NoteTask') {
     return (<div>  Tasks   </div>)
   }
   else if (props.match.path === '/List') {
@@ -172,6 +176,9 @@ export default function PersistentDrawerLeft(props) {
     else if (props.match.path === '/Department') {
       return (<Department />)
     }
+    else if (props.match.path === '/NoteTask') {
+      return (<NoteTask />)
+    }
   }
   return (
 
@@ -274,12 +281,10 @@ export default function PersistentDrawerLeft(props) {
 
                 <NavLink to='/Dashboard' activeClassName='active' >
                   <List className='sidefect' style={{ paddingBottom: 0 }} >
-
                     <ListItem >
                       <img src={require('../../assets/img/home.png')} alt='img' id='side_img' />
                       <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Dashboard</span></ListItemText>
                     </ListItem>
-
                   </List>
                 </NavLink>
 
@@ -287,58 +292,53 @@ export default function PersistentDrawerLeft(props) {
                   <div></div>
                 ) : (<NavLink to='/Users' activeClassName='active' >
                   <List className='sidefect' style={{ paddingBottom: 0 }} >
-
                     <ListItem >
                       <img src={require('../../assets/img/user.png')} alt='img' id='side_img' />
                       <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Users</span></ListItemText>
                     </ListItem>
-
                   </List>
                 </NavLink>)}
+
                 {JSON.parse(localStorage.getItem("roles").includes("3"))===false && JSON.parse(localStorage.getItem("roles").includes("4"))===false  ? (
                   <div></div>
                 ) : (
                 <NavLink to='/Department' activeClassName='active' >
                   <List className='sidefect' style={{ paddingBottom: 0 }} >
-
                     <ListItem >
                       <img src={require('../../assets/img/web.png')} alt='img' id='side_img' />
                       <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Departments</span></ListItemText>
                     </ListItem>
-
                   </List>
                 </NavLink>)}
 
                
                 <NavLink to='/Tasks' activeClassName='active' >
                     <List className='sidefect' style={{ paddingBottom: 0 }} >
-
                       <ListItem >
                         <img src={require('../../assets/img/list.png')} alt='img' id='side_img' />
                         <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Tasks</span></ListItemText>
-                      </ListItem>
-
+                     </ListItem>
                     </List>
                   </NavLink>
 
+                  {JSON.parse(localStorage.getItem("roles").includes("3"))===false && JSON.parse(localStorage.getItem("roles").includes("4"))===false  ? (
+                  <div></div>
+                ) : (
                   <NavLink to='/Task_type' activeClassName='active' >
                     <List className='sidefect' style={{ paddingBottom: 0 }} >
-
                       <ListItem >
                         <img src={require('../../assets/img/list.png')} alt='img' id='side_img' />
                         <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Task Type</span></ListItemText>
                       </ListItem>
-
                     </List>
-                  </NavLink>
+                  </NavLink>)}
+
                     <NavLink to='/Notifications' activeClassName='active' >
                       <List className='sidefect' style={{ paddingBottom: 0 }} >
-
                         <ListItem >
                           <img src={require('../../assets/img/bell.png')} alt='img' id='side_img' />
                           <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Notifications</span></ListItemText>
                         </ListItem>
-
                       </List>
                     </NavLink>
 

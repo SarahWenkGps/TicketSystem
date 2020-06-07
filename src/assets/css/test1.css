@@ -22,6 +22,11 @@
    /* height: 160px; */
 
 }
+td {
+  border-right: solid 1px #E7E8E8; 
+  border-left: solid 1px #E7E8E8;
+}
+
 #date_btn1{
   cursor: pointer;
   height: 43px;
@@ -415,6 +420,39 @@ a {
 
 .active .sidefect {
   background-color: #8282826b;
+}
+.attach_icon{
+  margin-right: 10px;
+  background-image: linear-gradient(to bottom, #FFFFFF, #F4F5F7);
+  box-shadow: inset 0 0 0 1px rgba(67, 90, 111, 0.14), inset 0 -1px 1px 0 rgba(67, 90, 111, 0.06);
+  color: #425A70;
+  background-color: white;
+  height: 32px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.attach_icon:hover{
+  background-image: none;
+  background-color: rgba(16, 112, 202, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(67, 90, 111, 0.14), inset 0 1px 1px 0 rgba(67, 90, 111, 0.06);
+}
+.attach_icon:active{
+  background-image: none;
+  background-color: rgba(16, 112, 202, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(67, 90, 111, 0.14), inset 0 1px 1px 0 rgba(67, 90, 111, 0.06);
+  transform: scale(1.05);
+}
+.file_show{
+  margin-top: 20px;
+  color: #61adc3;
+  font-size: 17px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 #main_sec {
   display: flex;

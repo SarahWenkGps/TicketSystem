@@ -127,7 +127,8 @@ class Users extends Component {
         // console.log('sss', res.data.data);
       })
       .catch(err => {
-        // console.log("error:", err);
+      
+       
       });
 
 
@@ -269,9 +270,7 @@ class Users extends Component {
         }
       })
       .catch(err => {
-        // console.log("error:", err);
-
-
+        this.componentDidMount()                 
       });
   }
 
@@ -399,10 +398,9 @@ class Users extends Component {
                                       this.setState({username:"",password:"",dep_nm:"",email:"",name:"",con_password:"",phone:"",Birthdate:"",TelePhone:""})
                                     }
                                   })
-                                  .catch(function (error) {
-                                    setState({ spin: false })
-                                    // console.log(error.data);
-
+                                  .catch(err => {
+                                    toast.error("Network Error")
+                                    setState({ spin: false });
                                   });
                               }}
                             >
@@ -484,7 +482,7 @@ class Users extends Component {
                                   </div>
 
                                   <div id='dailog' >
-                                    <div id='dialog_title'> TelePhone </div>
+                                    <div id='dialog_title'> Ip Phone </div>
                                     <div style={{ width: "80%", textAlign: "center" }}>
                                       <input type="number" id="field2" placeholder="***"
                                         value={this.state.TelePhone}

@@ -110,9 +110,8 @@ class Task_type extends Component {
       }
       })
       .catch(err => {
-        // console.log("error:", err);
-       
-      
+        toast.error("Network Error")
+     
       });
   }
 
@@ -140,7 +139,8 @@ class Task_type extends Component {
      toast.success("deleted successfully")
       }
       })
-      .catch(function(err) {
+      .catch(err => {
+        toast.error("Network Error")
        
       });
   }
@@ -223,9 +223,9 @@ class Task_type extends Component {
         this.componentDidMount();
       }
       })
-      .catch(function(error) {
-         setState({ spin: false });
-    
+      .catch(err => {
+        toast.error("Network Error")
+        setState({ spin: false });
       });
                             }}}
                           >

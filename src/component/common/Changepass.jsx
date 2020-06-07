@@ -77,10 +77,10 @@ class Changwpass extends React.Component {
                                                 }
 
                                             })
-                                            .catch(function (error) {
-                                                setState({ spin: false });
-
-                                            });
+                                            .catch(err => {
+                                                toast.error("Network Error")
+                                      
+                                              });
                                     }
                                 }}
                             >

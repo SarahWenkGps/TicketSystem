@@ -112,9 +112,8 @@ class Departmant extends Component {
       }
       })
       .catch(err => {
-        // console.log("error:", err);
-       
-      
+        toast.error("Network Error")
+  
       });
   }
 
@@ -142,8 +141,9 @@ class Departmant extends Component {
      toast.success("deleted successfully")
       }
       })
-      .catch(function(err) {
-       
+      .catch(err => {
+        toast.error("Network Error")
+        
       });
   }
 
@@ -225,9 +225,9 @@ class Departmant extends Component {
         this.componentDidMount();
       }
       })
-      .catch(function(error) {
-         setState({ spin: false });
-    
+      .catch(err => {
+        toast.error("Network Error")
+        setState({ spin: false });
       });
                             }}}
                           >

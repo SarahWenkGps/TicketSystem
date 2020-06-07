@@ -141,11 +141,10 @@ class Login extends Component {
                                                     
                                                         setState({ spin: false })
                                                      } })
-                                                    .catch(function (err) {
+                                                     .catch(err => {
+                                                        toast.error("Network Error")
                                                         setState({ spin: false });
-                                    //    console.log(err.data);
-                                       
-                                                    });
+                                                      });
                                             }                                        
                                         } >
 

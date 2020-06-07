@@ -30,7 +30,8 @@ class DashTable extends React.Component{
             fontWeight:'700' 
           },
           root: {
-            textAlign: 'center'
+            textAlign: 'center',
+          
           }
         },
      
@@ -42,12 +43,14 @@ render() {
       { name: " # ", field: "hash" },
         { name: " Name  ", field: "name" },
         { name: "All Tasks  ", field: "alltasks" },
+        {name: "Issuing Tasks" ,field:"issuingTasks"},
         { name: "New", field: "new" },
         { name: "In Progress", field: "inprogress" },
         { name: "Closed", field: "closed" },
         { name: "Approved  ", field: "approved" },
         { name: "Rejected  ", field: "rejected" },
         { name: "Archived", field: "archived" },
+
       ];
   
       const options = {
@@ -59,7 +62,8 @@ render() {
         filter: false,
          rowsPerPageOptions:[15,30,50,100],
         download:true,
-        rowHover:true
+        rowHover:true,
+        border:true
       };
     
   return (

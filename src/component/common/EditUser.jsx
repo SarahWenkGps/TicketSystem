@@ -80,9 +80,9 @@ class EditUser extends React.Component {
           status: this.props.status,
           depas: '',
           dep_nm: '',
-          phone:this.props.phone,
-          ip_phone:this.props.ip_phone,
-          birthdate:this.props.birthdate,
+          phone: this.props.phone,
+          ip_phone: this.props.ip_phone,
+          birthdate: this.props.birthdate,
         }}>
           {({ state, setState }) => (
             <Pane>
@@ -121,9 +121,9 @@ class EditUser extends React.Component {
                       name: state.name,
                       email: state.email,
                       department_id: state.dep_nm,
-                      phone:state.phone,
-                      ip_phone:state.ip_phone,
-                      birthdate:state.bithdate
+                      phone: state.phone,
+                      ip_phone: state.ip_phone,
+                      birthdate: state.birthdate
                     },
                   })
 
@@ -139,7 +139,8 @@ class EditUser extends React.Component {
                         //  console.log('data',this.props.fun);
                       }
                     })
-                    .catch(function (error) {
+                    .catch(err => {
+                      toast.error("Network Error")
                       setState({ spin: false });
                     });
 
@@ -173,36 +174,36 @@ class EditUser extends React.Component {
                       </div>
                     </div>
                     <div id='dailog' >
-                                    <div id='dialog_title'> Phone </div>
-                                    <div style={{ width: "80%", textAlign: "center" }}>
-                                      <input type="number" id="field2" placeholder="964**********"
-                                        value={state.phone}
-                                        onChange={e => {
-                                          setState({ phone: e.target.value })
-                                        }} />
-                                    </div>
-                                  </div>
+                      <div id='dialog_title'> Phone </div>
+                      <div style={{ width: "80%", textAlign: "center" }}>
+                        <input type="number" id="field2" placeholder="964**********"
+                          value={state.phone}
+                          onChange={e => {
+                            setState({ phone: e.target.value })
+                          }} />
+                      </div>
+                    </div>
 
-                                  <div id='dailog' >
-                                    <div id='dialog_title'> TelePhone </div>
-                                    <div style={{ width: "80%", textAlign: "center" }}>
-                                      <input type="number" id="field2" placeholder="***"
-                                        value={state.ip_phone}
-                                        onChange={e => {
-                                         setState({ ip_phone: e.target.value })
-                                        }} />
-                                    </div>
-                                  </div>
-                                  <div id='dailog' >
-                                    <div id='dialog_title'> Bithdate </div>
-                                    <div style={{ width: "80%", textAlign: "center" }}>
-                                      <input type="date" id="field2" placeholder="Bithdate"
-                                        value={state.bithdate}
-                                        onChange={e => {
-                                         setState({ bithdate: e.target.value })
-                                        }} />
-                                    </div>
-                                  </div>
+                    <div id='dailog' >
+                      <div id='dialog_title'> Ip Phone </div>
+                      <div style={{ width: "80%", textAlign: "center" }}>
+                        <input type="number" id="field2" placeholder="***"
+                          value={state.ip_phone}
+                          onChange={e => {
+                            setState({ ip_phone: e.target.value })
+                          }} />
+                      </div>
+                    </div>
+                    <div id='dailog' >
+                      <div id='dialog_title'> Birthdate </div>
+                      <div style={{ width: "80%", textAlign: "center" }}>
+                        <input type="date" id="field2" placeholder="Birthdate"
+                          value={state.birthdate}
+                          onChange={e => {
+                            setState({ birthdate: e.target.value })
+                          }} />
+                      </div>
+                    </div>
 
                     <div id='dailog' >
                       <div id='dialog_title' > Department </div>
@@ -240,9 +241,9 @@ class EditUser extends React.Component {
                     name: this.props.name,
                     email: this.props.email,
                     department: this.props.department,
-                    phone:this.props.phone,
-                    ip_phone:this.props.ip_phone,
-                    birthdate:this.props.birthdate,
+                    phone: this.props.phone,
+                    ip_phone: this.props.ip_phone,
+                    birthdate: this.props.birthdate,
                   })
                 }}
 

@@ -113,7 +113,7 @@ class Notifications extends React.Component {
         <Row style={{ width: '100%', display: 'flex' }}   >
           {this.state.data.map((p, i) => (
             <Col md={6} key={i}  onClick={()=>{
-              window.location.href = `/Tasks?id=${p.task_id}`
+              window.location.href = `/NoteTask?id=${p.task_id}`
               this.setRead(p.activity_id);
                 }}   >
 

@@ -57,9 +57,10 @@ class Permitions extends React.Component {
                     onProfileDelete1();
                 }
             })
-            .catch(function (error) {
-
-            });
+            .catch(err => {
+                toast.error("Network Error")
+              
+              });
     }
 
 

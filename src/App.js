@@ -161,7 +161,8 @@ class App extends React.Component {
           this.setState({ rejected: rejecteddata.length })
 
         })
-        .catch(function (error) {
+        .catch(err => {
+         
 
         });
 
@@ -239,12 +240,13 @@ class App extends React.Component {
         }} >
           <Switch>
             <Route exact path='/' component={Login} />
-        <Route path='/Task_type' component={Si} />
+            <Route path='/Task_type' component={Si} />
             <Route path='/Users' component={Si} />
             <Route path='/Dashboard' component={Si} />
             <Route path='/Tasks' component={Si} />
             <Route path='/Notifications' component={Si} />
             <Route path='/Department' component={Si} />
+            <Route path='/NoteTask' component={Si} />
           </Switch>
         </Context.Provider>
       </BrowserRouter>

@@ -15,6 +15,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import RangePicker from "react-range-picker";
 import moment from 'moment';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import { toast } from "react-toastify";
 const cookies = new Cookies();
 class Dashboard extends Component {
   constructor(props) {
@@ -158,7 +159,7 @@ class Dashboard extends Component {
             })
               .then(response => {
                 // console.log(response.data.data);
-                let data = response.data.data
+                let data = response.data.data.allTasks
                 this.setState({
                   alldata: data
                 }) 
@@ -196,6 +197,7 @@ class Dashboard extends Component {
                   hash: [index + 1],
                   name: res.data.data[index].name,
                   alltasks: this.state.alldata.length,
+                  issuingTasks:response.data.data.issuingTasks,
                   new: this.state.new.length,
                   inprogress: this.state.inprogress.length,
                   closed: this.state.closed.length,
@@ -216,9 +218,8 @@ class Dashboard extends Component {
         }
       })
       .catch(err => {
-        // console.log("error:", err);
-
-
+        toast.error("Network Error")
+      
       });
   }
 

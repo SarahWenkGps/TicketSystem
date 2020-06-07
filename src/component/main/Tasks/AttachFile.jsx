@@ -1,27 +1,27 @@
 import React from 'react';
-import { Pane, Dialog } from 'evergreen-ui';
+import { Pane, Dialog, FilePicker } from 'evergreen-ui';
 import Component from '@reactions/component';
 import axios from "axios";
 import Cookies from "universal-cookie";
-import Host from "../../assets/js/Host";
+import Host from "../../../assets/js/Host";
 import Lottie from "lottie-react-web";
-import loading from '../../assets/js/loading.json';
+import loading from '../../../assets/js/loading.json';
 import { toast } from "react-toastify";
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 import "react-toastify/dist/ReactToastify.css";
 const cookies = new Cookies();
-class Edit_typetask extends React.Component {
+class AttachFile extends React.Component {
   constructor(props) {
     super(props);
     this.myRef = React.createRef();
     this.state = {
       value: {
-       
+
         verified: "",
-        data: [],
-        Usersdata:[],
-        Users:[],
+
+
         check: "login",
-        name:'',
+        File: '',
         spin: false,
 
       }
@@ -36,8 +36,8 @@ class Edit_typetask extends React.Component {
 
         <Component initialState={{
           isShown: false, spin: false,
-          name:this.props.name,
-         
+          department: this.props.department,
+
         }}>
           {({ state, setState }) => (
             <Pane>
@@ -45,66 +45,63 @@ class Edit_typetask extends React.Component {
                 isShown={state.isShown}
                 onCloseComplete={() => setState({ isShown: false })}
                 hasHeader={false}
+                topOffset={100}
                 shouldCloseOnOverlayClick={false}
                 confirmLabel="Save"
                 cancelLabel="Cancel"
                 onConfirm={() => {
-                    if (state.name.length <3) {
-                        toast.warning('name mast be more than 3 char')
-                      }
-                      else{
-                 
+
+
                   setState({ spin: true })
 
                   var headers = {
                     jwt: cookies.get("token")
                   };
-                 
-              
+                  let formData = new FormData();
+                  formData.append("files", this.state.File);
                   axios({
-                    url: Host + `task_types/${this.props.ids}`,
-                    method: "PUT",
+                    url: Host + `tasks/task_files/${this.props.id}`,
+                    method: "POST",
                     headers: headers,
-                    data: {
-                        name:state.name,
-                     
-                    },
+                    data: formData
                   })
-              
+
                     .then(response => {
-                      if (response.data.status===false) {
+                      if (response.data.status === false) {
                         toast.error(response.data.data.text)
                         setState({ spin: false })
-                    }
-                    else if (response.data.status===true) {
-                      toast.success("Info updated successfully");
-                                            setState({isShown: false,spin:false })
-                                            const { onProfileDelete } = this.props
-                                            onProfileDelete()
-                                          //  console.log('data',this.props.fun);
-                    }                    
+                      }
+                      else if (response.data.status === true) {
+                        toast.success("Info updated successfully");
+                        setState({ isShown: false, spin: false })
+                        const { onProfileDelete } = this.props.onProfileDelete
+                        onProfileDelete()
+                        //  console.log('data',this.props.fun);
+                      }
                     })
-                 
                     .catch(err => {
                       toast.error("Network Error")
                       setState({ spin: false });
                     });
 
-                }}}
+                }}
               >
                 <div>
-                  <div id="new_itemnav"> Edit  Name </div>
+                  <div id="new_itemnav"> Attach File </div>
                   <div className="mod1">
                     <div id='dailog' style={{ marginTop: 15 }} >
                       <div id='dialog_title'>
-                      Name </div>
+                        File </div>
                       <div style={{ width: "80%", textAlign: "center" }}>
-                        <input type="text" id="field2" placeholder="name"
-                          value={state.name}
-                          onChange={e => {
-                            setState({ name: e.target.value })
-
-                          }} />
+                        <FilePicker
+                          multiple
+                          width={250}
+                          marginBottom={32}
+                          onChange={files =>
+                            this.setState({ File: files[0], file1: files.length })
+                          }
+                          placeholder="Select the file here!"
+                        />
                       </div>
                     </div>
 
@@ -124,14 +121,14 @@ class Edit_typetask extends React.Component {
                 </div>
               </Dialog>
 
-              <div
+              <div className="attach_icon"
                 onClick={() => {
-                  setState({ isShown: true , name:this.props.name, })
+                  setState({ isShown: true, department: this.props.department, })
 
                 }}
 
               >
-                <i className="fas fa-edit" id="edit"></i>
+                <AttachFileIcon />
               </div>
             </Pane>
           )}
@@ -141,4 +138,4 @@ class Edit_typetask extends React.Component {
     );
   }
 }
-export default Edit_typetask;
+export default AttachFile;
