@@ -96,7 +96,7 @@ class NewTask extends React.Component {
                             toast.success("user assigned successfully")
                             const { onProfileDelete } = this.props
                             onProfileDelete()
-                            this.setState({ isShown: false, spin: false, task_name: "", description: "", startDate: "" })
+                            this.setState({ isShown: false, spin: false, task_name: "", description: "", startDate: new Date() })
                         }
                         else if (res.data.status === false) {
                             toast.error(res.data.data.message.text)
@@ -163,7 +163,7 @@ class NewTask extends React.Component {
                     const { onProfileDelete } = this.props
                     onProfileDelete()
                     toast.success('task created successfully')
-                    this.setState({ isShown: false, spin: false, task_name: "", description: "", startDate: "" ,moniter:""})
+                    this.setState({ isShown: false, spin: false, task_name: "", description: "", startDate: new Date() ,moniter:""})
                 }
 
 
@@ -199,7 +199,7 @@ class NewTask extends React.Component {
                             <Dialog
                                 isShown={this.state.isShown}
 
-                                onCloseComplete={() => this.setState({ isShown: false })}
+                                onCloseComplete={() => this.setState({ isShown: false,checked:false })}
                                 hasHeader={false}
                                 shouldCloseOnOverlayClick={false}
                                 confirmLabel="Save"

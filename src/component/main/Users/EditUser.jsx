@@ -3,10 +3,10 @@ import { Pane, Dialog } from 'evergreen-ui';
 import Component from '@reactions/component';
 import axios from "axios";
 import Cookies from "universal-cookie";
-import Host from "../../assets/js/Host";
+import Host from "../../../assets/js/Host";
 import Lottie from "lottie-react-web";
 import Select from "react-select";
-import loading from '../../assets/js/loading.json';
+import loading from '../../../assets/js/loading.json';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -185,7 +185,7 @@ class EditUser extends React.Component {
                     </div>
 
                     <div id='dailog' >
-                      <div id='dialog_title'> Ip Phone </div>
+                      <div id='dialog_title'> Ext. </div>
                       <div style={{ width: "80%", textAlign: "center" }}>
                         <input type="number" id="field2" placeholder="***"
                           value={state.ip_phone}

@@ -218,7 +218,7 @@ class UserInfo extends React.Component {
                       </div>
                     </div>
                     <div id='dailog' >
-                      <div id='dialog_title'> Ip Phone </div>
+                      <div id='dialog_title'> Ext.  </div>
                       <div style={{ width: "80%", textAlign: "center" }}>
                         <input type="number" id="field2" placeholder="***"
                           value={this.state.ip_phone}

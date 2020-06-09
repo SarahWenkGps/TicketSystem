@@ -9,6 +9,7 @@ import Lottie from "lottie-react-web";
 import loading from '../../../assets/js/loading.json';
 import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
+import moment from 'moment';
 import { registerLocale, setDefaultLocale } from  "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -248,9 +249,10 @@ class EditTask extends React.Component {
                             <Button onClick={() => { setState({ isShown: true })
                          let getIndex=this.props.allstatus.findIndex((element) => element.label === this.props.status)
                          let getIndex1=this.props.type.findIndex((element) => element.label === this.props.task_type)
-                         setState({status_id:this.props.allstatus[getIndex] , time:this.props.time ,description:this.props.desc ,task_title:this.props.title,
+                         setState({status_id:this.props.allstatus[getIndex] , time:moment(this.props.time).format("LLL") ,description:this.props.desc ,task_title:this.props.title,
                             type:this.props.type,task_type1:this.props.type[getIndex1]
                         })
+              this.setState({startDate:''})
               
                
                      

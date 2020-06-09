@@ -22,12 +22,12 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Redirect } from 'react-router-dom';
 import Context from '../../assets/js/context';
 import Task_type from './Task_type';
-import Users from './Users';
+import Users from './Users/Users';
 import Tasks from './Tasks/Tasks';
 import NoteTask from './Tasks/NoteTask';
 import UserInfo from '../common/UserInfo';
-import Department from './Department';
-import Dashboard from './Dashboard';
+import Department from './Department/Department';
+import Dashboard from './Dashboard/Dashboard';
 import Notifications from './Notifications';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
@@ -288,16 +288,14 @@ export default function PersistentDrawerLeft(props) {
                   </List>
                 </NavLink>
 
-                {JSON.parse(localStorage.getItem("roles").includes("1"))===false && JSON.parse(localStorage.getItem("roles").includes("2"))===false  ? (
-                  <div></div>
-                ) : (<NavLink to='/Users' activeClassName='active' >
+              <NavLink to='/Users' activeClassName='active' >
                   <List className='sidefect' style={{ paddingBottom: 0 }} >
                     <ListItem >
                       <img src={require('../../assets/img/user.png')} alt='img' id='side_img' />
                       <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Users</span></ListItemText>
                     </ListItem>
                   </List>
-                </NavLink>)}
+                </NavLink>
 
                 {JSON.parse(localStorage.getItem("roles").includes("3"))===false && JSON.parse(localStorage.getItem("roles").includes("4"))===false  ? (
                   <div></div>

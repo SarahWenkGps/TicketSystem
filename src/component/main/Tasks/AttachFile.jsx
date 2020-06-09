@@ -22,6 +22,7 @@ class AttachFile extends React.Component {
 
         check: "login",
         File: '',
+      
         spin: false,
 
       }
@@ -58,7 +59,12 @@ class AttachFile extends React.Component {
                     jwt: cookies.get("token")
                   };
                   let formData = new FormData();
-                  formData.append("files", this.state.File);
+                  // let files = [this.state.File[0] ,this.state.File[1]]
+
+                for (let i = 0; i < 6; i++) {
+                    formData.append("files", this.state.File[i]);
+                } 
+                 
                   axios({
                     url: Host + `tasks/task_files/${this.props.id}`,
                     method: "POST",
@@ -87,6 +93,7 @@ class AttachFile extends React.Component {
                 }}
               >
                 <div>
+               
                   <div id="new_itemnav"> Attach File </div>
                   <div className="mod1">
                     <div id='dailog' style={{ marginTop: 15 }} >
@@ -96,12 +103,15 @@ class AttachFile extends React.Component {
                         <FilePicker
                           multiple
                           width={250}
-                          marginBottom={32}
-                          onChange={files =>
-                            this.setState({ File: files[0], file1: files.length })
-                          }
+
+                          onChange={files =>{
+                            this.setState({ File: files, file: files.length })
+                          
+                            
+                          }}
                           placeholder="Select the file here!"
                         />
+                    
                       </div>
                     </div>
 

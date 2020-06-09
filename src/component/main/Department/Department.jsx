@@ -3,16 +3,16 @@ import axios from "axios";
 import Component from "@reactions/component";
 import { Pane, Dialog } from "evergreen-ui";
 import Cookies from "universal-cookie";
-import Host from "../../assets/js/Host";
+import Host from "../../../assets/js/Host";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Lottie from "lottie-react-web";
-import Context from "../../assets/js/context";
+import Context from "../../../assets/js/context";
 import MaterialDatatable from "material-datatable";
 import { Redirect } from "react-router-dom";
-import loading from '../../assets/js/loading.json';
+import loading from '../../../assets/js/loading.json';
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import EditDep from "../common/EditDep";
+import EditDep from "./EditDep";
 const cookies = new Cookies();
 
 

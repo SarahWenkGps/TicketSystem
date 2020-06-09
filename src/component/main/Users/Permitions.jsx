@@ -3,7 +3,7 @@ import { SelectMenu, Pane, Button } from 'evergreen-ui';
 import Component from '@reactions/component';
 import axios from "axios";
 import Cookies from "universal-cookie";
-import Host from "../../assets/js/Host";
+import Host from "../../../assets/js/Host";
 import "react-toastify/dist/ReactToastify.css";
 import "react-datepicker/dist/react-datepicker.css";
 import Tooltip from '@material-ui/core/Tooltip';
