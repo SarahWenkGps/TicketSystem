@@ -173,7 +173,7 @@ export default function ControlledExpansionPanels(props) {
 
                 )}</div>
              
-<div id='icons_headerTask' > {props.geofences.geo_name !== null?(<LocationOnIcon style={{fontSize:18,marginRight:10}} />):(null)}     {props.comments_count>0 ?( <div> <CommentIcon style={{fontSize:18,color:'#3e83b2'}} /> {props.comments_count} </div>  ):(null)} </div>
+<div id='icons_headerTask' > {props.geofences.geo_name !== "null" && props.geofences.geo_name !== null   ?(<LocationOnIcon style={{fontSize:18,marginRight:10}} />):(null)}     {props.comments_count>0 ?( <div> <CommentIcon style={{fontSize:18,color:'#3e83b2'}} /> {props.comments_count} </div>  ):(null)} </div>
             </div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgb(225, 227, 229)' }}  >
@@ -199,7 +199,7 @@ export default function ControlledExpansionPanels(props) {
             </div>
            
             <div className='location' >
-            {props.geofences.geo_name !== null? (
+            {props.geofences.geo_name !== "null"  && props.geofences.geo_name !== null  ? (
             <div style={{display:'flex',alignItems:'center'}} onClick={()=>{
               window.open(`https://maps.google.com/?q=${props.geofences.geo_y},${props.geofences.geo_x}`, '_blank');
             }}   >  <LocationOnIcon  style={{fontSize:20}} />   {props.geofences.geo_name}   </div>  

@@ -61,10 +61,10 @@ class NewTask extends React.Component {
             id: '',
             type_id: '',
             moniter: '',
-            dimentions: [],
+            dimentions: [null,null],
             // priority_id:[],
-            geo_name: '',
-            weight:'',
+            geo_name: null,
+            weight:2,
         };
     }
 
