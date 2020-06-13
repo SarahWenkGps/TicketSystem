@@ -10,7 +10,6 @@ import loading from '../../../assets/js/loading.json';
 import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
 import moment from 'moment';
-import { registerLocale, setDefaultLocale } from  "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 // import moment from 'moment';
@@ -58,7 +57,9 @@ class EditTask extends React.Component {
             status_id: '',
             startDate: '',
             type_id:'',
-            moniter:[]
+            moniter:[],
+            geo_name:'',
+            dimentions:[],
         };
     }
 
@@ -107,7 +108,10 @@ class EditTask extends React.Component {
                                             task_title:state.task_title,
                                             description: state.description,
                                             dead_time:correctedDeadTime,
-                                            task_type_id:this.state.type_id
+                                            task_type_id:this.state.type_id,
+                                            geo_name: this.state.geo_name,
+                                            geo_x: this.state.dimentions[0],
+                                            geo_y: this.state.dimentions[1],
                                         },
                                     })
 
@@ -169,18 +173,45 @@ class EditTask extends React.Component {
                                             <div id='dialog_title' >  Task type </div>
 
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
-                                                <Component initialState={{ selected: state.task_type1 }}>
+                                                <Component initialState={{ selected: state.task_type1 ,label:''}}>
                                                     {({ setState, state }) => (
                                                         <SelectMenu
                                                             title="Select type"
                                                             options={this.props.type}
                                                             selected={state.selected}
                                                             onSelect={item => {
-                                                                setState({ selected: item.value })
+                                                                setState({ selected: item.value,label:item.label })
                                                                 this.setState({type_id:item.value})
                                                             }}
                                                         >
-                                                            <Button  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ 'Select Type...'}</Button>
+                                                            <Button  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ state.label ||'Select Type...'}</Button>
+                                                        </SelectMenu>
+                                                    )}
+                                                </Component>
+                                            </div>
+                                        </div>
+                                        <div id='dailog' >
+                                            <div id='dialog_title' >  ADD Geofence </div>
+                                            <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
+                                                <Component
+                                                    initialState={{
+                                                        selected: null,label:'',
+                                                        options: this.props.Geofences
+                                                            .map(label => ({ label: label.name, value: label.x, dimen: [label.x, label.y] })),
+                                                    }}
+                                                >
+                                                    {({ setState, state }) => (
+                                                        <SelectMenu
+                                                            title="Select Name"
+                                                            options={state.options}
+                                                            selected={state.selected}
+                                                            onSelect={item => {
+                                                                setState({ selected: item.value ,label:item.label})
+                                                                this.setState({ geo_name: item.label, dimentions: item.dimen })
+                                                      
+                                                            }}
+                                                        >
+                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label ||'Select Name...'}</Button>
                                                         </SelectMenu>
                                                     )}
                                                 </Component>
@@ -189,19 +220,19 @@ class EditTask extends React.Component {
                                         <div id='dailog' >
                                             <div id='dialog_title' >  Task Moniter  </div>
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
-                                                <Component initialState={{ selected: null }}>
+                                                <Component initialState={{ selected: null,label:'' }}>
                                                     {({ setState, state }) => (
                                                         <SelectMenu
                                                             title="Select Moniter"
                                                             options={this.props.users}
                                                             selected={state.selected}
                                                             onSelect={item => {
-                                                                setState({ selected: item.value })
+                                                                setState({ selected: item.value,label:item.label })
                                                                 this.setState({moniter:item.value})
                                                              
                                                             }}
                                                         >
-                                                            <Button  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ 'Select Moniter'}</Button>
+                                                            <Button  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ state.label ||'Select Moniter'}</Button>
                                                         </SelectMenu>
                                                     )}
                                                 </Component>

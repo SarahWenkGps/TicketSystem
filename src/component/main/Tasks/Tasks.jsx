@@ -66,6 +66,8 @@ class Tasks extends React.Component {
       selected_AssignTo: '',
       selected_taskType: '',
       type: [],
+      priorities:[],
+      Geofences:[],
     }
     this.filterRef = React.createRef();
   }
@@ -164,12 +166,46 @@ class Tasks extends React.Component {
 
 
       })
-
+// this.getpriorities();
+this.getGeofences();
 
   }
 
+  getpriorities(){
+    var headers = {
+      jwt: cookies.get("token"),
+    };
+    axios({
+      url: Host + `tasks/priorities`,
+      method: "GET",
+      headers: headers,
 
+    })
+      .then(res => {
+        this.setState({priorities:res.data.data})
+      })
+      .catch(err =>{
 
+      })
+  }
+
+  getGeofences(){
+    var headers = {
+      jwt: cookies.get("token"),
+    };
+    axios({
+      url: Host + `tasks/task_geofences?params={"force":0}`,
+      method: "GET",
+      headers: headers,
+
+    })
+      .then(res => {
+        this.setState({Geofences:res.data.data.data})
+      })
+      .catch(err =>{
+
+      })
+  }
 
   getTasks() {
     var headers = {
@@ -569,18 +605,11 @@ class Tasks extends React.Component {
                         )}
 
 
-                      <NewTask onProfileDelete={() => this.componentDidMount()} users={this.state.users} key={1} type={this.state.type} />
+                      <NewTask onProfileDelete={() => this.componentDidMount()} users={this.state.users} key={1}
+                       type={this.state.type} priorities={this.state.priorities} Geofences={this.state.Geofences}  />
                       <span className='filter_span' > {filter.length} Tasks </span>
                       <Row style={{ width: '100%', display: 'flex' }}   >
-                        {this.state.noti.length > 0 ? (
-                          <Col md={6} style={{ marginTop: 40 }}   >
-                            <Task_noti id='nnn' name={this.state.noti[0].task_title} time={this.state.noti[0].dead_time} desc={this.state.noti[0].description} id={this.state.noti[0].task_id}
-                              users={this.state.users} assigners={this.state.noti[0].assigners} onProfileDelete={() => this.componentDidMount()}
-                              status={this.state.noti[0].status} allstatus={this.state.statuses} createdby={this.state.noti[0].issuer_user.name}
-                              created_at={this.state.noti[0].created_at} assigned={this.state.noti[0].assigners.map((p, i) => (p.user_id))}
-                              comments_count={this.state.noti[0].comments_count}  type={this.state.type} task_type={this.state.noti[0].task_type} monitor={this.state.noti[0].monitor}   />
-                          </Col>
-                        ) : (null)}
+                     
 
                         {filter.map((item, i) => (
                           <Col md={6} key={i} id='noti_Get'  style={{ marginTop: 40 }}    >
@@ -588,7 +617,8 @@ class Tasks extends React.Component {
                               id={item.task_id} users={this.state.users} assigners={item.assigners}
                               onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
                               createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count}
-                              type={this.state.type} task_type={item.task_type} monitor={item.monitor}  files={item.files}  />
+                              type={this.state.type} task_type={item.task_type} monitor={item.monitor}  files={item.files}  priority={item.priority} geofences={item.geofences}
+                               Geofences={this.state.Geofences} weight={item.weight}  />
 
                           </Col>
                         ))}

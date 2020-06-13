@@ -11,7 +11,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Lottie from "lottie-react-web";
 import loading from '../../../assets/js/loading.json';
-// import moment from 'moment';
+import Slider from '@material-ui/core/Slider';
 const cookies = new Cookies();
 
 const customStyles = {
@@ -42,6 +42,7 @@ const customStyles = {
         return { ...provided, opacity, transition };
     }
 }
+
 class NewTask extends React.Component {
     constructor(props) {
         super(props);
@@ -57,9 +58,13 @@ class NewTask extends React.Component {
             startDate: new Date(),
             isShown: false,
             spin: false,
-            id: '',           
-            type_id:'',
-            moniter:''
+            id: '',
+            type_id: '',
+            moniter: '',
+            dimentions: [],
+            // priority_id:[],
+            geo_name: '',
+            weight:'',
         };
     }
 
@@ -69,46 +74,54 @@ class NewTask extends React.Component {
         });
     };
 
-
-  
+     handleChangeweight = (event, newValue) => {
+        // setValue(newValue);
+        console.log(newValue);
+        this.setState({weight:newValue})
+        
+      };
+    
 
     assign_user(id) {
         var headers = {
             jwt: cookies.get("token")
         };
-       
-      
-            axios({
-                url: Host + `tasks/assign/${id}`,
-                method: "POST",
-                headers: headers,
-                data: {
-                    users_id: this.state.user,
 
-                },
+
+        axios({
+            url: Host + `tasks/assign/${id}`,
+            method: "POST",
+            headers: headers,
+            data: {
+                users_id: this.state.user,
+
+            },
+        })
+
+            .then(res => {
+
+                // console.log(response.data);
+
+                if (res.data.status === true) {
+                    toast.success('task created successfully')
+                    const { onProfileDelete } = this.props
+                    onProfileDelete()
+                    this.setState({
+                        isShown: false, spin: false, task_name: "", description: "", startDate: new Date(),
+                        priority_id: "", geo_name: "", dimentions: [],weight:"",
+                    })
+                }
+                else if (res.data.status === false) {
+                    toast.error(res.data.data.message.text)
+                    this.setState({ spin: false })
+                }
+
             })
+            .catch(err => {
+                toast.error("Network Error")
+                this.setState({ spin: false });
+            });
 
-                .then(res => {
-                 
-                    // console.log(response.data);
-                 
-                        if (res.data.status === true) {
-                            toast.success("user assigned successfully")
-                            const { onProfileDelete } = this.props
-                            onProfileDelete()
-                            this.setState({ isShown: false, spin: false, task_name: "", description: "", startDate: new Date() })
-                        }
-                        else if (res.data.status === false) {
-                            toast.error(res.data.data.message.text)
-                            this.setState({ spin: false })
-                        }
-                  
-                })
-                .catch(err => {
-                    toast.error("Network Error")
-                    this.setState({ spin: false });
-                  });
-        
     }
 
 
@@ -140,30 +153,28 @@ class NewTask extends React.Component {
                     description: this.state.description,
                     dead_time: correctedDeadTime,
                     main_task_id: '0',
-                    task_type_id:this.state.type_id
+                    task_type_id: this.state.type_id,
+                    // priority_id:this.state.priority_id,
+                    geo_name: this.state.geo_name,
+                    geo_x: this.state.dimentions[0],
+                    geo_y: this.state.dimentions[1],
+                    weight:this.state.weight,
+                   
                 },
             })
             if (res.data.status === true) {
                 if (this.state.user.length > 0) {
                     this.assign_user(res.data.data.data.task_id);
                 }
-                if (this.state.moniter.length > 0) {
-                    this.moniter(res.data.data.data.task_id);
-                    axios({
-                        url: Host + `tasks/assign/monitor/${res.data.data.data.task_id}`,
-                        method: "PUT",
-                        headers: headers,
-                        data: {
-                            monitor_user_id: this.state.moniter,
         
-                        },
-                    })
-                }
                 else {
                     const { onProfileDelete } = this.props
                     onProfileDelete()
                     toast.success('task created successfully')
-                    this.setState({ isShown: false, spin: false, task_name: "", description: "", startDate: new Date() ,moniter:""})
+                    this.setState({
+                        isShown: false, spin: false, task_name: "", description: "", startDate: new Date(), moniter: "",
+                        priority_id: "", geo_name: "", dimentions: [],weight:""
+                    })
                 }
 
 
@@ -199,7 +210,7 @@ class NewTask extends React.Component {
                             <Dialog
                                 isShown={this.state.isShown}
 
-                                onCloseComplete={() => this.setState({ isShown: false,checked:false })}
+                                onCloseComplete={() => this.setState({ isShown: false, checked: false })}
                                 hasHeader={false}
                                 shouldCloseOnOverlayClick={false}
                                 confirmLabel="Save"
@@ -234,30 +245,84 @@ class NewTask extends React.Component {
                                         <div id='dailog' >
                                             <div id='dialog_title' >  Task type </div>
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
-                                                <Component initialState={{ selected: null }}>
+                                                <Component initialState={{ selected: null,label:'' }}>
                                                     {({ setState, state }) => (
                                                         <SelectMenu
                                                             title="Select type"
                                                             options={this.props.type}
                                                             selected={state.selected}
                                                             onSelect={item => {
-                                                                setState({ selected: item.value })
-                                                                this.setState({type_id:item.value})
+                                                                setState({ selected: item.value ,label:item.label})
+                                                                this.setState({ type_id: item.value })
                                                             }}
                                                         >
-                                                            <Button  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ 'Select Type...'}</Button>
+                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select Type...'}</Button>
                                                         </SelectMenu>
                                                     )}
                                                 </Component>
                                             </div>
                                         </div>
 
+                                        {/* <div id='dailog' >
+                                            <div id='dialog_title' >  Task Priorities </div>
+                                            <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
+                                                <Component 
+                                                initialState={{ selected: null ,
+                                                    options: this.props.priorities
+                                                 .map(label => ({ label: label.name, value: label.id })),
+                                                 }}                                                                                                
+                                                >
+                                                    {({ setState, state }) => (
+                                                        <SelectMenu
+                                                            title="Select type"
+                                                            options={state.options}
+                                                            selected={state.selected}
+                                                            onSelect={item => {
+                                                                setState({ selected: item.value })
+                                                                this.setState({priority_id:item.value})
+                                                            }}
+                                                        >
+                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ 'Select Type...'}</Button>
+                                                        </SelectMenu>
+                                                    )}
+                                                </Component>
+                                            </div>
+                                        </div> */}
+                                        <div id='dailog' >
+                                            <div id='dialog_title' >  ADD Geofence </div>
+                                            <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
+                                                <Component
+                                                    initialState={{
+                                                        selected: null,label:'',
+                                                        options: this.props.Geofences
+                                                            .map(label => ({ label: label.name, value: label.x, dimen: [label.x, label.y] })),
+                                                    }}
+                                                >
+                                                    {({ setState, state }) => (
+                                                        <SelectMenu
+                                                            title="Select Name"
+                                                            options={state.options}
+                                                            selected={state.selected}
+                                                            onSelect={item => {
+                                                                setState({ selected: item.value,label:item.label })
+                                                                this.setState({ geo_name: item.label, dimentions: item.dimen })
+                                                                setTimeout(() => {
+                                                                    console.log(this.state.geo_name);
 
+                                                                }, 200);
+                                                            }}
+                                                        >
+                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select name...'}</Button>
+                                                        </SelectMenu>
+                                                    )}
+                                                </Component>
+                                            </div>
+                                        </div>
                                         <div id='dailog' >
                                             <div id='dialog_title' >  Assign to </div>
 
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
-                                                <Component initialState={{ selected: '' }} >
+                                                <Component initialState={{ selected: '',label:'' }} >
                                                     {({ state, setState }) => (
                                                         <SelectMenu
                                                             isMultiSelect
@@ -265,6 +330,8 @@ class NewTask extends React.Component {
                                                             title="Select multiple names"
                                                             options={this.props.users}
                                                             onSelect={item => {
+                                                               
+                                                                
                                                                 const selected = [...state.selected, item.value]
                                                                 this.setState({ user: selected })
                                                                 const selectedItems = selected
@@ -279,7 +346,7 @@ class NewTask extends React.Component {
                                                                 }
                                                                 setState({
                                                                     selected,
-                                                                    selectedNames
+                                                                    selectedNames,label:item.label
                                                                 })
                                                             }}
                                                             onDeselect={item => {
@@ -296,19 +363,19 @@ class NewTask extends React.Component {
                                                                 } else if (selectedItemsLength > 1) {
                                                                     selectedNames = selectedItemsLength.toString() + ' selected...'
                                                                 }
-                                                                setState({ selected: selectedItems, selectedNames })
+                                                                setState({ selected: selectedItems, selectedNames, })
                                                                 this.setState({ user: selectedItems })
 
                                                             }}
                                                         >
-                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >Assign to... </Button>
+                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{'Select name...'} </Button>
                                                         </SelectMenu>
                                                     )}
                                                 </Component>
                                             </div>
                                         </div>
 
-                                        <div id='dailog' >
+                                        {/* <div id='dailog' >
                                             <div id='dialog_title' >  Task Moniter  </div>
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
                                                 <Component initialState={{ selected: null }}>
@@ -319,17 +386,36 @@ class NewTask extends React.Component {
                                                             selected={state.selected}
                                                             onSelect={item => {
                                                                 setState({ selected: item.value })
-                                                                this.setState({moniter:item.value})
+                                                                this.setState({ moniter: item.value })
                                                             }}
                                                         >
-                                                            <Button  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ 'Select Moniter'}</Button>
+                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{'Select Moniter'}</Button>
                                                         </SelectMenu>
                                                     )}
                                                 </Component>
                                             </div>
+                                        </div> */}
+                                        <div id='dailog' >
+                                            <div id='dialog_title' >  Task Weight  </div>
+                                            <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
+                                                <Component initialState={{ selected: null }}>
+                                                    {({ setState, state }) => (
+                                                          <Slider
+                                                          defaultValue={2}
+                                                        //   value={value}
+                                                          onChange={this.handleChangeweight}
+                                                          aria-labelledby="discrete-slider"
+                                                          valueLabelDisplay="auto"
+                                                          step={1}
+                                                          marks
+                                                          min={0}
+                                                          max={10}
+                                                        />
+                                                    )}
+                                                </Component>
+                                            </div>
                                         </div>
-
-                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '50%' ,paddingLeft:'1px'}}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '50%', paddingLeft: '1px' }}>
                                             <span style={{ color: '#517c92', marginBottom: '.5rem', fontWeight: '600', fontSize: 15 }}>Set Deadline</span>
                                             <Component initialState={{ checked: true }}>
                                                 {({ state, setState }) => (
