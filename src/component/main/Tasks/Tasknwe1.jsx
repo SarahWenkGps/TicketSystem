@@ -65,7 +65,7 @@ export default function ControlledExpansionPanels(props) {
             <div className='weight' > {props.weight} </div>
            <div className='task_type_style'>  {props.task_type} </div>
            {/* <div className='task_priority'  > {props.priority}  </div> */}
-           {props.files.length >0? (<AttachFileIcon  className='icon_file_head' />):(null)}
+       
             </div>
         ) : (
             null
@@ -75,7 +75,7 @@ export default function ControlledExpansionPanels(props) {
            <div className='weight' > {props.weight} </div>
           <div className='task_type_style'>  {props.task_type} </div>
           {/* <div className='task_priority'  > {props.priority}  </div> */}
-          {props.files.length >0? (<AttachFileIcon  className='icon_file_head' />):(null)}
+         
            </div>
         ) : (
             null
@@ -85,7 +85,7 @@ export default function ControlledExpansionPanels(props) {
            <div className='weight' > {props.weight} </div>
           <div className='task_type_style'>  {props.task_type} </div> 
           {/* <div className='task_priority'  > {props.priority}  </div>  */}
-          {props.files.length >0? (<AttachFileIcon  className='icon_file_head' />):(null)}
+          
            </div>
         ) : (
             null
@@ -95,7 +95,7 @@ export default function ControlledExpansionPanels(props) {
           <div className='weight' > {props.weight} </div>
           <div className='task_type_style'>  {props.task_type} </div> 
           {/* <div className='task_priority'  > {props.priority}  </div> */}
-          {props.files.length >0? (<AttachFileIcon  className='icon_file_head' />):(null)}
+          
             </div>
         ) : (
             null
@@ -105,7 +105,7 @@ export default function ControlledExpansionPanels(props) {
             <div className='weight' > {props.weight} </div>
            <div className='task_type_style'>  {props.task_type} </div> 
            {/* <div className='task_priority'  > {props.priority}  </div>  */}
-           {props.files.length >0? (<AttachFileIcon  className='icon_file_head' />):(null)}
+           
             </div>
         ) : (
             null
@@ -115,7 +115,7 @@ export default function ControlledExpansionPanels(props) {
             <div className='weight' > {props.weight} </div>
            <div className='task_type_style'>  {props.task_type} </div> 
            {/* <div className='task_priority'  > {props.priority}  </div> */}
-           {props.files.length >0? (<AttachFileIcon  className='icon_file_head' />):(null)}
+           
              </div>
         ) : (
             null
@@ -125,7 +125,7 @@ export default function ControlledExpansionPanels(props) {
            <div className='weight' > {props.weight} </div>
            <div className='task_type_style'>  {props.task_type} </div>  
            {/* <div className='task_priority'  > {props.priority}  </div> */}
-           {props.files.length >0? (<AttachFileIcon  className='icon_file_head' />):(null)}
+           
             </div>
         ) : (
             null
@@ -173,7 +173,12 @@ export default function ControlledExpansionPanels(props) {
 
                 )}</div>
              
-<div id='icons_headerTask' > {props.geofences.geo_name !== "null" && props.geofences.geo_name !== null   ?(<LocationOnIcon style={{fontSize:18,marginRight:10}} />):(null)}     {props.comments_count>0 ?( <div> <CommentIcon style={{fontSize:18,color:'#3e83b2'}} /> {props.comments_count} </div>  ):(null)} </div>
+<div id='icons_headerTask' >
+{props.files.length >0? (<AttachFileIcon  className='icon_file_head' />):(null)}
+   {props.geofences.geo_name !== "null" && props.geofences.geo_name !== null ?(<LocationOnIcon style={{fontSize:18,marginRight:10}} />):(null)}   
+     {props.comments_count>0 ?( <div> <CommentIcon style={{fontSize:18,color:'#3e83b2'}} /> {props.comments_count} </div>  ):(null)}
+     
+      </div>
             </div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgb(225, 227, 229)' }}  >

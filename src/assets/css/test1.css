@@ -163,7 +163,7 @@ transform: scale(1.2);
 }
 #tit_task{
   background-color: #2e6b95;
-    width: 90px;
+    width: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -479,18 +479,15 @@ a {
     cursor: grab;
 }
 .icon_file_head{
-  position: absolute;
-  right: 5px;
   font-size: 35px;
   transform: rotate(45deg);
-  z-index: 20;
-  /* top: 3px; */
   color: gray;
 }
 .weight{
   width: 10%;
   background: linear-gradient(58deg, #f6f4f4  80%,rgb(223, 224, 224)0);
-  /* text-align: center; */
+ display: flex;
+ align-items: center;
   color: #d9251e;
   font-weight: 700;
   padding-left: 15px;

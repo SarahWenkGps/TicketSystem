@@ -66,6 +66,7 @@ class NoteTask extends React.Component {
       selected_AssignTo: '',
       selected_taskType: '',
       type: [],
+      Geofences:[],
     }
     this.filterRef = React.createRef();
   }
@@ -126,10 +127,24 @@ class NoteTask extends React.Component {
           users: arr
         });
       })
-      .catch(err => {
-        
-      
+      .catch(err => {            
       });
+
+    
+        axios({
+          url: Host + `tasks/task_geofences?params={"force":0}`,
+          method: "GET",
+          headers: headers,
+    
+        })
+          .then(res => {
+            this.setState({Geofences:res.data.data.data})
+          })
+          .catch(err =>{
+    
+          })
+    
+
 
     axios({
       url: Host + `task_types`,
@@ -280,7 +295,9 @@ class NoteTask extends React.Component {
                               users={this.state.users} assigners={this.state.noti[0].assigners} onProfileDelete={() => this.componentDidMount()}
                               status={this.state.noti[0].status} allstatus={this.state.statuses} createdby={this.state.noti[0].issuer_user.name}
                               created_at={this.state.noti[0].created_at} assigned={this.state.noti[0].assigners.map((p, i) => (p.user_id))}
-                              comments_count={this.state.noti[0].comments_count}  type={this.state.type} task_type={this.state.noti[0].task_type} monitor={this.state.noti[0].monitor} files={this.state.noti[0].files}   />
+                              comments_count={this.state.noti[0].comments_count}  type={this.state.type} task_type={this.state.noti[0].task_type} monitor={this.state.noti[0].monitor}
+                               files={this.state.noti[0].files} priority={this.state.noti[0].priority} geofences={this.state.noti[0].geofences}
+                               Geofences={this.state.Geofences} weight={this.state.noti[0].weight}  />
                           </Col>
                         ) : (null)}
 

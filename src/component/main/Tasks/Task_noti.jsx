@@ -7,6 +7,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 import Details from './Details';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 import "react-toastify/dist/ReactToastify.css";
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import AssingUser from './AssignUser';
@@ -18,6 +19,8 @@ import AttachFile from './AttachFile';
 import Status from './Status';
 import moment from 'moment';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import CommentIcon from '@material-ui/icons/Comment';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -34,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
     flexBasis: '30%',
     textAlign: 'end',
+    display:'flex',
+    flexDirection:'column',
+    justifyContent:'space-between',
   },
 
 }));
@@ -41,13 +47,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ControlledExpansionPanels(props) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState('panel1');
+  // const [ setExpanded] = React.useState(false);
 
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : true);
+  // const handleChange = (panel) => (event, isExpanded) => {
+  //   setExpanded(isExpanded ? panel : false);
 
 
-  };
+  // };
   return (
 
     <div className="ControlledExpansionPanels"  >
@@ -55,42 +61,77 @@ export default function ControlledExpansionPanels(props) {
 
       <div   >
         {props.status === "approved" ? (
-          <div id='head_task' >   <div id='tit_task' style={{ backgroundColor: '#188718b5' }} >Approved  </div>  <div className='task_type_style'>  {props.task_type} </div> </div>
+          <div id='head_task' >   <div id='tit_task' style={{ backgroundColor: '#188718b5' }} >Approved  </div> 
+            <div className='weight' > {props.weight} </div>
+           <div className='task_type_style'>  {props.task_type} </div>
+           {/* <div className='task_priority'  > {props.priority}  </div> */}
+       
+            </div>
         ) : (
             null
           )}
         {props.status === "rejected" ? (
-          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: '#da251e' }} >Rejected</div> <div className='task_type_style'>  {props.task_type} </div> </div>
+          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: '#da251e' }} >Rejected</div> 
+           <div className='weight' > {props.weight} </div>
+          <div className='task_type_style'>  {props.task_type} </div>
+          {/* <div className='task_priority'  > {props.priority}  </div> */}
+         
+           </div>
         ) : (
             null
           )}
         {props.status === "closed" ? (
-          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: 'gray' }} >Closed </div> <div className='task_type_style'>  {props.task_type} </div>   </div>
+          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: 'gray' }} >Closed </div> 
+           <div className='weight' > {props.weight} </div>
+          <div className='task_type_style'>  {props.task_type} </div> 
+          {/* <div className='task_priority'  > {props.priority}  </div>  */}
+          
+           </div>
         ) : (
             null
           )}
         {props.status === "new" ? (
-          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: '#2e6b95' }} >New </div> <div className='task_type_style'>  {props.task_type} </div>   </div>
+          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: '#2e6b95' }} >New </div> 
+          <div className='weight' > {props.weight} </div>
+          <div className='task_type_style'>  {props.task_type} </div> 
+          {/* <div className='task_priority'  > {props.priority}  </div> */}
+          
+            </div>
         ) : (
             null
           )}
         {props.status === "in progress" ? (
-          <div id='head_task' >    <div id='tit_task' style={{ backgroundColor: '#f06105cc' }} > In progress </div>  <div className='task_type_style'>  {props.task_type} </div>   </div>
+          <div id='head_task' >    <div id='tit_task' style={{ backgroundColor: '#f06105cc' }} > In progress </div> 
+            <div className='weight' > {props.weight} </div>
+           <div className='task_type_style'>  {props.task_type} </div> 
+           {/* <div className='task_priority'  > {props.priority}  </div>  */}
+           
+            </div>
         ) : (
             null
           )}
         {props.status === "assigned" ? (
-          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: '#d5ad00d4' }} > Assigned </div>  <div className='task_type_style'>  {props.task_type} </div>   </div>
+          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: '#d5ad00d4' }} > Assigned </div> 
+            <div className='weight' > {props.weight} </div>
+           <div className='task_type_style'>  {props.task_type} </div> 
+           {/* <div className='task_priority'  > {props.priority}  </div> */}
+           
+             </div>
         ) : (
             null
           )}
         {props.status === "archived" ? (
-          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: 'black' }} > Archived </div>  <div className='task_type_style'>  {props.task_type} </div>   </div>
+          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: 'black' }} > Archived </div> 
+           <div className='weight' > {props.weight} </div>
+           <div className='task_type_style'>  {props.task_type} </div>  
+           {/* <div className='task_priority'  > {props.priority}  </div> */}
+           
+            </div>
         ) : (
             null
           )}
 
-        <ExpansionPanel  square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}
+        <ExpansionPanel
           style={{ backgroundColor: 'rgba(241, 237, 237, 0.42)', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey' }} >
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
@@ -106,15 +147,19 @@ export default function ControlledExpansionPanels(props) {
                 </div>
                 {props.assigners.length > 0 ? (<div style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100' }}  >   <PeopleAltIcon style={{ fontSize: 14 }} />    {props.assigners[0].name} {props.assigners.length > 1 ? (
                   <span id='OthersParent' > +  {props.assigners.length - 1} Others <span id='OthersContent' > {props.assigners.map((p, i) => (<div key={i}  > {p.name} </div>))}  </span> </span>) : (null)} </div>) : (null)}
-                <div style={{ color: 'rgb(127, 127, 127)', fontSize: 10, fontWeight: '100' }}   > {moment(props.created_at).format("lll")}  </div>
+                
+               
+                  <div style={{ color: 'rgb(127, 127, 127)', fontSize: 10, fontWeight: '100' }}   > {moment(props.created_at).format("lll")}  </div>
+               
+               
               </div>
             </div>
             <div className={classes.secondaryHeading}>
-              {props.time === '0000-00-00 00:00:00' ? (
+              <div> {props.time === '1970-01-01T00:00:00.000Z' ? (
                 null
               ) : (
                   <div id="parent">
-                    {moment().format('lll') >= moment(props.time).format("lll") ? (
+                    {moment().format('X') >= moment(props.time).format("X") ? (
                       <AccessAlarmIcon
                         style={{ color: '#da251e', cursor: 'pointer' }} />
                     ) : (<AccessAlarmIcon
@@ -122,16 +167,26 @@ export default function ControlledExpansionPanels(props) {
 
                     <div id="hover-content" >
                       {moment(props.time).format("lll")}
+                     
                     </div>
                   </div>
 
-                )}
-
+                )}</div>
+             
+<div id='icons_headerTask' >
+{props.files.length >0? (<AttachFileIcon  className='icon_file_head' />):(null)}
+   {props.geofences.geo_name !== "null" && props.geofences.geo_name !== null ?(<LocationOnIcon style={{fontSize:18,marginRight:10}} />):(null)}   
+     {props.comments_count>0 ?( <div> <CommentIcon style={{fontSize:18,color:'#3e83b2'}} /> {props.comments_count} </div>  ):(null)}
+     
+      </div>
             </div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgb(225, 227, 229)' }}  >
-
-            <div style={{ display: 'flex' }} >
+ 
+            <div style={{ display: 'flex',justifyContent:'space-between' }} >
+              <div>  {props.files.length >0? ( <ShowFile files={props.files} onProfileDelete={props}  /> ):(null)}</div>
+           
+              <div>
               <button className='btn_lang' onClick={() => {
                 var x = document.createElement("STYLE");
                 var t = document.createTextNode("p {text-align: start;}");
@@ -144,9 +199,17 @@ export default function ControlledExpansionPanels(props) {
                 x.appendChild(t);
                 document.head.appendChild(x);
               }} ><FormatAlignRightIcon style={{ fontSize: 16 }} /></button>
+              </div>
+             
             </div>
-            {props.files.length >0? (
-            <div  > <ShowFile files={props.files} onProfileDelete={props}  />  </div>):(null)}
+           
+            <div className='location' >
+            {props.geofences.geo_name !== "null"  && props.geofences.geo_name !== null  ? (
+            <div style={{display:'flex',alignItems:'center'}} onClick={()=>{
+              window.open(`https://maps.google.com/?q=${props.geofences.geo_y},${props.geofences.geo_x}`, '_blank');
+            }}   >  <LocationOnIcon  style={{fontSize:20}} />   {props.geofences.geo_name}   </div>  
+            ):(null)}
+                </div>
 
             <div  style={{ width: '100%', paddingBottom: 35, fontSize: 16, paddingTop: 10, height: 150, overflow: 'auto' }}  >
 
@@ -161,12 +224,12 @@ export default function ControlledExpansionPanels(props) {
               <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', width: '50%' }} >
                 <AssingUser users={props.users} id={props.id} onProfileDelete={props} assigned={props.assigned} />
                 <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} title={props.name}
-                  time={props.time} desc={props.desc} status={props.status} type={props.type} task_type={props.task_type} users={props.users} />
+                  time={props.time} desc={props.desc} status={props.status} type={props.type} task_type={props.task_type}
+                   users={props.users} Geofences={props.Geofences} geofences={props.geofences}  />
                 <AttachFile id={props.id} onProfileDelete={props} />
               </div>
 
               <Status status={props.status} onProfileDelete={props} id={props.id} />
-
 
             </div>
 
