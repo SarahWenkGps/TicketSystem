@@ -3,9 +3,9 @@ import { Pane, Dialog } from 'evergreen-ui';
 import Component from '@reactions/component';
 import axios from "axios";
 import Cookies from "universal-cookie";
-import Host from "../../assets/js/Host";
+import Host from "../../../assets/js/Host";
 import Lottie from "lottie-react-web";
-import loading from '../../assets/js/loading.json';
+import loading from '../../../assets/js/loading.json';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const cookies = new Cookies();
@@ -77,10 +77,10 @@ class Changwpass extends React.Component {
                                                 }
 
                                             })
-                                            .catch(function (error) {
-                                                setState({ spin: false });
-
-                                            });
+                                            .catch(err => {
+                                                toast.error("Network Error")
+                                      
+                                              });
                                     }
                                 }}
                             >

@@ -3,15 +3,17 @@ import { Pane, Dialog, Button } from 'evergreen-ui';
 import Component from '@reactions/component';
 import axios from "axios";
 import Cookies from "universal-cookie";
-import Host from "../../assets/js/Host";
+import Host from "../../../assets/js/Host";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SendIcon from '@material-ui/icons/Send';
 import "react-datepicker/dist/react-datepicker.css";
 import PersonIcon from '@material-ui/icons/Person';
 import Lottie from "lottie-react-web";
-import loading from '../../assets/js/loading.json';
+import loading from '../../../assets/js/loading.json';
 import EditIcon from '@material-ui/icons/Edit';
+import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import InputFiles from 'react-input-files';
 import moment from 'moment';
 // import moment from 'moment';
 const cookies = new Cookies();
@@ -27,6 +29,8 @@ class Comments extends React.Component {
             comments: [],
             comment: '',
             comment2: '',
+            file: '',
+            file2: '',
         };
     }
 
@@ -53,31 +57,34 @@ class Comments extends React.Component {
                 this.setState({ spin: false })
                 this.setState({ comments: response.data.data })
             })
-            .catch(function (error) {
-                // console.log('error', error);
-                this.setState({ spin: true })
+            .catch(err => {
+                toast.error("Network Error")
+
             });
 
     }
 
 
-   
+
 
 
     addcomm() {
+        let formData = new FormData();
         var headers = {
             jwt: cookies.get("token")
         };
+        if (this.state.comment.length === 0) {
+            return toast.error("Add comment First")
+        }
+        let fdata = JSON.stringify({ "comment": this.state.comment })
+        formData.append("photo", this.state.file);
+        formData.append("params", fdata);
         axios({
-            url: Host + `comments/comment`,
+            url: Host + `comments/comment/${this.props.id}`,
             method: "POST",
             headers: headers,
-            data: {
-                comment: this.state.comment,
-                task_id: this.props.id,
-            },
+            data: formData,
         })
-
             .then(res => {
                 // console.log(response.data);
                 if (res.data.status === true) {
@@ -85,13 +92,14 @@ class Comments extends React.Component {
                     this.callcomm();
                     const { onProfileDelete } = this.props.onProfileDelete
                     onProfileDelete()
-                    this.setState({comment:""})
+                    this.setState({ comment: "" })
                 }
                 else if (res.data.status === false) {
                     toast.error(res.data.data.message.text)
                 }
             })
-            .catch(function (error) {
+            .catch(err => {
+                toast.error("Network Error")
 
             });
     }
@@ -114,10 +122,8 @@ class Comments extends React.Component {
                                 hasHeader={false}
                                 onCloseComplete={() => setState({ isShown: false })}
                                 hasFooter={false}
-                                topOffset={100}
+                                topOffset={150}
                             >
-
-
                                 {this.state.comments.length > 0 ? (
                                     <div style={{ height: 200, width: '100%', overflow: 'auto' }} >
                                         {this.state.comments.map((item, i) => (
@@ -127,13 +133,18 @@ class Comments extends React.Component {
                                                     <div>
                                                         {moment(item.comment_dateTime).format("LLL")} </div>
                                                 </div>
-                                                <div style={{ paddingTop: 14, paddingBottom: 10, textAlign: 'end' }}  >
+
+                                                <div style={{ paddingTop: 14, paddingBottom: 10, textAlign: 'start', direction: 'rtl' }}  >
                                                     {item.comment_text.split('\n').map((i, n) => {
                                                         return <p key={n} >{i}</p>
-                                                    })}</div>
-                                                <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '5px' }} >
+                                                    })}
+                                                    {item.comment_pic_path === null ? (null) : (<img src={Host + item.comment_pic_path} alt='img' style={{ height: 100 ,cursor:'pointer'}} onClick={() => {
+                                                        window.open(Host + item.comment_pic_path, '_blank');
+                                                    }} />)}
+                                                </div>
 
-                                                    <Component initialState={{ isShown: false,comment2:item.comment_text }}>
+                                                <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '5px' }} >
+                                                    <Component initialState={{ isShown: false, comment2: item.comment_text }}>
                                                         {({ state, setState }) => (
                                                             <Pane>
                                                                 <Dialog
@@ -141,31 +152,39 @@ class Comments extends React.Component {
                                                                     hasHeader={false}
                                                                     onCloseComplete={() => setState({ isShown: false })}
                                                                     hasFooter={false}
-
                                                                     topOffset={200}
                                                                 >
-                                                                    <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', marginBottom: 5, marginTop: 5 }} >
-                                                                      
-                                                                     
+                                                                    <div style={{ width: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-evenly', marginBottom: 5, marginTop: 5 }} >
+
+                                                                        <InputFiles onChange={files =>
+                                                                            this.setState({ file2: files[0], file: files.length })
+                                                                        }>
+                                                                            <AddPhotoAlternateIcon style={{ cursor: 'pointer', color: '#2e6b95' }} />
+                                                                        </InputFiles>
+
                                                                         <textarea id='coment' value={state.comment2}
                                                                             onChange={(e) => {
                                                                                 setState({ comment2: e.target.value })
                                                                             }} />
                                                                         <SendIcon id='com_icon' onClick={() => {
-                                                                            // this.editcoment(item.comment_id);
+
                                                                             var headers = {
                                                                                 jwt: cookies.get("token")
                                                                             };
+                                                                            let formData = new FormData();
+                                                                            if (state.comment2.length === 0) {
+                                                                                return toast.error("Add comment First")
+                                                                            }
+                                                                            let fdata2 = JSON.stringify({ "comment": state.comment2 })
+                                                                            formData.append("photo", this.state.file2);
+                                                                            formData.append("params", fdata2);
                                                                             axios({
                                                                                 url: Host + `comments/comment/${item.comment_id}`,
                                                                                 method: "PUT",
                                                                                 headers: headers,
-                                                                                data: {
-                                                                                    comment: state.comment2,
-                                                                    
-                                                                                },
+                                                                                data: formData
                                                                             })
-                                                                    
+
                                                                                 .then(res => {
                                                                                     // console.log(response.data);
                                                                                     if (res.data.status === true) {
@@ -173,18 +192,18 @@ class Comments extends React.Component {
                                                                                         this.callcomm();
                                                                                         const { onProfileDelete } = this.props.onProfileDelete
                                                                                         onProfileDelete()
-                                                                                      
+
                                                                                     }
                                                                                     else if (res.data.status === false) {
                                                                                         toast.error(res.data.data.message.text)
                                                                                     }
                                                                                 })
-                                                                                .catch(function (error) {
-                                                                    
+                                                                                .catch(err => {
+                                                                                    toast.error("Network Error")
                                                                                 });
                                                                             setState({ isShown: false })
                                                                         }} />
-                                                                     
+
                                                                     </div>
                                                                 </Dialog>
 
@@ -192,9 +211,6 @@ class Comments extends React.Component {
                                                             </Pane>
                                                         )}
                                                     </Component>
-
-
-
 
                                                 </div>
                                             </div>
@@ -204,8 +220,6 @@ class Comments extends React.Component {
                                         <div style={{ width: '100%', height: 200, textAlign: 'center', color: '#2e6b95', fontSize: 20, display: 'flex', flexDirection: 'column', justifyContent: 'center' }} >
                                             No Comments </div>
                                     )}
-
-
 
                                 {this.state.spin === true ? (
                                     <div style={{ width: "100%", position: "absolute" }}>
@@ -222,7 +236,13 @@ class Comments extends React.Component {
 
 
 
-                                <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', marginBottom: 5, marginTop: 5 }} >
+                                <div style={{ width: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-evenly', marginBottom: 5, marginTop: 5 }} >
+                                    <InputFiles onChange={files =>
+                                        this.setState({ file: files[0], file1: files.length })
+                                    }>
+                                        <AddPhotoAlternateIcon style={{ cursor: 'pointer', color: '#2e6b95' }} />
+                                    </InputFiles>
+
                                     <textarea id='coment' value={this.state.comment}
                                         onChange={(e) => {
                                             this.setState({ comment: e.target.value })
@@ -238,10 +258,8 @@ class Comments extends React.Component {
                             <Button onClick={() => {
                                 setState({ isShown: true })
                                 this.callcomm();
-                               
-                                
-                            }}
-                                id='coment1' >Comments {this.props.comments_count} </Button>
+                            }} id='coment1' >Comments {this.props.comments_count}
+                            </Button>
                         </Pane>
                     )}
                 </Component>

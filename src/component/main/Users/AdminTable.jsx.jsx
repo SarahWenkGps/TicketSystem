@@ -3,7 +3,7 @@ import MaterialDatatable from "material-datatable";
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import moment from 'moment';
 
-class DashTable extends React.Component{
+class AdminTable extends React.Component{
   constructor(props) {
     super(props);
     this.wrapper = React.createRef();
@@ -30,7 +30,8 @@ class DashTable extends React.Component{
             fontWeight:'700' 
           },
           root: {
-            textAlign: 'center'
+            textAlign: 'center',
+          
           }
         },
      
@@ -39,36 +40,44 @@ class DashTable extends React.Component{
 render() {
 
     const columns = [
-      { name: " # ", field: "hash" },
+        { name: " # ", field: "hash" },
+        { name: " Username ", field: "username" },
         { name: " Name  ", field: "name" },
-        { name: "All Tasks  ", field: "alltasks" },
-        { name: "New", field: "new" },
-        { name: "In Progress", field: "inprogress" },
-        { name: "Closed", field: "closed" },
-        { name: "Approved  ", field: "approved" },
-        { name: "Rejected  ", field: "rejected" },
-        { name: "Archived", field: "archived" },
+        { name: " Department ", field: "depa" },
+        { name: "Email", field: "email" },
+        { name: "Ext.", field: "ip_phone" },
+        { name: "Phone", field: "phone" },
+        { name: "Birthdate", field: "birthdate" },
+       
+      
+        { name: " Status", field: "status" },
+        { name: "Edit", field: "edit" },
+  
+  
       ];
   
       const options = {
         selectableRows: false,
         print: false,
         responsive: "scroll",
-        rowCursorHand: true,
-        sort: true,
+        rowCursorHand: false,
+        sort: false,
         filter: false,
-         rowsPerPageOptions:[5,10,50,100],
-        download:true,
-        rowHover:true
+        rowsPerPageOptions: [ 15, 50, 100],
+        download: false,
+  
       };
-    
   return (
   <div style={{width:'100%'}} >
- <MuiThemeProvider theme={this.getMuiTheme()}>
-        <MaterialDatatable title={`RECENT ACTIVITIES ${this.props.date1!=0 ?(moment(this.props.date1).format("L")):('')} - ${this.props.date2!=0 ?(  moment(this.props.date2).format("L")):('')}`} data={this.props.data} columns={columns} options={options} />
-      </MuiThemeProvider>
+    <MuiThemeProvider theme={this.getMuiTheme()}>
+                    <MaterialDatatable
+                      data={this.props.data}
+                      columns={columns}
+                      options={options}
+                    />
+                  </MuiThemeProvider>
   </div>
   );
 }}
 
-export default DashTable;
+export default AdminTable;

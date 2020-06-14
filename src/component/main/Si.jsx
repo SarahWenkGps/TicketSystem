@@ -21,19 +21,20 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Redirect } from 'react-router-dom';
 import Context from '../../assets/js/context';
-import Home from './Home';
-import Users from './Users';
-import Tasks from './Tasks';
+import Task_type from './Task_type';
+import Users from './Users/Users';
+import Tasks from './Tasks/Tasks';
+import NoteTask from './Tasks/NoteTask';
 import UserInfo from '../common/UserInfo';
-import Department from './Department';
-import Dashboard from './Dashboard';
+import Department from './Department/Department';
+import Dashboard from './Dashboard/Dashboard';
 import Notifications from './Notifications';
 import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
 function rendertitile(props) {
-  if (props.match.path === '/Home') {
-    return (<div> Main  </div>)
+  if (props.match.path === '/Task_type') {
+    return (<div> Task Type  </div>)
   }
 
   else if (props.match.path === '/Users') {
@@ -53,6 +54,9 @@ function rendertitile(props) {
 
 
   else if (props.match.path === '/Tasks') {
+    return (<div>  Tasks   </div>)
+  }
+  else if (props.match.path === '/NoteTask') {
     return (<div>  Tasks   </div>)
   }
   else if (props.match.path === '/List') {
@@ -154,8 +158,8 @@ export default function PersistentDrawerLeft(props) {
     setOpen(false);
   };
   const renderPage = (props) => {
-    if (props.match.path === '/Home') {
-      return (<Home />)
+    if (props.match.path === '/Task_type') {
+      return (<Task_type />)
     }
     else if (props.match.path === '/Users') {
       return (<Users />)
@@ -171,6 +175,9 @@ export default function PersistentDrawerLeft(props) {
     }
     else if (props.match.path === '/Department') {
       return (<Department />)
+    }
+    else if (props.match.path === '/NoteTask') {
+      return (<NoteTask />)
     }
   }
   return (
@@ -274,70 +281,64 @@ export default function PersistentDrawerLeft(props) {
 
                 <NavLink to='/Dashboard' activeClassName='active' >
                   <List className='sidefect' style={{ paddingBottom: 0 }} >
-
                     <ListItem >
                       <img src={require('../../assets/img/home.png')} alt='img' id='side_img' />
                       <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Dashboard</span></ListItemText>
                     </ListItem>
-
                   </List>
                 </NavLink>
 
-                {JSON.parse(localStorage.getItem("roles").includes("1"))===false && JSON.parse(localStorage.getItem("roles").includes("2"))===false  ? (
-                  <div></div>
-                ) : (<NavLink to='/Users' activeClassName='active' >
+              <NavLink to='/Users' activeClassName='active' >
                   <List className='sidefect' style={{ paddingBottom: 0 }} >
-
                     <ListItem >
                       <img src={require('../../assets/img/user.png')} alt='img' id='side_img' />
                       <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Users</span></ListItemText>
                     </ListItem>
-
                   </List>
-                </NavLink>)}
+                </NavLink>
+
                 {JSON.parse(localStorage.getItem("roles").includes("3"))===false && JSON.parse(localStorage.getItem("roles").includes("4"))===false  ? (
                   <div></div>
                 ) : (
                 <NavLink to='/Department' activeClassName='active' >
                   <List className='sidefect' style={{ paddingBottom: 0 }} >
-
                     <ListItem >
                       <img src={require('../../assets/img/web.png')} alt='img' id='side_img' />
                       <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Departments</span></ListItemText>
                     </ListItem>
-
                   </List>
                 </NavLink>)}
 
-                {(cookies.get("role")) === "Designer" || (cookies.get("role")) === "Checker" || (cookies.get("role")) === "Storekeeper" ? (
-                  null) : (<NavLink to='/Tasks' activeClassName='active' >
+               
+                <NavLink to='/Tasks' activeClassName='active' >
                     <List className='sidefect' style={{ paddingBottom: 0 }} >
-
                       <ListItem >
                         <img src={require('../../assets/img/list.png')} alt='img' id='side_img' />
                         <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Tasks</span></ListItemText>
-                      </ListItem>
+                     </ListItem>
+                    </List>
+                  </NavLink>
 
+                  {JSON.parse(localStorage.getItem("roles").includes("3"))===false && JSON.parse(localStorage.getItem("roles").includes("4"))===false  ? (
+                  <div></div>
+                ) : (
+                  <NavLink to='/Task_type' activeClassName='active' >
+                    <List className='sidefect' style={{ paddingBottom: 0 }} >
+                      <ListItem >
+                        <img src={require('../../assets/img/list.png')} alt='img' id='side_img' />
+                        <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Task Type</span></ListItemText>
+                      </ListItem>
                     </List>
                   </NavLink>)}
 
-
-
-
-
-
-                {(cookies.get("role")) === "Designer" || (cookies.get("role")) === "Checker" ? (
-                  null) : (
                     <NavLink to='/Notifications' activeClassName='active' >
                       <List className='sidefect' style={{ paddingBottom: 0 }} >
-
                         <ListItem >
                           <img src={require('../../assets/img/bell.png')} alt='img' id='side_img' />
                           <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Notifications</span></ListItemText>
                         </ListItem>
-
                       </List>
-                    </NavLink>)}
+                    </NavLink>
 
 
               </div>

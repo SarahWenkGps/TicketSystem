@@ -5,12 +5,12 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import axios from "axios";
 import Lottie from "lottie-react-web";
-import loading from '../../assets/js/loading.json'
+import loading from '../../../assets/js/loading.json'
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import { toast } from "react-toastify";
 import Cookies from "universal-cookie";
-import Host from "../../assets/js/Host";
+import Host from "../../../assets/js/Host";
 const cookies = new Cookies();
 class AssingUser extends React.Component {
   
@@ -20,38 +20,32 @@ class AssingUser extends React.Component {
         this.state = {
 
             data: [],
-            id: '',
-            spin: false
+            id: [],
+            spin: false,
+            assigned :this.props.assigned
         };
     }
 
-
-
+   
     assign_user() {
         if (this.state.id.length > 0) {
             this.setState({ spin: true })
             var headers = {
                 jwt: cookies.get("token")
-            };
-            var counter= 0;
-            for (var i = 0; i < this.state.id.length; i++) {
-               
+            };                          
                 axios({
                     url: Host + `tasks/assign/${this.props.id}`,
                     method: "POST",
                     headers: headers,
                     data: {
-                        user_id: this.state.id[i],
+                        users_id: this.state.id,
     
                     },
                 })
     
                     .then(res => {
-                        counter++;
-                        // console.log('ff',res);
-                        // console.log('this.state.id.length',this.state.id.length);
-                        // console.log('counter',counter);
-                        if (this.state.id.length === counter) {
+                  
+                    
                             if (res.data.status === true) {
                                 toast.success("user assigned successfully")
                                 const { onProfileDelete } = this.props.onProfileDelete
@@ -61,15 +55,15 @@ class AssingUser extends React.Component {
                                 this.setState({ spin: false })
                                 toast.error(res.data.data.message.text)
                             }
-                        }
+                    
     
     
                     })
-                    .catch(function (error) {
-                        this.setState({ spin: false })
-                        // console.log(error.data);
-                    });
-            }
+                    .catch(err => {
+                        toast.error("Network Error")
+                      
+                      });
+          
             
         }
         else{
@@ -91,9 +85,10 @@ class AssingUser extends React.Component {
                 <Component
                     initialState={{
 
-                        selected: this.props.assigned
+                        selected:this.props.assigned 
                     }}
                 >
+
                     {({ state, setState }) => (
                         <SelectMenu
                             isMultiSelect
@@ -140,9 +135,7 @@ class AssingUser extends React.Component {
                                 setState({
                                     selected,
                                     selectedNames
-                                })
-                         
-                                
+                                })                                                       
                             }}
                             onDeselect={item => {
                                 const deselectedItemIndex = state.selected.indexOf(item.value)
@@ -163,7 +156,10 @@ class AssingUser extends React.Component {
                                 
                             }}
                         >
-                            <Button>{state.name || <SupervisorAccountIcon />}</Button>
+                            <Button onMouseOver={()=>{
+                             
+                                setState({selected:this.props.assigned})
+                            }}  ><SupervisorAccountIcon /></Button>
                         </SelectMenu>
                     )}
                 </Component>

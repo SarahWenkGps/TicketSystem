@@ -9,7 +9,7 @@ import loading from '../../assets/js/loading.json';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const cookies = new Cookies();
-class Edit_Dep extends React.Component {
+class Edit_typetask extends React.Component {
   constructor(props) {
     super(props);
     this.myRef = React.createRef();
@@ -36,7 +36,7 @@ class Edit_Dep extends React.Component {
 
         <Component initialState={{
           isShown: false, spin: false,
-          department:this.props.department,
+          name:this.props.name,
          
         }}>
           {({ state, setState }) => (
@@ -49,7 +49,10 @@ class Edit_Dep extends React.Component {
                 confirmLabel="Save"
                 cancelLabel="Cancel"
                 onConfirm={() => {
-
+                    if (state.name.length <3) {
+                        toast.warning('name mast be more than 3 char')
+                      }
+                      else{
                  
                   setState({ spin: true })
 
@@ -59,11 +62,11 @@ class Edit_Dep extends React.Component {
                  
               
                   axios({
-                    url: Host + `departments/department/${this.props.ids}`,
+                    url: Host + `task_types/${this.props.ids}`,
                     method: "PUT",
                     headers: headers,
                     data: {
-                        dep_name:state.department,
+                        name:state.name,
                      
                     },
                   })
@@ -81,23 +84,25 @@ class Edit_Dep extends React.Component {
                                           //  console.log('data',this.props.fun);
                     }                    
                     })
-                    .catch(function (error) {
+                 
+                    .catch(err => {
+                      toast.error("Network Error")
                       setState({ spin: false });
                     });
 
-                }}
+                }}}
               >
                 <div>
-                  <div id="new_itemnav"> Edit Department Name </div>
+                  <div id="new_itemnav"> Edit  Name </div>
                   <div className="mod1">
                     <div id='dailog' style={{ marginTop: 15 }} >
                       <div id='dialog_title'>
-                      Department </div>
+                      Name </div>
                       <div style={{ width: "80%", textAlign: "center" }}>
-                        <input type="text" id="field2" placeholder="Department"
-                          value={state.department}
+                        <input type="text" id="field2" placeholder="name"
+                          value={state.name}
                           onChange={e => {
-                            setState({ department: e.target.value })
+                            setState({ name: e.target.value })
 
                           }} />
                       </div>
@@ -121,7 +126,7 @@ class Edit_Dep extends React.Component {
 
               <div
                 onClick={() => {
-                  setState({ isShown: true , department:this.props.department, })
+                  setState({ isShown: true , name:this.props.name, })
 
                 }}
 
@@ -136,4 +141,4 @@ class Edit_Dep extends React.Component {
     );
   }
 }
-export default Edit_Dep;
+export default Edit_typetask;

@@ -12,11 +12,11 @@ import MaterialDatatable from "material-datatable";
 import { Redirect } from "react-router-dom";
 import loading from '../../assets/js/loading.json';
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
-import EditDep from "../common/EditDep";
+import Edit_typetask from "../common/Edit_typetask";
 const cookies = new Cookies();
 
 
-class Departmant extends Component {
+class Task_type extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -67,12 +67,10 @@ class Departmant extends Component {
      
        var headers = {
         jwt:jwt,
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
       };
     
        axios({
-        url: Host + `departments/departments`,
+        url: Host + `task_types`,
         method: "GET",
         headers: headers,  
     })
@@ -86,18 +84,19 @@ class Departmant extends Component {
         for (let index = 0; index < res.data.data.length; index++) {
           let obj = {
             hash:[index +1],
-            Department: res.data.data[index].name,
+            name: res.data.data[index].name,
     
             edit: (
-           <EditDep  ids={res.data.data[index].dep_id} onProfileDelete={ () => this.componentDidMount() } 
-           department={res.data.data[index].name} 
+           <Edit_typetask  ids={res.data.data[index].task_type_id} onProfileDelete={ () => this.componentDidMount() } 
+           name={res.data.data[index].name} 
            />
             ),
             delete:(  <i
               className="far fa-trash-alt"
               id="del"
               onClick={() => {
-                this.delete(res.data.data[index].dep_id);
+                // this.delete(res.data.data[index].dep_id);
+                if(window.confirm('Delete the Type?')){this.delete(res.data.data[index].task_type_id)};
               }}
             ></i>)
           };
@@ -111,9 +110,8 @@ class Departmant extends Component {
       }
       })
       .catch(err => {
-        // console.log("error:", err);
-       
-      
+        toast.error("Network Error")
+     
       });
   }
 
@@ -127,7 +125,7 @@ class Departmant extends Component {
       jwt: cookies.get("token")
     };
     axios({
-      url: Host + `departments/department/${id}`,
+      url: Host + `task_types/${id}`,
       method: "DELETE",
       headers: headers
     })
@@ -141,7 +139,8 @@ class Departmant extends Component {
      toast.success("deleted successfully")
       }
       })
-      .catch(function(err) {
+      .catch(err => {
+        toast.error("Network Error")
        
       });
   }
@@ -150,7 +149,7 @@ class Departmant extends Component {
    
     const columns = [
       { name: " # ", field: "hash" },
-      { name: " Department ", field: "Department" },
+      { name: " Name ", field: "name" },
       { name: "Edit", field: "edit" },
       { name: "Delete", field: "delete" },
     
@@ -183,7 +182,7 @@ class Departmant extends Component {
               <div id="main_sec">
                 <div id="main_row">
                   <div style={{ width: 150 }}>
-                    <Component initialState={{ isShown: false,spin:false,Department:'' }}>
+                    <Component initialState={{ isShown: false,spin:false,name:'' }}>
                       {({ state, setState }) => (
                         <Pane>
                           <Dialog
@@ -194,8 +193,8 @@ class Departmant extends Component {
                             confirmLabel="Save"
                             cancelLabel="Cancel"
                             onConfirm={() => {
-                             if (state.Department.length <3) {
-                               toast.warning('department mast be more than 3 char')
+                             if (state.name.length <3) {
+                               toast.warning('name mast be more than 3 char')
                              }
                              else{
                               setState({ spin: true });
@@ -206,11 +205,11 @@ class Departmant extends Component {
     };
  
     axios({
-      url: Host + `departments/department`,
+      url: Host + `task_types`,
       method: "POST",
       headers: headers,
       data:{
-        dep_name:state.Department
+        name:state.name
       }
     })
       .then(response => {
@@ -219,28 +218,28 @@ class Departmant extends Component {
           setState({ spin: false })
       }
       else if (response.data.status===true) {
-        toast.success("Department added successfully");
-        setState({ spin: false,Department:"" , isShown: false}); 
+        toast.success(" Added successfully");
+        setState({ spin: false,name:"" , isShown: false}); 
         this.componentDidMount();
       }
       })
-      .catch(function(error) {
-         setState({ spin: false });
-    
+      .catch(err => {
+        toast.error("Network Error")
+        setState({ spin: false });
       });
                             }}}
                           >
                             <div>
-                              <div id="new_itemnav"> Create New Department </div>
+                              <div id="new_itemnav"> Create New Type </div>
                               <div className="mod1">
                                 <div id='dailog' style={{marginTop:15}} >
                                   <div id='dialog_title'>
-                                  Department </div>
+                                  Name </div>
                                   <div style={{ width: "80%",textAlign: "center"}}>
-                                    <input type="text" id="field2" placeholder="Department"
-                                      value={state.Department}
+                                    <input type="text" id="field2" placeholder="Name"
+                                      value={state.name}
                                       onChange={e =>{
-                                        setState({ Department: e.target.value})
+                                        setState({ name: e.target.value})
                                       
                                       }}/>
                                   </div>
@@ -314,5 +313,5 @@ class Departmant extends Component {
   }
 }
 
-export default Departmant;
+export default Task_type;
 

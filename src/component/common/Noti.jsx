@@ -24,44 +24,27 @@ class Noti extends React.Component {
   }
 
 
-
-  setRead() {
-    this.setState({ color: '#4f8363' })
-    var headers = {
-      jwt: cookies.get("token"),
-    };
-    axios({
-      url: Host + `notifications/read_notification/${this.props.activity_id}`,
-      method: "POST",
-      headers: headers,
-
-    })
-      .then(response => {
-        if (response.data.status === false) {
-          toast.error(response.data.data.message.text)
-        } else {
-          toast.success("Done")
-          const { onProfileDelete } = this.props
-          onProfileDelete()
-        }
-      })
-  }
-
-
-
-
-
-
-
   render() {
     return (
-      <div>
+      <div style={{cursor:'pointer'}}  >
         <div id='notification_main'  >
-          <div id='type_btn' >{this.props.type} <NotificationsIcon /> </div>
+        
+            {this.props.type==='task_assgin'?(
+ <div id='type_btn' style={{backgroundColor:'#94D295'}}  > Task Assign  <NotificationsIcon />  </div>
+            ):(null)} 
+           {this.props.type==='task_status_changed'?(
+ <div id='type_btn'   > Task Status Changed    <NotificationsIcon />  </div>
+            ):(null)} 
+              {this.props.type==='task_updated'?(
+ <div id='type_btn' style={{backgroundColor:'#FF8847'}}   > Task Updated    <NotificationsIcon />  </div>
+            ):(null)} 
+                {this.props.type==='comment'?(
+ <div id='type_btn' style={{backgroundColor:'#946F5D'}}   > Task Comment   <NotificationsIcon />  </div>
+            ):(null)} 
           <div id='noti_date'  >  {moment(this.props.time).format("LLL")}   </div>
           <div id='noti_text' >  <span id='span_noti1' > {this.props.commenter} {this.props.assign_to}  </span> {this.props.note}  <span id='span_noti2'>{this.props.user_updater} {this.props.assign_from} </span>    </div>
 
-          <div id='noti_btn_dwn' >
+          {/* <div id='noti_btn_dwn' >
             <Tooltip title="Set Read" onClick={() => {
               this.setRead();
             }}>
@@ -70,7 +53,7 @@ class Noti extends React.Component {
               </IconButton>
             </Tooltip>
        
-          </div>
+          </div> */}
 
         </div>
 
