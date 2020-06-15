@@ -70,7 +70,7 @@ class EditUser extends React.Component {
   render() {
     const { selectedOption } = this.state;
     return (
-      <div ref={this.myRef} style={{display:'flex',alignItems:'center',justifyContent:'center'}}  >
+      <div ref={this.myRef} style={{display:'flex',alignItems:'center',justifyContent:'center'}}  className='iconUserDialog'  >
 
         <Component initialState={{
           isShown: false, spin: false,

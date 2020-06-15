@@ -166,6 +166,7 @@ class NewTask extends React.Component {
                 if (this.state.user.length > 0) {
                     this.assign_user(res.data.data.data.task_id);
                 }
+
                 else {
                     const { onProfileDelete } = this.props
                     onProfileDelete()

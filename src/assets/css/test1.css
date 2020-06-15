@@ -88,30 +88,7 @@ transform: scale(1.2);
    /* height: 160px; */
    background-color: #dfe0e0;
 }
-.parent_user{
-  position: relative;
- display: flex;
- align-items: center;
- justify-content: space-between;
- 
-  color: #2e6b95;
-}
-.hover_parentUser{
-  display:none;
-  padding: 4px;
-    min-width: 100%;
-    overflow: auto;
-   /* height: 160px; */
-   background-color: #dfe0e0;
-}
-.parent_user:hover .hover_parentUser {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  z-index: 5;
-  padding: 4px;
-  border-radius: 5px;
-}
+
 #OthersParent{
   position: relative;
 }
@@ -122,6 +99,16 @@ transform: scale(1.2);
     overflow: auto;
    /* height: 160px; */
 
+}
+.iconUserDialog{
+  width: 96%;
+  text-align: center;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(to bottom, #FFFFFF, #F4F5F7);
+  box-shadow: inset 0 0 0 1px rgba(67, 90, 111, 0.14), inset 0 -1px 1px 0 rgba(67, 90, 111, 0.06);
 }
 #OthersParent:hover #OthersContent {
   display: flex;
