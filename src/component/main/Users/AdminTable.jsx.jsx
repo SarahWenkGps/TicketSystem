@@ -56,6 +56,7 @@ render() {
   
       ];
   
+  
       const options = {
         selectableRows: false,
         print: false,

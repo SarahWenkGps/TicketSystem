@@ -247,6 +247,7 @@ class App extends React.Component {
             <Route path='/Notifications' component={Si} />
             <Route path='/Department' component={Si} />
             <Route path='/NoteTask' component={Si} />
+            <Route path='/LogTable' component={Si} />
           </Switch>
         </Context.Provider>
       </BrowserRouter>

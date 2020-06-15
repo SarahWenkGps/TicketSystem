@@ -26,6 +26,7 @@ import Users from './Users/Users';
 import Tasks from './Tasks/Tasks';
 import NoteTask from './Tasks/NoteTask';
 import UserInfo from '../common/UserInfo';
+import LogTable from '../common/LogTable';
 import Department from './Department/Department';
 import Dashboard from './Dashboard/Dashboard';
 import Notifications from './Notifications';
@@ -61,6 +62,9 @@ function rendertitile(props) {
   }
   else if (props.match.path === '/List') {
     return (<div>   List   </div>)
+  }
+  else if (props.match.path === '/LogTable') {
+    return (<div>   Log   </div>)
   }
 }
 
@@ -178,6 +182,9 @@ export default function PersistentDrawerLeft(props) {
     }
     else if (props.match.path === '/NoteTask') {
       return (<NoteTask />)
+    }
+    else if (props.match.path === '/LogTable') {
+      return (<LogTable />)
     }
   }
   return (

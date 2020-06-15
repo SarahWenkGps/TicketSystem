@@ -50,7 +50,8 @@ class Departmant extends Component {
 
           },
           root:{
-            textAlign:'center' 
+            textAlign:'center' ,
+         
            }
       },
      
@@ -100,7 +101,8 @@ class Departmant extends Component {
                 // this.delete(res.data.data[index].dep_id);
                 if(window.confirm('Delete the Department?')){this.delete(res.data.data[index].dep_id)};
               }}
-            ></i>)
+            ></i>),
+            log:(  <div className='dep_icons'  > <div className='iconUserDialog' onClick={()=>{window.location=`/LogTable?id=${res.data.data[index].dep_id}&name=${"department"}`}}   >   <img src={require('../../../assets/img/log.png')} alt='img' style={{height:25}} /></div></div> )
           };
           arr.push(obj);
           // console.log('data11',this.state.arr);
@@ -154,6 +156,9 @@ class Departmant extends Component {
       { name: " Department ", field: "Department" },
       { name: "Edit", field: "edit" },
       { name: "Delete", field: "delete" },
+      {name:"Log", field:"log",  options: {
+        width: 200,
+    },}
     
     ];
   

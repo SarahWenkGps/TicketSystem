@@ -29,6 +29,7 @@ import PopupState, { bindToggle, bindPopper } from 'material-ui-popup-state';
 import Fade from '@material-ui/core/Fade';
 import Paper from '@material-ui/core/Paper';
 const cookies = new Cookies();
+
 const customStyles = {
   option: (provided, state) => ({
     ...provided,
@@ -105,6 +106,7 @@ class Users extends Component {
         },
       }
     });
+
 
   componentDidMount() {
     if (cookies.get("token")) {
@@ -280,7 +282,7 @@ class Users extends Component {
             {({ TransitionProps }) => (
               <Fade {...TransitionProps} timeout={350}>
                 <Paper>
-                <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'space-between',padding:5,height:130}}  >
+                <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'space-between',padding:5,height:150}}  >
                       <EditUser ids={res.data.data[index].user_id} onProfileDelete={() => this.componentDidMount()}
                   name={res.data.data[index].name} email={res.data.data[index].email}
                   department={res.data.data[index].department.name} status={res.data.data[index].enabled} data1={this.state.dapts}
@@ -288,7 +290,11 @@ class Users extends Component {
                          <Changwpass ids={res.data.data[index].user_id} />
                          {  res.data.data[index].premissions=== undefined ? (null):(<Permitions ids={res.data.data[index].user_id} roles={this.state.roles}  permitions={res.data.data[index].premissions.map((p,i)=>(
                 p.role_id ))}
-                onProfileDelete1={() => this.componentDidMount()}/>)}</div>
+                onProfileDelete1={() => this.componentDidMount()}/>)}
+                  <div className='iconUserDialog' onClick={()=>{window.location=`/LogTable?id=${res.data.data[index].user_id}&name=${"user"}`}}   >   <img src={require('../../../assets/img/log.png')} alt='img' style={{height:25}} /></div>
+                </div>
+              
+             
                 </Paper>
               </Fade>
             )}
@@ -330,7 +336,7 @@ class Users extends Component {
 
   render() {
     const { selectedOption } = this.state;
-  
+
     return (
       <Context.Consumer>
         {ctx => {

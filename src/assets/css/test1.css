@@ -100,8 +100,16 @@ transform: scale(1.2);
    /* height: 160px; */
 
 }
+.dep_icons{
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 .iconUserDialog{
-  width: 96%;
+  width: 55px;
   text-align: center;
   height: 30px;
   display: flex;

@@ -156,17 +156,7 @@ class Tasks extends React.Component {
         }
       })
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const myParam = urlParams.get('id');
-    axios
-      .get(Host + `tasks/task/${myParam}?params={"from_date":0,"to_date":0}`, {
-        headers: headers,
-      })
-      .then(res => {
-        this.setState({ noti: res.data.data })
 
-
-      })
 // this.getpriorities();
 this.getGeofences();
 
