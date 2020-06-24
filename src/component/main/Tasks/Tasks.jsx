@@ -595,7 +595,6 @@ class Tasks extends React.Component {
 
 
 
-
                   <div id="apfot" ref={this.myRef}  >
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
                       <div id='searchdiv' >
