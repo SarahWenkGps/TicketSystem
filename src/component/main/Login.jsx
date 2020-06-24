@@ -109,7 +109,8 @@ class Login extends Component {
 
                                                     data: {
                                                         username: this.state.username, 
-                                                        password:this.state.password
+                                                        password:this.state.password,
+                                                        device_type:"web"
                                                       }
 
                                                 })

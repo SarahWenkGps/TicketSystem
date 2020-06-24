@@ -1,5 +1,5 @@
 import React from 'react';
-import {  Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import Component from "@reactions/component";
 import { Checkbox, SelectMenu, Button } from 'evergreen-ui';
 import loading from '../../../assets/js/loading.json';
@@ -16,7 +16,8 @@ import moment from 'moment';
 import Task_noti from './Task_noti';
 import { toast } from "react-toastify";
 import Context from "../../../assets/js/context";
-import { ChromePicker } from 'react-color'
+
+
 const cookies = new Cookies();
 
 class Tasks extends React.Component {
@@ -66,8 +67,8 @@ class Tasks extends React.Component {
       selected_AssignTo: '',
       selected_taskType: '',
       type: [],
-      priorities:[],
-      Geofences:[],
+      priorities: [],
+      Geofences: [],
     }
     this.filterRef = React.createRef();
   }
@@ -129,8 +130,8 @@ class Tasks extends React.Component {
         });
       })
       .catch(err => {
-        
-      
+
+
       });
 
     axios({
@@ -155,23 +156,13 @@ class Tasks extends React.Component {
         }
       })
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const myParam = urlParams.get('id');
-    axios
-      .get(Host + `tasks/task/${myParam}?params={"from_date":0,"to_date":0}`, {
-        headers: headers,
-      })
-      .then(res => {
-        this.setState({ noti: res.data.data })
 
-
-      })
-// this.getpriorities();
-this.getGeofences();
+    // this.getpriorities();
+    this.getGeofences();
 
   }
 
-  getpriorities(){
+  getpriorities() {
     var headers = {
       jwt: cookies.get("token"),
     };
@@ -182,14 +173,14 @@ this.getGeofences();
 
     })
       .then(res => {
-        this.setState({priorities:res.data.data})
+        this.setState({ priorities: res.data.data })
       })
-      .catch(err =>{
+      .catch(err => {
 
       })
   }
 
-  getGeofences(){
+  getGeofences() {
     var headers = {
       jwt: cookies.get("token"),
     };
@@ -200,9 +191,9 @@ this.getGeofences();
 
     })
       .then(res => {
-        this.setState({Geofences:res.data.data.data})
+        this.setState({ Geofences: res.data.data.data })
       })
-      .catch(err =>{
+      .catch(err => {
 
       })
   }
@@ -264,8 +255,8 @@ this.getGeofences();
 
       })
       .catch(err => {
-      
-       
+
+
       });
   }
 
@@ -281,6 +272,12 @@ this.getGeofences();
     var x = document.getElementById("date_btn");
     x.style.backgroundColor = "#fff";
     x.style.color = "#828282";
+    var b = document.getElementById("date_btn2");
+    b.style.backgroundColor = "#fff";
+    b.style.color = "#828282";
+    var n = document.getElementById("date_btn3");
+    n.style.backgroundColor = "#fff";
+    n.style.color = "#828282";
     var y = document.getElementById("date_btn1");
     y.style.backgroundColor = "rgb(106, 170, 104)";
     y.style.color = "#fff";
@@ -290,12 +287,44 @@ this.getGeofences();
     var x = document.getElementById("date_btn1");
     x.style.backgroundColor = "#fff";
     x.style.color = "#828282";
+    var s = document.getElementById("date_btn3");
+    s.style.backgroundColor = "#fff";
+    s.style.color = "#828282";
+    var t = document.getElementById("date_btn2");
+    t.style.backgroundColor = "#fff";
+    t.style.color = "#828282";
     var y = document.getElementById("date_btn");
     y.style.backgroundColor = "rgb(106, 170, 104)";
     y.style.color = "#fff";
   }
-
-
+  yesterday() {
+    var x = document.getElementById("date_btn1");
+    x.style.backgroundColor = "#fff";
+    x.style.color = "#828282";
+    var s = document.getElementById("date_btn3");
+    s.style.backgroundColor = "#fff";
+    s.style.color = "#828282";
+    var t = document.getElementById("date_btn");
+    t.style.backgroundColor = "#fff";
+    t.style.color = "#828282";
+    var y = document.getElementById("date_btn2");
+    y.style.backgroundColor = "rgb(106, 170, 104)";
+    y.style.color = "#fff";
+  }
+  Week() {
+    var x = document.getElementById("date_btn1");
+    x.style.backgroundColor = "#fff";
+    x.style.color = "#828282";
+    var t = document.getElementById("date_btn");
+    t.style.backgroundColor = "#fff";
+    t.style.color = "#828282";
+    var d = document.getElementById("date_btn2");
+    d.style.backgroundColor = "#fff";
+    d.style.color = "#828282";
+    var y = document.getElementById("date_btn3");
+    y.style.backgroundColor = "rgb(106, 170, 104)";
+    y.style.color = "#fff";
+  }
   onDateChanges = (date, date2) => {
     this.setState({ date1: moment(date).format("X") * 1000, date2: moment(date2).format("X") * 1000 })
     var x = document.getElementById("date_btn");
@@ -304,6 +333,12 @@ this.getGeofences();
     var x = document.getElementById("date_btn1");
     x.style.backgroundColor = "#fff";
     x.style.color = "#828282";
+    var s = document.getElementById("date_btn2");
+    s.style.backgroundColor = "#fff";
+    s.style.color = "#828282";
+    var c = document.getElementById("date_btn3");
+    c.style.backgroundColor = "#fff";
+    c.style.color = "#828282";
   }
   render() {
     let filter = this.state.tasks.filter((dog) => {
@@ -326,7 +361,7 @@ this.getGeofences();
         )
         && (
           // dog.task_type.toString().toLowerCase().includes(this.state.selected_taskType)
-       dog.task_type!==null?(dog.task_type.toString().toLowerCase().includes(this.state.selected_taskType)):(<div></div>)
+          dog.task_type !== null ? (dog.task_type.toString().toLowerCase().includes(this.state.selected_taskType)) : (<div></div>)
         )
 
       )
@@ -552,11 +587,10 @@ this.getGeofences();
                       )}
                     </Component>
 
-                  
+
 
 
                   </div>
-
 
 
 
@@ -572,6 +606,7 @@ this.getGeofences();
                             onClose={() => {
                               this.componentDidMount();
                             }} />
+                         
                           <div onClick={() => {
                             this.setState({ date1: 0, date2: 0 })
                             setTimeout(() => {
@@ -579,7 +614,25 @@ this.getGeofences();
                               this.allTime();
                             }, 200);
                           }} id="date_btn1" > All Time </div>
-
+                         
+                         <div onClick={() => {
+                            this.setState({ date1: moment().subtract(7, 'day').format("X") * 1000, date2: moment(moment().format('L')).format("X") * 1000 })
+                            setTimeout(() => {
+                              this.componentDidMount();
+                              this.Week();
+                            }, 200);
+                            console.log(moment().subtract(7, 'day'));
+                            
+                          }} id="date_btn3" > Week  </div>
+                         
+                          <div onClick={() => {
+                            this.setState({ date1: moment().subtract(1, 'day').format("X") * 1000, date2: moment(moment().format('L')).format("X") * 1000 })
+                            setTimeout(() => {
+                              this.componentDidMount();
+                              this.yesterday();
+                            }, 200);
+                          }} id="date_btn2" > Yesterday  </div>
+                          
                           <div onClick={() => {
                             this.setState({ date1: moment(moment().format('L')).format("X") * 1000, date2: 0 })
                             setTimeout(() => {
@@ -587,6 +640,7 @@ this.getGeofences();
                               this.today();
                             }, 200);
                           }} id="date_btn" > Today  </div>
+
                         </div>
                       </div>
 
@@ -606,19 +660,19 @@ this.getGeofences();
 
 
                       <NewTask onProfileDelete={() => this.componentDidMount()} users={this.state.users} key={1}
-                       type={this.state.type} priorities={this.state.priorities} Geofences={this.state.Geofences}  />
+                        type={this.state.type} priorities={this.state.priorities} Geofences={this.state.Geofences} />
                       <span className='filter_span' > {filter.length} Tasks </span>
                       <Row style={{ width: '100%', display: 'flex' }}   >
-                     
+
 
                         {filter.map((item, i) => (
-                          <Col md={6} key={i} id='noti_Get'  style={{ marginTop: 40 }}    >
-                            <Tasknwe1  name={item.task_title} time={item.dead_time} desc={item.description}
+                          <Col md={6} key={i} id='noti_Get' style={{ marginTop: 40 }}    >
+                            <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                               id={item.task_id} users={this.state.users} assigners={item.assigners}
                               onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
                               createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count}
-                              type={this.state.type} task_type={item.task_type} monitor={item.monitor}  files={item.files}  priority={item.priority} geofences={item.geofences}
-                               Geofences={this.state.Geofences} weight={item.weight}  />
+                              type={this.state.type} task_type={item.task_type} monitor={item.monitor} files={item.files} priority={item.priority} geofences={item.geofences}
+                              Geofences={this.state.Geofences} weight={item.weight} />
 
                           </Col>
                         ))}

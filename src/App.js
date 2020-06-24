@@ -63,7 +63,7 @@ class App extends React.Component {
         })
           .then(res => {
             if (res.data.data.length > 0) {
-              // console.log(res.data.data);
+            // console.log(res.data.data);
               var arr = []
               if (res.data.data[0].assign_to !== undefined) {
                 arr.push(res.data.data[0].assign_to)
@@ -247,6 +247,7 @@ class App extends React.Component {
             <Route path='/Notifications' component={Si} />
             <Route path='/Department' component={Si} />
             <Route path='/NoteTask' component={Si} />
+            <Route path='/LogTable' component={Si} />
           </Switch>
         </Context.Provider>
       </BrowserRouter>

@@ -45,16 +45,18 @@ render() {
         { name: " Name  ", field: "name" },
         { name: " Department ", field: "depa" },
         { name: "Email", field: "email" },
+        {name:"Last Login" ,field:"last_login"},
         { name: "Ext.", field: "ip_phone" },
         { name: "Phone", field: "phone" },
         { name: "Birthdate", field: "birthdate" },
-        { name: "Permitions", field: "Permitions" },
-        { name: " Password", field: "pass" },
+       
+      
         { name: " Status", field: "status" },
         { name: "Edit", field: "edit" },
   
   
       ];
+  
   
       const options = {
         selectableRows: false,

@@ -89,7 +89,7 @@ class ShowFile extends React.Component {
 
                                         <div onClick={() => {
                                             window.open(Host + f.file_path);
-                                        }} >{i + 1} File <span> <AttachmentIcon />    </span>  </div>
+                                        }} >{i + 1} File <span> <AttachmentIcon /> <span style={{fontSize:12}}  >{f.file_path} </span>  </span>  </div>
                                         <div>
                                             <i className="far fa-trash-alt" id="del"
                                                 onClick={() => {

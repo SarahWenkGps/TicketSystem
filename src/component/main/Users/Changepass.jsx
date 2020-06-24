@@ -27,7 +27,7 @@ class Changwpass extends React.Component {
 
     render() {
         return (
-            <div    >
+            <div  className='iconUserDialog'  >
 
                 <Component initialState={{ isShown: false, spin: false }}    >
                     {({ state, setState }) => (

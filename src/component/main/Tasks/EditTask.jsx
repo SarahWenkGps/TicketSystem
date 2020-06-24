@@ -11,7 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import DatePicker from "react-datepicker";
 import moment from 'moment';
 import "react-datepicker/dist/react-datepicker.css";
-
+import Slider from '@material-ui/core/Slider';
 // import moment from 'moment';
 const cookies = new Cookies();
 
@@ -60,6 +60,7 @@ class EditTask extends React.Component {
             moniter:[],
             geo_name:'',
             dimentions:[],
+            weight:'',
         };
     }
 
@@ -68,7 +69,12 @@ class EditTask extends React.Component {
             startDate: date
         });
     };
-
+    handleChangeweight = (event, newValue) => {
+        // setValue(newValue);
+        console.log(newValue);
+        this.setState({weight:newValue})
+        
+      };
 
     render() {
         const { selectedOption } = this.state;
@@ -112,6 +118,7 @@ class EditTask extends React.Component {
                                             geo_name: this.state.geo_name,
                                             geo_x: this.state.dimentions[0],
                                             geo_y: this.state.dimentions[1],
+                                            weight:this.state.weight
                                         },
                                     })
 
@@ -173,45 +180,96 @@ class EditTask extends React.Component {
                                             <div id='dialog_title' >  Task type </div>
 
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
-                                                <Component initialState={{ selected: state.task_type1 ,label:''}}>
-                                                    {({ setState, state }) => (
-                                                        <SelectMenu
-                                                            title="Select type"
-                                                            options={this.props.type}
-                                                            selected={state.selected}
-                                                            onSelect={item => {
-                                                                setState({ selected: item.value,label:item.label })
-                                                                this.setState({type_id:item.value})
-                                                            }}
-                                                        >
-                                                            <Button  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ state.label ||'Select Type...'}</Button>
-                                                        </SelectMenu>
-                                                    )}
-                                                </Component>
+                                        
+
+                                                <Component initialState={{ selected: null, label: '' }}>
+                      {({ state, setState }) => (
+                        <SelectMenu
+                          isMultiSelect
+                          title="Select type"
+                          options={this.props.type}
+                          selected={state.selected}
+                          onSelect={item => {
+                            const selected = [state.selected, item.value]
+                            this.setState({ type_id: item.value })
+                            const selectedItems = selected
+                            const selectedItemsLength = selectedItems.length
+                            let selectedNames = ''
+                            setState({
+                              selected,
+                              selectedNames
+                            })
+                          }}
+                          onDeselect={item => {
+                            const deselectedItemIndex = state.selected.indexOf(item.value)
+                            const selectedItems = state.selected.filter(
+                              (_item, i) => i !== deselectedItemIndex
+                            )
+                            const selectedItemsLength = selectedItems.length
+                            let selectedNames = ''
+                            if (selectedItemsLength === 0) {
+                              selectedNames = ''
+                            } else if (selectedItemsLength === 1) {
+                              selectedNames = selectedItems.toString()
+                            } else if (selectedItemsLength > 1) {
+                              selectedNames = selectedItemsLength.toString() + ' selected...'
+                            }
+                            setState({ selected: selectedItems, selectedNames })
+                            this.setState({ type_id: "" })
+                          }}
+                        >
+                           <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select Type...'}</Button>
+                        </SelectMenu>
+                      )}
+                    </Component>
+
                                             </div>
                                         </div>
                                         <div id='dailog' >
                                             <div id='dialog_title' >  ADD Geofence </div>
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
-                                                <Component
-                                                    initialState={{
-                                                        selected: null,label:'',
-                                                        options: this.props.Geofences
-                                                            .map(label => ({ label: label.name, value: label.x, dimen: [label.x, label.y] })),
-                                                    }}
-                                                >
-                                                    {({ setState, state }) => (
+                                          
+                                                <Component initialState={{
+                                                    selected: null, label: '',
+                                                    options: this.props.Geofences
+                                                        .map(label => ({ label: label.name, value: label.x, dimen: [label.x, label.y] })),
+                                                }} >
+                                                    {({ state, setState }) => (
                                                         <SelectMenu
-                                                            title="Select Name"
-                                                            options={state.options}
+                                                            isMultiSelect
                                                             selected={state.selected}
+                                                            title="Select names"
+                                                            options={state.options}
                                                             onSelect={item => {
-                                                                setState({ selected: item.value ,label:item.label})
+                                                                const selected = [state.selected, item.value]
                                                                 this.setState({ geo_name: item.label, dimentions: item.dimen })
-                                                      
+                                                                const selectedItems = selected
+                                                                const selectedItemsLength = selectedItems.length
+                                                                let selectedNames = ''
+                                                                setState({
+                                                                    selected,
+                                                                    selectedNames
+                                                                })
+                                                            }}
+                                                            onDeselect={item => {
+                                                                const deselectedItemIndex = state.selected.indexOf(item.value)
+                                                                const selectedItems = state.selected.filter(
+                                                                    (_item, i) => i !== deselectedItemIndex
+                                                                )
+                                                                const selectedItemsLength = selectedItems.length
+                                                                let selectedNames = ''
+                                                                if (selectedItemsLength === 0) {
+                                                                    selectedNames = ''
+                                                                } else if (selectedItemsLength === 1) {
+                                                                    selectedNames = selectedItems.toString()
+                                                                } else if (selectedItemsLength > 1) {
+                                                                    selectedNames = selectedItemsLength.toString() + ' selected...'
+                                                                }
+                                                                setState({ selected: selectedItems, selectedNames })
+                                                                this.setState({ geo_name: null, dimentions: [null, null] })
                                                             }}
                                                         >
-                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label ||'Select Name...'}</Button>
+                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select name...'}</Button>
                                                         </SelectMenu>
                                                     )}
                                                 </Component>
@@ -220,25 +278,70 @@ class EditTask extends React.Component {
                                         <div id='dailog' >
                                             <div id='dialog_title' >  Task Moniter  </div>
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
-                                                <Component initialState={{ selected: null,label:'' }}>
-                                                    {({ setState, state }) => (
+                                       
+
+                                                <Component initialState={{ selected: null,label:'' }} >
+                                                    {({ state, setState }) => (
                                                         <SelectMenu
+                                                            isMultiSelect
                                                             title="Select Moniter"
                                                             options={this.props.users}
                                                             selected={state.selected}
                                                             onSelect={item => {
-                                                                setState({ selected: item.value,label:item.label })
+                                                                const selected = [state.selected, item.value]
                                                                 this.setState({moniter:item.value})
-                                                             
+                                                                const selectedItems = selected
+                                                                const selectedItemsLength = selectedItems.length
+                                                                let selectedNames = ''
+                                                                setState({
+                                                                    selected,
+                                                                    selectedNames
+                                                                })
+                                                            }}
+                                                            onDeselect={item => {
+                                                                const deselectedItemIndex = state.selected.indexOf(item.value)
+                                                                const selectedItems = state.selected.filter(
+                                                                    (_item, i) => i !== deselectedItemIndex
+                                                                )
+                                                                const selectedItemsLength = selectedItems.length
+                                                                let selectedNames = ''
+                                                                if (selectedItemsLength === 0) {
+                                                                    selectedNames = ''
+                                                                } else if (selectedItemsLength === 1) {
+                                                                    selectedNames = selectedItems.toString()
+                                                                } else if (selectedItemsLength > 1) {
+                                                                    selectedNames = selectedItemsLength.toString() + ' selected...'
+                                                                }
+                                                                setState({ selected: selectedItems, selectedNames })
+                                                                this.setState({moniter:""})
                                                             }}
                                                         >
-                                                            <Button  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{ state.label ||'Select Moniter'}</Button>
+                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select name...'}</Button>
                                                         </SelectMenu>
                                                     )}
                                                 </Component>
                                             </div>
                                         </div>
-                                   
+                                        <div id='dailog' >
+                                            <div id='dialog_title' >  Task Weight  </div>
+                                            <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
+                                                <Component initialState={{ selected: null }}>
+                                                    {({ setState, state }) => (
+                                                          <Slider style={{width:'94%'}}
+                                                          defaultValue={2}
+                                                        //   value={value}
+                                                          onChange={this.handleChangeweight}
+                                                          aria-labelledby="discrete-slider"
+                                                          valueLabelDisplay="auto"
+                                                          step={1}
+                                                          marks
+                                                          min={0}
+                                                          max={10}
+                                                        />
+                                                    )}
+                                                </Component>
+                                            </div>
+                                        </div>
 
                                         <div id='dailog' style={{ marginTop: 15, height: 'auto' }} >
                                             <div id='dialog_title' > Deadline Date    </div>

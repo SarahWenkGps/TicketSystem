@@ -98,7 +98,8 @@ class Task_type extends Component {
                 // this.delete(res.data.data[index].dep_id);
                 if(window.confirm('Delete the Type?')){this.delete(res.data.data[index].task_type_id)};
               }}
-            ></i>)
+            ></i>),
+            log:(  <div className='dep_icons'  > <div className='iconUserDialog' onClick={()=>{window.open(`https://www.iraq-gis.com/`+`LogTable?id=${res.data.data[index].task_type_id}&name=${"type"}`,'_blank')}}   >   <img src={require('../../assets/img/log.png')} alt='img' style={{height:25}} /></div></div> )
           };
           arr.push(obj);
           // console.log('data11',this.state.arr);
@@ -152,7 +153,7 @@ class Task_type extends Component {
       { name: " Name ", field: "name" },
       { name: "Edit", field: "edit" },
       { name: "Delete", field: "delete" },
-    
+      { name: "Log", field: "log" },
     ];
   
 
