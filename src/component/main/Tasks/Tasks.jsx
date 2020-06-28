@@ -69,8 +69,12 @@ class Tasks extends React.Component {
       type: [],
       priorities: [],
       Geofences: [],
+      height: window.innerHeight,
+      message: 'not at bottom',
+      force:0,
     }
     this.filterRef = React.createRef();
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
 
@@ -78,7 +82,32 @@ class Tasks extends React.Component {
   handleClearAllClick = () => {
     this.filterRef.current.clearAll();
   }
+
+  handleScroll() {
+    const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
+    const body = document.body;
+    const html = document.documentElement;
+    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    const windowBottom = windowHeight + window.pageYOffset;
+    if (windowBottom >= docHeight) {
+        this.setState({
+            message: 'bottom reached'
+        });
+    } else {
+        this.setState({
+            message: 'not at bottom'
+        });
+    }
+}
+
+
+
+componentWillUnmount() {
+  window.removeEventListener("scroll", this.handleScroll);
+}
+  
   componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll);
     this.setState({ spin: true })
     if (cookies.get("token")) {
       this.setState({ check: "login" })
@@ -179,13 +208,19 @@ class Tasks extends React.Component {
 
       })
   }
-
+RefreshGeofences(){
+  this.setState({force:1})
+  setTimeout(() => {
+    this.getGeofences();
+  }, 200);
+}
   getGeofences() {
     var headers = {
       jwt: cookies.get("token"),
     };
+    
     axios({
-      url: Host + `tasks/task_geofences?params={"force":0}`,
+      url: Host + `tasks/task_geofences?params={"force":${this.state.force}}`,
       method: "GET",
       headers: headers,
 
@@ -595,6 +630,7 @@ class Tasks extends React.Component {
 
 
 
+
                   <div id="apfot" ref={this.myRef}  >
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
                       <div id='searchdiv' >
@@ -615,7 +651,7 @@ class Tasks extends React.Component {
                           }} id="date_btn1" > All Time </div>
                          
                          <div onClick={() => {
-                            this.setState({ date1: moment().subtract(7, 'day').format("X") * 1000, date2: moment(moment().format('L')).format("X") * 1000 })
+                            this.setState({ date1: moment(moment().format('L')).subtract(7, 'day').format("X")* 1000, date2: 0 })
                             setTimeout(() => {
                               this.componentDidMount();
                               this.Week();
@@ -625,7 +661,7 @@ class Tasks extends React.Component {
                           }} id="date_btn3" > Week  </div>
                          
                           <div onClick={() => {
-                            this.setState({ date1: moment().subtract(1, 'day').format("X") * 1000, date2: moment(moment().format('L')).format("X") * 1000 })
+                            this.setState({ date1: moment(moment().format('L')).subtract(1, 'day').format("X")* 1000, date2: moment(moment().format('L')).format("X") * 1000 })
                             setTimeout(() => {
                               this.componentDidMount();
                               this.yesterday();
@@ -658,7 +694,7 @@ class Tasks extends React.Component {
                         )}
 
 
-                      <NewTask onProfileDelete={() => this.componentDidMount()} users={this.state.users} key={1}
+                      <NewTask onProfileDelete={() => this.componentDidMount()} users={this.state.users} key={1} onRefreshGeo={() => this.RefreshGeofences()}
                         type={this.state.type} priorities={this.state.priorities} Geofences={this.state.Geofences} />
                       <span className='filter_span' > {filter.length} Tasks </span>
                       <Row style={{ width: '100%', display: 'flex' }}   >
@@ -671,7 +707,7 @@ class Tasks extends React.Component {
                               onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
                               createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count}
                               type={this.state.type} task_type={item.task_type} monitor={item.monitor} files={item.files} priority={item.priority} geofences={item.geofences}
-                              Geofences={this.state.Geofences} weight={item.weight} />
+                              Geofences={this.state.Geofences} weight={item.weight} onRefreshGeo={() => this.RefreshGeofences()}    />
 
                           </Col>
                         ))}

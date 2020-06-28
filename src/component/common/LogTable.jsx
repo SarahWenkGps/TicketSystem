@@ -139,11 +139,26 @@ class DashTable extends React.Component {
                     let arr=[];
                     for (let index = 0; index < response.data.data.length; index++) {
                         const obj ={
-                            log_type:  response.data.data[index].log_type,
-                            action_by_user: response.data.data[index].action_by_user,
-                            affected_user: response.data.data[index].affected_user,
-                            note: response.data.data[index].note,
-                            created_at:(moment(response.data.data[index].created_at).format('lll') ),
+                            log_type: (response.data.data[index].log_type!== null && response.data.data[index].log_type.includes("task") ?(  <div  onClick={()=>{
+                                {window.open(`https://www.iraq-gis.com/`+`NoteTask?id=${response.data.data[index].task_id}`,'_blank')} }}   > 
+                                 {response.data.data[index].log_type} </div> ):(response.data.data[index].log_type)
+                            ) ,
+                            action_by_user: (response.data.data[index].log_type!== null && response.data.data[index].log_type.includes("task") ?(  <div  onClick={()=>{
+                                {window.open(`https://www.iraq-gis.com/`+`NoteTask?id=${response.data.data[index].task_id}`,'_blank')} }}   > 
+                                 {response.data.data[index].action_by_user} </div> ):(response.data.data[index].action_by_user)
+                            ) ,
+                            affected_user: (response.data.data[index].log_type!== null && response.data.data[index].log_type.includes("task") ?(  <div  onClick={()=>{
+                                {window.open(`https://www.iraq-gis.com/`+`NoteTask?id=${response.data.data[index].task_id}`,'_blank')} }}   > 
+                                 {response.data.data[index].affected_user} </div> ):(response.data.data[index].affected_user)
+                            ),
+                            note:(response.data.data[index].log_type!== null && response.data.data[index].log_type.includes("task") ?(  <div  onClick={()=>{
+                                {window.open(`https://www.iraq-gis.com/`+`NoteTask?id=${response.data.data[index].task_id}`,'_blank')} }}   > 
+                                 {response.data.data[index].note} </div> ):(response.data.data[index].note)
+                            ) ,
+                            created_at:(response.data.data[index].log_type!== null && response.data.data[index].log_type.includes("task") ?(  <div  onClick={()=>{
+                                {window.open(`https://www.iraq-gis.com/`+`NoteTask?id=${response.data.data[index].task_id}`,'_blank')} }}   > 
+                                 {(moment(response.data.data[index].created_at).format('lll') )} </div> ):((moment(response.data.data[index].created_at).format('lll') ))
+                            ),
                         }
                         arr.push(obj)
                     }
@@ -273,7 +288,7 @@ class DashTable extends React.Component {
 
         const columns = [
             //   { name: " # ", field: "hash" },
-            { name: "Log Type", field: "log_type" ,  options: { width: 200 }},
+            { name: "Log Type", field: "log_type" ,  options: { width: 200 }   },
             { name: " Created At  ", field:"created_at",  options: { width: 200 }},
             { name: " Action By User  ", field: "action_by_user" ,  options: { width: 200 }},
             { name: " Affected User  ", field: "affected_user",  options: { width: 200 } },
@@ -302,7 +317,8 @@ class DashTable extends React.Component {
                         onClose={() => {
                             this.componentDidMount();
                         }} />
-                   <div onClick={() => {
+                 
+                 <div onClick={() => {
                             this.setState({ date1: 0, date2: 0 })
                             setTimeout(() => {
                               this.componentDidMount();
@@ -311,7 +327,7 @@ class DashTable extends React.Component {
                           }} id="date_btn1" > All Time </div>
                          
                          <div onClick={() => {
-                            this.setState({ date1: moment().subtract(7, 'day').format("X") * 1000, date2: moment(moment().format('L')).format("X") * 1000 })
+                            this.setState({ date1: moment(moment().format('L')).subtract(7, 'day').format("X")* 1000, date2: 0 })
                             setTimeout(() => {
                               this.componentDidMount();
                               this.Week();
@@ -321,7 +337,7 @@ class DashTable extends React.Component {
                           }} id="date_btn3" > Week  </div>
                          
                           <div onClick={() => {
-                            this.setState({ date1: moment().subtract(1, 'day').format("X") * 1000, date2: moment(moment().format('L')).format("X") * 1000 })
+                            this.setState({ date1: moment(moment().format('L')).subtract(1, 'day').format("X")* 1000, date2: moment(moment().format('L')).format("X") * 1000 })
                             setTimeout(() => {
                               this.componentDidMount();
                               this.yesterday();

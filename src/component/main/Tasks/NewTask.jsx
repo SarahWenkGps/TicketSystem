@@ -1,6 +1,8 @@
 import React from 'react';
 import { Pane, Dialog, Switch, SelectMenu, Button } from 'evergreen-ui';
 import Component from '@reactions/component';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
 import axios from "axios";
 import Cookies from "universal-cookie";
 import Host from '../../../assets/js/Host';
@@ -12,6 +14,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Lottie from "lottie-react-web";
 import loading from '../../../assets/js/loading.json';
 import Slider from '@material-ui/core/Slider';
+import RefreshIcon from '@material-ui/icons/Refresh';
 const cookies = new Cookies();
 
 const customStyles = {
@@ -65,6 +68,7 @@ class NewTask extends React.Component {
             // priority_id:[],
             geo_name: null,
             weight: 2,
+          
         };
     }
 
@@ -82,26 +86,21 @@ class NewTask extends React.Component {
     };
 
 
+
     assign_user(id) {
         var headers = {
             jwt: cookies.get("token")
         };
-
-
         axios({
             url: Host + `tasks/assign/${id}`,
             method: "POST",
             headers: headers,
             data: {
                 users_id: this.state.user,
-
             },
         })
-
-            .then(res => {
-
+           .then(res => {
                 // console.log(response.data);
-
                 if (res.data.status === true) {
                     toast.success('task created successfully')
                     const { onProfileDelete } = this.props
@@ -137,10 +136,7 @@ class NewTask extends React.Component {
             }
             if (this.state.task_name.length < 5) {
                 return toast.error("Title must be more than 5 char")
-
-
-            }
-         
+            }        
             this.setState({ spin: true })
             let res = await axios({
                 url: Host + `tasks/task`,
@@ -157,14 +153,12 @@ class NewTask extends React.Component {
                     geo_x: this.state.dimentions[0],
                     geo_y: this.state.dimentions[1],
                     weight: this.state.weight,
-
                 },
             })
             if (res.data.status === true) {
                 if (this.state.user.length > 0) {
                     this.assign_user(res.data.data.data.task_id);
                 }
-
                 else {
                     const { onProfileDelete } = this.props
                     onProfileDelete()
@@ -174,21 +168,13 @@ class NewTask extends React.Component {
                         priority_id: "", geo_name: "", dimentions: [], weight: ""
                     })
                 }
-
-
             } else if (res.data.status === false) {
                 toast.error(res.data.data.message.text)
                 this.setState({ spin: false })
             }
-
-
-
-
-
         }
         catch (error) {
             // console.log(error);
-
         }
     }
 
@@ -327,6 +313,28 @@ class NewTask extends React.Component {
                                                             isMultiSelect
                                                             selected={state.selected}
                                                             title="Select names"
+                                                            titleView={({ close, title, headerHeight }) => {
+                                                                return (
+                                                                    <Pane
+                                                                        display="flex"
+                                                                        alignItems="center"
+                                                                        borderBottom="default"
+                                                                        padding={8}
+                                                                        height={headerHeight}
+                                                                        boxSizing="border-box"
+                                                                    >
+                                                                        <Tooltip title="Refresh" onClick={() => {
+                                                                          const { onRefreshGeo } = this.props
+                                                                          onRefreshGeo()
+                                                                        }}   >
+                                                                            <IconButton aria-label="Refresh">
+                                                                                <RefreshIcon style={{ color: '#da251e', cursor: 'pointer' }} />
+                                                                            </IconButton>
+                                                                        </Tooltip>
+                                                                    </Pane>
+                                                                )
+                                
+                                                            }}
                                                             options={state.options}
                                                             onSelect={item => {
                                                                 const selected = [state.selected, item.value]

@@ -12,7 +12,9 @@ import DatePicker from "react-datepicker";
 import moment from 'moment';
 import "react-datepicker/dist/react-datepicker.css";
 import Slider from '@material-ui/core/Slider';
-// import moment from 'moment';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import RefreshIcon from '@material-ui/icons/Refresh';
 const cookies = new Cookies();
 
 const customStyles = {
@@ -61,6 +63,7 @@ class EditTask extends React.Component {
             geo_name:'',
             dimentions:[],
             weight:'',
+          
         };
     }
 
@@ -72,9 +75,10 @@ class EditTask extends React.Component {
     handleChangeweight = (event, newValue) => {
         // setValue(newValue);
         console.log(newValue);
-        this.setState({weight:newValue})
-        
+        this.setState({weight:newValue})       
       };
+
+   
 
     render() {
         const { selectedOption } = this.state;
@@ -83,7 +87,7 @@ class EditTask extends React.Component {
         return (
             <div style={{ marginRight: 10 }}  >
            
-                <Component initialState={{ isShown: false, spin: false,time:'',
+                <Component initialState={{ isShown: false, spin: false, 
                     description:'',task_title:'',status_id:'',status:'',task_type1:'' }}    >
                     {({ state, setState }) => (
                         <Pane >
@@ -239,6 +243,28 @@ class EditTask extends React.Component {
                                                             isMultiSelect
                                                             selected={state.selected}
                                                             title="Select names"
+                                                            titleView={({ close, title, headerHeight }) => {
+                                                                return (
+                                                                    <Pane
+                                                                        display="flex"
+                                                                        alignItems="center"
+                                                                        borderBottom="default"
+                                                                        padding={8}
+                                                                        height={headerHeight}
+                                                                        boxSizing="border-box"
+                                                                    >
+                                                                        <Tooltip title="Refresh" onClick={() => {
+                                                                            const { onRefreshGeo } = this.props.onRefreshGeo
+                                                                            onRefreshGeo()
+                                                                        }}   >
+                                                                            <IconButton aria-label="Refresh">
+                                                                                <RefreshIcon style={{ color: '#da251e', cursor: 'pointer' }} />
+                                                                            </IconButton>
+                                                                        </Tooltip>
+                                                                    </Pane>
+                                                                )
+                                
+                                                            }}
                                                             options={state.options}
                                                             onSelect={item => {
                                                                 const selected = [state.selected, item.value]
@@ -328,7 +354,7 @@ class EditTask extends React.Component {
                                                 <Component initialState={{ selected: null }}>
                                                     {({ setState, state }) => (
                                                           <Slider style={{width:'94%'}}
-                                                          defaultValue={2}
+                                                          defaultValue={this.props.weight}
                                                         //   value={value}
                                                           onChange={this.handleChangeweight}
                                                           aria-labelledby="discrete-slider"
@@ -350,7 +376,7 @@ class EditTask extends React.Component {
                                                     this.setState({ dead_time: e.target.value })} />   */}
                                                 <DatePicker
                                                     selected={this.state.startDate}
-                                                    onChange={this.handleChange}                                               
+                                                    onChange={this.handleChange}
                                                     locale="ar-iq"
                                                     showTimeSelect
                                                     timeFormat="p"
@@ -383,10 +409,12 @@ class EditTask extends React.Component {
                             <Button onClick={() => { setState({ isShown: true })
                          let getIndex=this.props.allstatus.findIndex((element) => element.label === this.props.status)
                          let getIndex1=this.props.type.findIndex((element) => element.label === this.props.task_type)
-                         setState({status_id:this.props.allstatus[getIndex] , time:moment(this.props.time).format("LLL") ,description:this.props.desc ,task_title:this.props.title,
+                         setState({status_id:this.props.allstatus[getIndex] , description:this.props.desc ,task_title:this.props.title,
                             type:this.props.type,task_type1:this.props.type[getIndex1]
                         })
-              this.setState({startDate:''})
+          
+             this.setState({startDate: this.props.time === '1970-01-01T00:00:00.000Z' ? ( "") :(new Date(this.props.time)) })
+           
               
                
                      

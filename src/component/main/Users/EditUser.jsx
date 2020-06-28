@@ -9,7 +9,9 @@ import Select from "react-select";
 import loading from '../../../assets/js/loading.json';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import moment from 'moment';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 const cookies = new Cookies();
 const customStyles = {
   option: (provided, state) => ({
@@ -70,7 +72,7 @@ class EditUser extends React.Component {
   render() {
     const { selectedOption } = this.state;
     return (
-      <div ref={this.myRef} style={{display:'flex',alignItems:'center',justifyContent:'center'}}  className='iconUserDialog'  >
+      <div ref={this.myRef} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} className='iconUserDialog'  >
 
         <Component initialState={{
           isShown: false, spin: false,
@@ -82,7 +84,7 @@ class EditUser extends React.Component {
           dep_nm: '',
           phone: this.props.phone,
           ip_phone: this.props.ip_phone,
-          birthdate: this.props.birthdate,
+          birthdate: '',
         }}>
           {({ state, setState }) => (
             <Pane>
@@ -113,6 +115,10 @@ class EditUser extends React.Component {
                   var headers = {
                     jwt: cookies.get("token")
                   };
+                  if (state.birthdate!=='') {
+                    var milliseconds = state.birthdate.getTime() + (3 * 60 * 60 * 1000); //add three hours
+                    var correctedDeadTime = new Date(milliseconds);  
+                }
                   axios({
                     url: Host + `users/user/${this.props.ids}`,
                     method: "PUT",
@@ -123,7 +129,7 @@ class EditUser extends React.Component {
                       department_id: state.dep_nm,
                       phone: state.phone,
                       ip_phone: state.ip_phone,
-                      birthdate: state.birthdate
+                      birthdate: correctedDeadTime
                     },
                   })
 
@@ -197,11 +203,22 @@ class EditUser extends React.Component {
                     <div id='dailog' >
                       <div id='dialog_title'> Birthdate </div>
                       <div style={{ width: "80%", textAlign: "center" }}>
-                        <input type="date" id="field2" placeholder="Birthdate"
-                          value={state.birthdate}
-                          onChange={e => {
-                            setState({ birthdate: e.target.value })
-                          }} />
+                        <DatePicker  id='dateEditUser'
+                         style={{width:'292px'}}
+                          selected={state.birthdate}
+                          onChange={(date)=> {
+                            setState({birthdate:date})
+                            console.log(date,new Date(this.props.birthdate));
+                            
+                           }}
+                          locale="ar-iq"
+                          // showTimeSelect
+                          // timeFormat="p"
+                          // timeIntervals={15}
+                          dateFormat="P"
+                          registerLocale='ar-iq'
+                          // minDate={new Date()}
+                        />
                       </div>
                     </div>
 
@@ -243,7 +260,7 @@ class EditUser extends React.Component {
                     department: this.props.department,
                     phone: this.props.phone,
                     ip_phone: this.props.ip_phone,
-                    birthdate: this.props.birthdate,
+                    birthdate: new Date(this.props.birthdate)
                   })
                 }}
 

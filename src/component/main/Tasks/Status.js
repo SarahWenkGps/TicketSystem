@@ -159,6 +159,7 @@ import Lottie from "lottie-react-web";
  import axios from "axios";
 import Cookies from "universal-cookie";
  import Host from "../../../assets/js/Host";
+
  const cookies = new Cookies();
 var spin;
 const useStyles = makeStyles((theme) => ({
@@ -218,6 +219,7 @@ export default function OpenIconSpeedDial(props) {
     { icon: <ThumbUpIcon  onClick={()=>{myFunction(props,5) }} />, name: 'Approve' },
     { icon: <ThumbDownIcon  onClick={()=>{myFunction(props,4) }}/>, name: 'Reject' },
     { icon: <ArchiveIcon onClick={()=>{myFunction(props,6) }} />, name: 'Archive' },
+    
   ];
   
   const handleOpen = () => {

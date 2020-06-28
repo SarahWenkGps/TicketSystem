@@ -80,12 +80,6 @@ td {
   min-width: 60%;
   color: #2e6b95;
 }
-#parent{
-  position: relative;
-  text-align: end;
-  min-width: 60%;
-  color: #2e6b95;
-}
 #parent:hover #hover-content {
   display: flex;
   flex-direction: column;
@@ -133,23 +127,16 @@ td {
     inset 0 -1px 1px 0 rgba(67, 90, 111, 0.06);
     cursor: pointer;
 }
-.dep_icons{
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
+.dropdown-menu{
+ z-index: 10;
 }
-
-.iconUserDialog{
-  width: 55px;
-  text-align: center;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-image: linear-gradient(to bottom, #FFFFFF, #F4F5F7);
-  box-shadow: inset 0 0 0 1px rgba(67, 90, 111, 0.14), inset 0 -1px 1px 0 rgba(67, 90, 111, 0.06);
+.dropdown-menu.show{
+  transform: translate(12.25px, 38.75px);
+  
+}
+.dropdown-menu[x-placement^=bottom]{
+  transform: translate(12.25px, 38.75px); 
+  width: 50px;
 }
 #OthersParent:hover #OthersContent {
   display: flex;
@@ -177,7 +164,12 @@ td {
   padding-left: 15px;
   margin-bottom: 30px;
 }
-
+#dateEditUser{
+  width: 310px;
+}
+#dateEditUser1{
+  width: 295px;
+}
 #info_btn {
   display: flex;
   align-items: center;

@@ -1,7 +1,9 @@
 import React from "react";
 import axios from "axios";
+import {DropdownButton,Dropdown,ButtonGroup} from 'react-bootstrap';
+import { MDBPopover, MDBPopoverBody, MDBBtn, MDBContainer } from "mdbreact";
 import Component from "@reactions/component";
-import { Pane, Dialog, Spinner } from "evergreen-ui";
+import { Pane, Dialog, Spinner ,Menu,Popover,Position,toaster} from "evergreen-ui";
 import Cookies from "universal-cookie";
 import Host from "../../../assets/js/Host";
 import { toast } from "react-toastify";
@@ -28,6 +30,7 @@ import Popper from '@material-ui/core/Popper';
 import PopupState, { bindToggle, bindPopper } from 'material-ui-popup-state';
 import Fade from '@material-ui/core/Fade';
 import Paper from '@material-ui/core/Paper';
+
 const cookies = new Cookies();
 
 const customStyles = {
@@ -81,7 +84,8 @@ class Users extends Component {
       phone:'',
       Birthdate:'',
       anchorEl:null,
-      open:''
+      open:'',
+      isVisible:false
     };
 
   }
@@ -107,7 +111,12 @@ class Users extends Component {
       }
     });
 
-
+isVisible(){
+  this.setState({isVisible:(this.state.isVisible==='flex'?('none'):('flex'))})
+  var x = document.getElementById("stst");
+  x.style.display = `${this.state.isVisible}`;
+ 
+}
   componentDidMount() {
     if (cookies.get("token")) {
       this.setState({ check: "login" })
@@ -269,48 +278,60 @@ class Users extends Component {
               edit: (
               
               
-                      <div>
+                     <div>
 
-
-<PopupState variant="popper" popupId="demo-popup-popper">
-      {(popupState) => (
-        <div>
-          <Button variant="contained"  {...bindToggle(popupState)} >
-           Edit User
-          </Button>
-          <Popper {...bindPopper(popupState)} transition>
-            {({ TransitionProps }) => (
-              <Fade {...TransitionProps} timeout={350}>
-                <Paper>
-                <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'space-between',padding:5,height:150}}  >
-                      <EditUser ids={res.data.data[index].user_id} onProfileDelete={() => this.componentDidMount()}
-                  name={res.data.data[index].name} email={res.data.data[index].email}
-                  department={res.data.data[index].department.name} status={res.data.data[index].enabled} data1={this.state.dapts}
-                  phone={res.data.data[index].phone}  ip_phone={res.data.data[index].ip_phone}  birthdate={res.data.data[index].birthdate}  />
-                         <Changwpass ids={res.data.data[index].user_id} />
-                         {  res.data.data[index].premissions=== undefined ? (null):(<Permitions ids={res.data.data[index].user_id} roles={this.state.roles}  permitions={res.data.data[index].premissions.map((p,i)=>(
-                p.role_id ))}
-                onProfileDelete1={() => this.componentDidMount()}/>)}
-                  <div className='iconUserDialog' onClick={()=>{window.open(`https://www.iraq-gis.com/` +`LogTable?id=${res.data.data[index].user_id}&name=${"user"}`, '_blank')}}   >   <img src={require('../../../assets/img/log.png')} alt='img' style={{height:25}} /></div>
-                </div>
-              
-             
-                </Paper>
-              </Fade>
-            )}
-          </Popper>
-        </div>
-      )}
-    </PopupState>
+    <DropdownButton
+        as={ButtonGroup}
+        key={'down'}
+        id={`dropdown-button-drop-${'down'}`}
+        drop={'down'}
+        variant="secondary"
+        title={` Edit User`}
+      >
+        <Dropdown.Item eventKey="1" style={{display:'flex',justifyContent:'center'}} >      <EditUser ids={res.data.data[index].user_id} onProfileDelete={() => this.componentDidMount()} 
+                 name={res.data.data[index].name} email={res.data.data[index].email}
+                department={res.data.data[index].department.name} status={res.data.data[index].enabled} data1={this.state.dapts}
+               phone={res.data.data[index].phone}  ip_phone={res.data.data[index].ip_phone}  birthdate={res.data.data[index].birthdate}  /></Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Item eventKey="2" style={{display:'flex',justifyContent:'center'}}  >      <Changwpass ids={res.data.data[index].user_id} />  </Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Item eventKey="3" style={{display:'flex',justifyContent:'center'}}  >  <Permitions ids={res.data.data[index].user_id} roles={this.state.roles}  permitions={res.data.data[index].premissions.map((p,i)=>(
+       p.role_id ))}
+      onProfileDelete1={() => this.componentDidMount()}/></Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Item eventKey="4" style={{display:'flex',justifyContent:'center'}}  >   <div className='iconUserDialog' onClick={()=>{window.open(`https://www.iraq-gis.com/` +`LogTable?id=${res.data.data[index].user_id}&name=${"user"}`, '_blank')}}   > 
+                  <img src={require('../../../assets/img/log.png')} alt='img' style={{height:25}} /></div> </Dropdown.Item>
+      </DropdownButton>
+                    </div>
     
+      
 
 
-
-                      </div>
+   
+           
+   
+                  
+                     
+                    
+                    
                    
+
+                    
+    
+        
+             
+       
+
+     
+      
+          
+         
+
+
+      
              
 
-
+     
                                                        
                 )
             };

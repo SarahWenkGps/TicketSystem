@@ -67,6 +67,7 @@ class NoteTask extends React.Component {
       selected_taskType: '',
       type: [],
       Geofences:[],
+      force:0
     }
     this.filterRef = React.createRef();
   }
@@ -84,10 +85,7 @@ class NoteTask extends React.Component {
     var headers = {
       jwt: cookies.get("token"),
     };
-    this.getTasks();
-    setInterval(() => {
-      this.getTasks();
-    }, 100000);
+  
     axios({
       url: Host + `tasks/statuses`,
       method: "GET",
@@ -131,18 +129,7 @@ class NoteTask extends React.Component {
       });
 
     
-        axios({
-          url: Host + `tasks/task_geofences?params={"force":0}`,
-          method: "GET",
-          headers: headers,
-    
-        })
-          .then(res => {
-            this.setState({Geofences:res.data.data.data})
-          })
-          .catch(err =>{
-    
-          })
+     this.getGeofences();
     
 
 
@@ -184,70 +171,30 @@ class NoteTask extends React.Component {
   }
 
 
-
-
-  getTasks() {
+  RefreshGeofences(){
+    this.setState({force:1})
+    setTimeout(() => {
+      this.getGeofences();
+    }, 200);
+  }
+  getGeofences() {
     var headers = {
       jwt: cookies.get("token"),
     };
+    
     axios({
-      url: Host + `tasks/tasks?params={"from_date":${this.state.date1},"to_date":${this.state.date2}}`,
+      url: Host + `tasks/task_geofences?params={"force":${this.state.force}}`,
       method: "GET",
       headers: headers,
 
     })
-      .then(response => {
-        this.setState({ watt: "no" });
-        this.setState({ spin: false })
-        if (response.data.status === false) {
-          cookies.remove("token");
-          window.location.href = "/"
-        } else {
-
-
-          this.setState({ tasks: response.data.data })
-
-          let data = response.data.data
-
-          let newdata = data.filter(f =>
-            f.status === 'new'
-          )
-          this.setState({
-            new: newdata
-          })
-
-          let assignedata = data.filter(f =>
-            f.status === "archived")
-          this.setState({
-            archived: assignedata
-          })
-          let inprogressdata = data.filter(f =>
-            f.status === "in progress")
-          this.setState({
-            inprogress: inprogressdata
-          })
-          let closeddata = data.filter(f =>
-            f.status === "closed")
-          this.setState({
-            closed: closeddata
-          })
-          let approveddata = data.filter(f =>
-            f.status === "approved")
-          this.setState({ approved: approveddata })
-
-          let rejecteddata = data.filter(f =>
-            f.status === "rejected")
-          this.setState({ rejected: rejecteddata })
-
-        }
-
+      .then(res => {
+        this.setState({ Geofences: res.data.data.data })
       })
       .catch(err => {
-      
-       
-      });
-  }
 
+      })
+  }
 
 
   render() {
@@ -297,7 +244,7 @@ class NoteTask extends React.Component {
                               created_at={this.state.noti[0].created_at} assigned={this.state.noti[0].assigners.map((p, i) => (p.user_id))}
                               comments_count={this.state.noti[0].comments_count}  type={this.state.type} task_type={this.state.noti[0].task_type} monitor={this.state.noti[0].monitor}
                                files={this.state.noti[0].files} priority={this.state.noti[0].priority} geofences={this.state.noti[0].geofences}
-                               Geofences={this.state.Geofences} weight={this.state.noti[0].weight}  />
+                               Geofences={this.state.Geofences} weight={this.state.noti[0].weight} onRefreshGeo={() => this.RefreshGeofences()}   />
                           </Col>
                         ) : (null)}
 

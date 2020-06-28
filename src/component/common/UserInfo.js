@@ -10,6 +10,8 @@ import { toast } from "react-toastify";
 import PersonIcon from '@material-ui/icons/Person';
 import "react-toastify/dist/ReactToastify.css";
 import Context from "../../assets/js/context";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 const cookies = new Cookies();
 class UserInfo extends React.Component {
     constructor(props) {
@@ -99,7 +101,7 @@ class UserInfo extends React.Component {
                     name: response.data.data[0].name,
                     email: response.data.data[0].email,
                     ip_phone:response.data.data[0].ip_phone,
-                    birthdate:response.data.data[0].birthdate,
+                    birthdate: response.data.data[0].birthdate === 'Thu Jan 01 1970 03:00:00 GMT+0300 (Arabian Standard Time)' ? ( "") :(new Date(response.data.data[0].birthdate)),
                     phone:response.data.data[0].phone
                 })
 
@@ -126,6 +128,10 @@ class UserInfo extends React.Component {
         var headers = {
             jwt: cookies.get("token")
         };
+        if (this.state.birthdate!=='') {
+            var milliseconds = this.state.birthdate.getTime() + (3 * 60 * 60 * 1000); //add three hours
+            var correctedDeadTime = new Date(milliseconds);  
+        }
         axios({
             url: Host + `users/user/${this.props.ids}`,
             method: "PUT",
@@ -135,7 +141,7 @@ class UserInfo extends React.Component {
                 email: this.state.email,
                 phone: this.state.phone,
                 ip_phone:this.state.ip_phone,
-                birthdate:this.state.birthdate
+                birthdate:correctedDeadTime
             },
         })
 
@@ -230,11 +236,22 @@ class UserInfo extends React.Component {
                     <div id='dailog' >
                       <div id='dialog_title'> Birthdate </div>
                       <div style={{ width: "80%", textAlign: "center" }}>
-                        <input type="date" id="field2" placeholder="Birthdate"
-                          value={this.state.birthdate}
-                          onChange={e => {
-                            this.setState({ birthdate: e.target.value })
-                          }} />
+                      <DatePicker  id='dateEditUser1'
+                         
+                          selected={this.state.birthdate}
+                          onChange={(date)=> {
+                            this.setState({birthdate:date})
+                            // console.log(date,new Date(this.props.birthdate));
+                            
+                           }}
+                          locale="ar-iq"
+                          // showTimeSelect
+                          // timeFormat="p"
+                          // timeIntervals={15}
+                          dateFormat="P"
+                          registerLocale='ar-iq'
+                          // minDate={new Date()}
+                        />
                       </div>
                     </div>
 

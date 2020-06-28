@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectMenu, Pane, Button } from 'evergreen-ui';
+import { SelectMenu, Pane, Button,Dialog ,Position} from 'evergreen-ui';
 import Component from '@reactions/component';
 import axios from "axios";
 import Cookies from "universal-cookie";
@@ -71,15 +71,31 @@ class Permitions extends React.Component {
     render() {
         return (
             <div>
+<Component initialState={{ isShown: false }}>
+                    {({ state, setState }) => (
+                        <Pane>
+                            <Dialog
+                                isShown={state.isShown}
+                                hasHeader={false}
+                                onCloseComplete={() => setState({ isShown: false })}
+                                hasFooter={false}
+                                height={0}
+                                width={0}
+                                topOffset={200}
+                                overflow={'none'}
+                            >
+
                 <Component
                     initialState={{
-                        options: this.props.roles
-                            .map(label => ({ label: label.name, value: label.role_id })),
+                       options: this.props.roles
+                          .map(label => ({ label: label.name, value: label.role_id })),
                         selected: this.props.permitions
                     }} >
                     {({ state, setState }) => (
                         <SelectMenu
                             isMultiSelect
+                            isShown
+                            position={Position.BOTTOM}
                             title="Select multiple names"
                             titleView={({ close, title, headerHeight }) => {
                                 return (
@@ -137,14 +153,27 @@ class Permitions extends React.Component {
                                 this.setState({ roles_id: selectedItems })
                             }}
                         >
-                            <Button onMouseOver={() => {
-                                setState({ selected: this.props.permitions })
+                            <Button    style={{border:'none',background:'none',boxShadow:'none',boxSizing:'none',height:0,width:0}}   onMouseOver={() => {
+                                // setState({ selected: this.props.permitions })
                                 
-                            }}  >{state.name || <LockOpenIcon />}</Button>
+                            }}  >{<LockOpenIcon />}</Button>
                         </SelectMenu>
                     )}
                 </Component>
+                
+                </Dialog>
+
+<Button onClick={() => {
+    setState({ isShown: true ,selected: this.props.permitions })
+//    console.log(this.props.permitions);
+   
+}}  > <LockOpenIcon />
+</Button>
+</Pane>
+)}
+</Component>
             </div>
+            
         );
     }
 }
