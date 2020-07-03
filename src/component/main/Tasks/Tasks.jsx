@@ -72,9 +72,10 @@ class Tasks extends React.Component {
       height: window.innerHeight,
       message: 'not at bottom',
       force:0,
+      deadTimeFilter:null,
     }
     this.filterRef = React.createRef();
-    this.handleScroll = this.handleScroll.bind(this);
+    // this.handleScroll = this.handleScroll.bind(this);
   }
 
 
@@ -83,31 +84,31 @@ class Tasks extends React.Component {
     this.filterRef.current.clearAll();
   }
 
-  handleScroll() {
-    const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
-    const body = document.body;
-    const html = document.documentElement;
-    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-    const windowBottom = windowHeight + window.pageYOffset;
-    if (windowBottom >= docHeight) {
-        this.setState({
-            message: 'bottom reached'
-        });
-    } else {
-        this.setState({
-            message: 'not at bottom'
-        });
-    }
-}
+//   handleScroll() {
+//     const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
+//     const body = document.body;
+//     const html = document.documentElement;
+//     const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+//     const windowBottom = windowHeight + window.pageYOffset;
+//     if (windowBottom >= docHeight) {
+//         this.setState({
+//             message: 'bottom reached'
+//         });
+//     } else {
+//         this.setState({
+//             message: 'not at bottom'
+//         });
+//     }
+// }
 
 
 
 componentWillUnmount() {
-  window.removeEventListener("scroll", this.handleScroll);
+  // window.removeEventListener("scroll", this.handleScroll);
 }
   
   componentDidMount() {
-    window.addEventListener("scroll", this.handleScroll);
+    // window.addEventListener("scroll", this.handleScroll);
     this.setState({ spin: true })
     if (cookies.get("token")) {
       this.setState({ check: "login" })
@@ -398,8 +399,16 @@ RefreshGeofences(){
           // dog.task_type.toString().toLowerCase().includes(this.state.selected_taskType)
           dog.task_type !== null ? (dog.task_type.toString().toLowerCase().includes(this.state.selected_taskType)) : (<div></div>)
         )
+    &&(
+    this.state.deadTimeFilter!=null?(
+      dog.dead_time!=="1970-01-01T00:00:00.000Z" &&   
+      moment(dog.dead_time).format("X")  < this.state.deadTimeFilter 
+    
+    ):(dog.dead_time)
+    )
 
       )
+
 
 
 
@@ -427,14 +436,14 @@ RefreshGeofences(){
                       checked={this.state.checked}
                       onChange={e => {
                         this.setState({ checked: e.target.checked })
-                        console.log(this.state.checked);
+                        // console.log(this.state.checked);
 
                         if (this.state.checked === false) {
                           this.setState({ status1: 'new' })
-                          console.log(this.state.status1);
+                          // console.log(this.state.status1);
                         } else {
                           this.setState({ status1: '' })
-                          console.log(this.state.status1 === undefined);
+                          // console.log(this.state.status1 === undefined);
                         }
                       }}
                     />
@@ -442,7 +451,7 @@ RefreshGeofences(){
                       label="In Progress"
                       checked={this.state.checked2}
                       onChange={e => {
-                        console.log(this.state.checked2);
+                        // console.log(this.state.checked2);
                         this.setState({ checked2: e.target.checked })
                         if (this.state.checked2 === false) {
                           this.setState({ status2: 'in progress' })
@@ -623,7 +632,27 @@ RefreshGeofences(){
                     </Component>
 
 
+<div id='deadTime'  onClick={()=>{
+// console.log(moment(moment().format('L')).add(1,'day').format("X"));
 
+   if (this.state.deadTimeFilter===null) {
+    this.setState({
+      deadTimeFilter: moment(moment().format('L')).add(1,'day').format("X")
+    })
+    var x = document.getElementById("deadTime");
+    x.style.backgroundImage = "linear-gradient(rgb(227, 14, 14), rgb(229, 75, 118))";
+    x.style.color = "#FFF";
+   }else{
+    this.setState({
+      deadTimeFilter: null
+    })
+    var x = document.getElementById("deadTime");
+    x.style.backgroundImage = "linear-gradient(rgb(255, 255, 255), rgb(244, 245, 247))";
+    x.style.color = "#828282";
+   }
+   
+  
+}}  >Dead Line</div>
 
                   </div>
 
@@ -656,7 +685,7 @@ RefreshGeofences(){
                               this.componentDidMount();
                               this.Week();
                             }, 200);
-                            console.log(moment().subtract(7, 'day'));
+                            // console.log(moment().subtract(7, 'day'));
                             
                           }} id="date_btn3" > Week  </div>
                          

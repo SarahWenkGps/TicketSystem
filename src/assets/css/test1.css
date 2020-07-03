@@ -200,6 +200,17 @@ td {
   width: 60px;
   text-align: center;
 }
+#deadTime{
+  cursor: pointer;
+    color: rgb(130, 130, 130);
+    /* background-color: rgb(255, 255, 255); */
+    background-image: linear-gradient(rgb(255, 255, 255), rgb(244, 245, 247));
+    box-shadow: rgba(67, 90, 111, 0.14) 0px 0px 0px 1px inset, rgba(67, 90, 111, 0.06) 0px -1px 1px 0px inset;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 #info_btnMain {
   display: flex;
   align-items: center;

@@ -129,7 +129,7 @@ class EditTask extends React.Component {
                                         .then(res => {
                                         
                                             if (res.data.status === true) {
-                                             if (this.state.moniter.length === undefined) {
+                                            //  if (this.state.moniter.length === undefined) {
                                                 axios({
                                                     url: Host + `tasks/assign/monitor/${this.props.id}`,
                                                     method: "PUT",
@@ -143,7 +143,7 @@ class EditTask extends React.Component {
                                                     onProfileDelete()
                                                     
                                                 })
-                                             }
+                                            //  }
                                                                                                                                                                                       
                                                 setState({ isShown: false, spin: false })
                                                 toast.success('task updated successfully')
@@ -186,7 +186,7 @@ class EditTask extends React.Component {
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
                                         
 
-                                                <Component initialState={{ selected: null, label: '' }}>
+                                                <Component initialState={{ selected: [null], label: '' }}>
                       {({ state, setState }) => (
                         <SelectMenu
                           isMultiSelect
@@ -201,7 +201,7 @@ class EditTask extends React.Component {
                             let selectedNames = ''
                             setState({
                               selected,
-                              selectedNames
+                              selectedNames,label:item.label
                             })
                           }}
                           onDeselect={item => {
@@ -218,11 +218,16 @@ class EditTask extends React.Component {
                             } else if (selectedItemsLength > 1) {
                               selectedNames = selectedItemsLength.toString() + ' selected...'
                             }
-                            setState({ selected: selectedItems, selectedNames })
+                            setState({ selected:"" ,label:""})
                             this.setState({ type_id: "" })
                           }}
                         >
-                           <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select Type...'}</Button>
+                           <Button  onMouseOver={()=>{
+                              
+                               let obs = this.props.type.find(o => o.label === this.props.task_type)
+                               setState({selected:[obs.value]})
+                            //    console.log(this.props.task_type,this.props.type,obs);
+                           }}  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select Type...'}</Button>
                         </SelectMenu>
                       )}
                     </Component>
@@ -234,7 +239,7 @@ class EditTask extends React.Component {
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
                                           
                                                 <Component initialState={{
-                                                    selected: null, label: '',
+                                                    selected: [this.props.geofences], label: '',
                                                     options: this.props.Geofences
                                                         .map(label => ({ label: label.name, value: label.x, dimen: [label.x, label.y] })),
                                                 }} >
@@ -274,7 +279,7 @@ class EditTask extends React.Component {
                                                                 let selectedNames = ''
                                                                 setState({
                                                                     selected,
-                                                                    selectedNames
+                                                                    selectedNames,label:item.label
                                                                 })
                                                             }}
                                                             onDeselect={item => {
@@ -291,11 +296,11 @@ class EditTask extends React.Component {
                                                                 } else if (selectedItemsLength > 1) {
                                                                     selectedNames = selectedItemsLength.toString() + ' selected...'
                                                                 }
-                                                                setState({ selected: selectedItems, selectedNames })
+                                                                setState({ selected: "",label:'' })
                                                                 this.setState({ geo_name: null, dimentions: [null, null] })
                                                             }}
                                                         >
-                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select name...'}</Button>
+                                                            <Button   style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select name...'}</Button>
                                                         </SelectMenu>
                                                     )}
                                                 </Component>
@@ -306,7 +311,7 @@ class EditTask extends React.Component {
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
                                        
 
-                                                <Component initialState={{ selected: null,label:'' }} >
+                                                <Component initialState={{ selected:[this.props.monitor.id],label:this.props.monitor.name }} >
                                                     {({ state, setState }) => (
                                                         <SelectMenu
                                                             isMultiSelect
@@ -321,8 +326,10 @@ class EditTask extends React.Component {
                                                                 let selectedNames = ''
                                                                 setState({
                                                                     selected,
-                                                                    selectedNames
+                                                                    selectedNames,label:item.label
                                                                 })
+                                                           
+                                                                
                                                             }}
                                                             onDeselect={item => {
                                                                 const deselectedItemIndex = state.selected.indexOf(item.value)
@@ -338,11 +345,17 @@ class EditTask extends React.Component {
                                                                 } else if (selectedItemsLength > 1) {
                                                                     selectedNames = selectedItemsLength.toString() + ' selected...'
                                                                 }
-                                                                setState({ selected: selectedItems, selectedNames })
-                                                                this.setState({moniter:""})
+                                                                setState({ selected:'',label:""})                                                         
+                                                               this.setState({moniter:null})
+                                                           
+                                                            
                                                             }}
                                                         >
-                                                            <Button style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select name...'}</Button>
+                                                            <Button  onMouseOver={()=>{
+                                                              setState({selected: [this.props.monitor.id],label:this.props.monitor.name}) 
+                                                              console.log(state.selected);
+                                                               
+                                                            }}  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select name...'}</Button>
                                                         </SelectMenu>
                                                     )}
                                                 </Component>
@@ -383,7 +396,7 @@ class EditTask extends React.Component {
                                                     timeIntervals={15}
                                                     dateFormat="Pp"
                                                     registerLocale='ar-iq'
-                                                    minDate={new Date()}
+                                                    // minDate={new Date()}
                                                 />
 
                                             </div>

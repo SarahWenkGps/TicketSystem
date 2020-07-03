@@ -31,6 +31,7 @@ class Comments extends React.Component {
             comment2: '',
             file: '',
             file2: '',
+            spinComment:false,
         };
     }
 
@@ -69,6 +70,7 @@ class Comments extends React.Component {
 
 
     addcomm() {
+       
         let formData = new FormData();
         var headers = {
             jwt: cookies.get("token")
@@ -76,6 +78,7 @@ class Comments extends React.Component {
         if (this.state.comment.length === 0) {
             return toast.error("Add comment First")
         }
+        this.setState({spinComment:true})
         let fdata = JSON.stringify({ "comment": this.state.comment })
         formData.append("photo", this.state.file);
         formData.append("params", fdata);
@@ -92,15 +95,17 @@ class Comments extends React.Component {
                     this.callcomm();
                     const { onProfileDelete } = this.props.onProfileDelete
                     onProfileDelete()
-                    this.setState({ comment: "" })
+                    this.setState({ comment: "",file:'',spinComment:false })
+
                 }
                 else if (res.data.status === false) {
                     toast.error(res.data.data.message.text)
+                    this.setState({ comment: "",file:'',spinComment:false })
                 }
             })
             .catch(err => {
                 toast.error("Network Error")
-
+                // this.setState({ comment: "",file:'',spinComment:false })
             });
     }
 
@@ -247,9 +252,21 @@ class Comments extends React.Component {
                                         onChange={(e) => {
                                             this.setState({ comment: e.target.value })
                                         }} />
-                                    <SendIcon id='com_icon' onClick={() => {
-                                        this.addcomm();
-                                    }} />
+                                          {this.state.spinComment === true ? (
+                                    <div style={{ width: "17%", position: "absolute",top:170,right:100 }}>
+                                        <Lottie
+                                            options={{
+                                                animationData: loading
+                                            }}
+                                            width={300}
+                                            height={150}
+                                            position="absolute"
+                                        />
+                                    </div>
+                                ) : (   <SendIcon id='com_icon' onClick={() => {
+                                    this.addcomm();
+                                }} />)}
+                                 
                                 </div>
 
 
