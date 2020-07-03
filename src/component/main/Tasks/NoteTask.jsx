@@ -17,6 +17,7 @@ import Task_noti from './Task_noti';
 import { toast } from "react-toastify";
 import Context from "../../../assets/js/context";
 import { ChromePicker } from 'react-color'
+import Axios from 'axios';
 const cookies = new Cookies();
 
 class NoteTask extends React.Component {
@@ -157,12 +158,16 @@ class NoteTask extends React.Component {
 
     const urlParams = new URLSearchParams(window.location.search);
     const myParam = urlParams.get('id');
-    axios
-      .get(Host + `tasks/task/${myParam}?params={"from_date":0,"to_date":0}`, {
-        headers: headers,
-      })
+    axios({
+      url: Host + `tasks/task/${myParam}?params={"from_date":0,"to_date":0}`,
+      method: "GET",
+      headers: headers,
+    })
+  
       .then(res => {
-        this.setState({ noti: res.data.data })
+        console.log(res.data.data);
+        
+        this.setState({ noti: res.data.data,watt:'no',check:"login" })
 
 
       })
@@ -218,19 +223,7 @@ class NoteTask extends React.Component {
                   <div id="apfot" ref={this.myRef}  >
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
                     
-                      {this.state.spin === true ? (
-                        <div style={{ width: "100%", position: "absolute" }}>
-                          <Lottie
-                            options={{
-                              animationData: loading
-                            }}
-                            width={300}
-                            height={300}
-                          />
-                        </div>
-                      ) : (
-                          null
-                        )}
+            
 
 
                     
@@ -238,6 +231,8 @@ class NoteTask extends React.Component {
                       <Row style={{ width: '100%', display: 'flex' }}   >
                         {this.state.noti.length > 0 ? (
                           <Col md={6} style={{ marginTop: 40 }}   >
+
+                           
                             <Task_noti id='nnn' name={this.state.noti[0].task_title} time={this.state.noti[0].dead_time} desc={this.state.noti[0].description} id={this.state.noti[0].task_id}
                               users={this.state.users} assigners={this.state.noti[0].assigners} onProfileDelete={() => this.componentDidMount()}
                               status={this.state.noti[0].status} allstatus={this.state.statuses} createdby={this.state.noti[0].issuer_user.name}

@@ -242,7 +242,7 @@ export default function ControlledExpansionPanels(props) {
                 <AssingUser users={props.users} id={props.id} onProfileDelete={props} assigned={props.assigned} />
                 <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} title={props.name}
                   time={props.time} desc={props.desc} status={props.status} type={props.type} task_type={props.task_type}
-                  users={props.users} Geofences={props.Geofences} geofences={props.geofences} onRefreshGeo={props}  />
+                  users={props.users} Geofences={props.Geofences} geofences={props.geofences} onRefreshGeo={props} weight={props.weight}  monitor={props.monitor} />
                 <AttachFile id={props.id} onProfileDelete={props} />
               </div>
 
