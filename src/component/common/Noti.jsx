@@ -42,7 +42,12 @@ class Noti extends React.Component {
  <div id='type_btn' style={{backgroundColor:'#946F5D'}}   > Task Comment   <NotificationsIcon />  </div>
             ):(null)} 
           <div id='noti_date'  >  {moment(this.props.time).format("LLL")}   </div>
-          <div id='noti_text' >  <span id='span_noti1' > {this.props.commenter} {this.props.assign_to}  </span> {this.props.note}  <span id='span_noti2'>{this.props.user_updater} {this.props.assign_from} </span>    </div>
+          <div id='notiTitle' >{this.props.task_title}</div>
+          <div id='noti_text' > 
+         
+           <span id='span_noti1' >
+             {this.props.commenter} {this.props.assign_to}  </span> {this.props.note}  
+              <span id='span_noti2'>{this.props.user_updater} {this.props.assign_from} </span>    </div>
 
           {/* <div id='noti_btn_dwn' >
             <Tooltip title="Set Read" onClick={() => {

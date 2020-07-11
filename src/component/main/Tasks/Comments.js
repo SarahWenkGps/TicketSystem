@@ -109,7 +109,38 @@ class Comments extends React.Component {
             });
     }
 
-
+    Delete(data) {
+        this.setState({spinComment:true}) 
+        var headers = {
+          "Content-Type": "application/json",
+          jwt: cookies.get("token")
+        };
+       
+        axios({
+          url: Host + `comments/comment/${data}`,
+          method: "DELETE",
+          headers: headers
+        })
+          .then(response => {
+            if (response.data.status===false) {
+              toast.error(response.data.data.text)
+              this.setState({spinComment:false}) 
+          }
+          else if (response.data.status===true) {
+           
+            this.callcomm();        
+                    const { onProfileDelete } = this.props.onProfileDelete
+                    onProfileDelete()
+         toast.success("deleted successfully")
+        this.setState({spinComment:false}) 
+          }
+          })
+          .catch(err => {
+            toast.error("Network Error")
+            this.setState({spinComment:false}) 
+          });
+        
+        }
 
 
 
@@ -149,6 +180,11 @@ class Comments extends React.Component {
                                                 </div>
 
                                                 <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '5px' }} >
+                                                {JSON.parse(localStorage.getItem("roles")).includes(13) ? (
+                <i className="far fa-trash-alt"  id="del" onClick={() => {                   
+                    if (window.confirm('Delete the Comment?')) { this.Delete(item.comment_id) }
+                  }}></i>
+              ) : (null)}
                                                     <Component initialState={{ isShown: false, comment2: item.comment_text }}>
                                                         {({ state, setState }) => (
                                                             <Pane>
@@ -212,7 +248,7 @@ class Comments extends React.Component {
                                                                     </div>
                                                                 </Dialog>
 
-                                                                <div onClick={() => setState({ isShown: true })}>  <EditIcon style={{ fontSize: 20, color: '#22619f', cursor: 'pointer' }} /> </div>
+                                                                <div onClick={() => setState({ isShown: true })}>  <EditIcon style={{ fontSize: 20, color: '#22619f', cursor: 'pointer',marginLeft:10 }} /> </div>
                                                             </Pane>
                                                         )}
                                                     </Component>

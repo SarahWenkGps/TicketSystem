@@ -21,6 +21,14 @@ import moment from 'moment';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import CommentIcon from '@material-ui/icons/Comment';
+import { toast } from "react-toastify";
+import axios from "axios";
+import Cookies from "universal-cookie";
+import Host from "../../../assets/js/Host";
+import Lottie from "lottie-react-web";
+ import loading from '../../../assets/js/loading.json';
+const cookies = new Cookies();
+var spin;
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -54,6 +62,40 @@ export default function ControlledExpansionPanels(props) {
 
 
   };
+
+  function Delete(data) {
+    spin=true;
+    var headers = {
+      "Content-Type": "application/json",
+      jwt: cookies.get("token")
+    };
+   
+    axios({
+      url: Host + `tasks/task/${data}`,
+      method: "DELETE",
+      headers: headers
+    })
+      .then(response => {
+        if (response.data.status===false) {
+          toast.error(response.data.data.text)
+          spin=false;
+      }
+      else if (response.data.status===true) {
+        const { onProfileDelete } = props
+          onProfileDelete() 
+     toast.success("deleted successfully")
+     spin=false;
+      }
+      })
+      .catch(err => {
+        toast.error("Network Error")
+        spin=false;
+      });
+    
+    }
+
+
+
   return (
 
     <div className="ControlledExpansionPanels"  >
@@ -239,20 +281,45 @@ export default function ControlledExpansionPanels(props) {
 
             <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse' }} >
               <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', width: '50%' }} >
+                
                 <AssingUser users={props.users} id={props.id} onProfileDelete={props} assigned={props.assigned} />
+                {props.status !== "new" &&  props.task_type==="حذف" ? (null):(
                 <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} title={props.name}
                   time={props.time} desc={props.desc} status={props.status} type={props.type} task_type={props.task_type}
                   users={props.users} Geofences={props.Geofences} geofences={props.geofences} onRefreshGeo={props} weight={props.weight}  monitor={props.monitor} />
-                <AttachFile id={props.id} onProfileDelete={props} />
+                )}
+                  <AttachFile id={props.id} onProfileDelete={props} />
               </div>
 
               <Status status={props.status} onProfileDelete={props} id={props.id} />
 
             </div>
-
-            {JSON.parse(localStorage.getItem("roles").includes(9))===false?(null):(  <span style={{display:'flex',justifyContent:'flex-end',cursor:'help'}} >
-                <img src={require('../../../assets/img/log1.png')} alt='img' style={{height:20}} onClick={()=>{ window.open(`https://www.iraq-gis.com/` +`LogTable?id=${props.id}&name=${"Task"}`, '_blank')}}  />
-                 </span>   )}
+            <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end'}}  >
+            <span style={{marginRight:10}}  >
+              {props.status === "rejected" && JSON.parse(localStorage.getItem("roles")).includes(7) ? (
+                <i className="far fa-trash-alt"  id="dels" onClick={() => {                   
+                    if (window.confirm('Delete the Task?')) { Delete(props.id) }
+                  }}></i>
+              ) : (null)}
+                 </span>
+           
+            {JSON.parse(localStorage.getItem("roles")).includes(9) === false ? (null) : (<span style={{ display: 'flex', justifyContent: 'flex-end', cursor: 'help' }} >
+              <img src={require('../../../assets/img/log1.png')} alt='img' style={{ height: 20 }} onClick={() => { window.open(`https://www.iraq-gis.com/` + `LogTable?id=${props.id}&name=${"Task"}`, '_blank') }} />
+            </span>)}
+        
+                 </div>
+                 {spin===true ? (
+                      <div style={{ width: "100%", position: "absolute" }}>
+                        <Lottie
+                          options={{
+                            animationData: loading
+                          }}
+                          width={300}
+                          height={150}
+                          position="absolute"
+                        />
+                      </div>
+                    ) : null}
           </ExpansionPanelDetails>
 
           <div id='pan_main'  >

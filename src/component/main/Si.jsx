@@ -304,17 +304,19 @@ export default function PersistentDrawerLeft(props) {
                   </List>
                 </NavLink>
 
-                {JSON.parse(localStorage.getItem("roles").includes("3"))===false && JSON.parse(localStorage.getItem("roles").includes("4"))===false  ? (
-                  <div></div>
-                ) : (
-                <NavLink to='/Department' activeClassName='active' >
-                  <List className='sidefect' style={{ paddingBottom: 0 }} >
-                    <ListItem >
-                      <img src={require('../../assets/img/web.png')} alt='img' id='side_img' />
-                      <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Departments</span></ListItemText>
-                    </ListItem>
-                  </List>
-                </NavLink>)}
+                {JSON.parse(localStorage.getItem("roles")).includes(3) && JSON.parse(localStorage.getItem("roles")).includes(4)  ? (
+                 
+                 <NavLink to='/Department' activeClassName='active' >
+                 <List className='sidefect' style={{ paddingBottom: 0 }} >
+                   <ListItem >
+                     <img src={require('../../assets/img/web.png')} alt='img' id='side_img' />
+                     <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Departments</span></ListItemText>
+                   </ListItem>
+                 </List>
+               </NavLink>
+               
+                ) : (null
+            )}
 
                
                 <NavLink to='/Tasks' activeClassName='active' >
@@ -326,7 +328,7 @@ export default function PersistentDrawerLeft(props) {
                     </List>
                   </NavLink>
 
-                  {JSON.parse(localStorage.getItem("roles").includes("3"))===false && JSON.parse(localStorage.getItem("roles").includes("4"))===false  ? (
+                  {JSON.parse(localStorage.getItem("roles")).includes(11)===false ? (
                   <div></div>
                 ) : (
                   <NavLink to='/Task_type' activeClassName='active' >

@@ -258,17 +258,23 @@ td {
 
 #notification_main {
   background-color: #808181;
-  height: 100px;
+  min-height: 100px;
   width: 100%;
   margin-bottom: 40px;
   color: #fff;
   display: flex;
   flex-direction: column;
+  padding-bottom: 10px;
 }
 #noti_btn_dwn {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+}
+#notiTitle{
+  padding-left: 25px;
+    font-size: 20px;
+    padding-bottom: 10px;
 }
 #clear_noti {
   font-size: 22px;
@@ -338,6 +344,10 @@ td {
   color: #d94848;
   font-size: 18px;
 }
+#dels {
+  color: #d94848;
+  font-size: 20px;
+}
 #edit {
   color: #22619f;
   font-size: 18px;
@@ -354,6 +364,10 @@ td {
 }
 #edit:hover,
 #del:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+#dels:hover {
   cursor: pointer;
   transform: scale(1.1);
 }

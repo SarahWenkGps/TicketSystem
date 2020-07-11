@@ -53,16 +53,16 @@ class Tasks extends React.Component {
       noti: [],
       status1: 'new',
       checked: true,
-      status2: 'in progress',
-      checked2: true,
-      status3: 'closed',
-      checked3: true,
-      status4: 'approved',
-      checked4: true,
-      status5: 'rejected',
-      checked5: true,
-      status6: 'archived',
-      checked6: true,
+      status2: '',
+      checked2: false,
+      status3: '',
+      checked3: false,
+      status4: '',
+      checked4: false,
+      status5: '',
+      checked5: false,
+      status6: '',
+      checked6: false,
       selected_AssignFrom: '',
       selected_AssignTo: '',
       selected_taskType: '',
@@ -381,6 +381,7 @@ RefreshGeofences(){
 
       return (
         (dog.task_title.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+        dog.description.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
           dog.status.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
           dog.issuer_user.name.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
           dog.created_at.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
@@ -523,6 +524,7 @@ RefreshGeofences(){
                             const selectedItems = selected
                             const selectedItemsLength = selectedItems.length
                             let selectedNames = ''
+                            
                             setState({
                               selected,
                               selectedNames

@@ -186,7 +186,7 @@ class EditTask extends React.Component {
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
                                         
 
-                                                <Component initialState={{ selected: [null], label: '' }}>
+                                                <Component initialState={{ selected: [null], label:this.props.task_type }}>
                       {({ state, setState }) => (
                         <SelectMenu
                           isMultiSelect
@@ -225,7 +225,7 @@ class EditTask extends React.Component {
                            <Button  onMouseOver={()=>{
                               
                                let obs = this.props.type.find(o => o.label === this.props.task_type)
-                               setState({selected:[obs.value]})
+                               setState({selected:[obs.value],label:this.props.task_type})
                             //    console.log(this.props.task_type,this.props.type,obs);
                            }}  style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select Type...'}</Button>
                         </SelectMenu>
@@ -239,7 +239,7 @@ class EditTask extends React.Component {
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
                                           
                                                 <Component initialState={{
-                                                    selected: [this.props.geofences], label: '',
+                                                    selected: [JSON.parse(this.props.geofences.geo_x),JSON.parse(this.props.geofences.geo_y)], label:this.props.geofences.geo_name,
                                                     options: this.props.Geofences
                                                         .map(label => ({ label: label.name, value: label.x, dimen: [label.x, label.y] })),
                                                 }} >
@@ -300,7 +300,13 @@ class EditTask extends React.Component {
                                                                 this.setState({ geo_name: null, dimentions: [null, null] })
                                                             }}
                                                         >
-                                                            <Button   style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select name...'}</Button>
+                                                            <Button  
+                                                            onMouseOver={()=>{
+                                                                console.log(this.props.geofences);
+                                                                setState({selected: [JSON.parse(this.props.geofences.geo_x),JSON.parse(this.props.geofences.geo_y)],label:this.props.geofences.geo_name}) 
+                                                                console.log(state.selected);
+                                                            }}
+                                                             style={{ width: '95%', outline: 'none', display: 'flex', justifyContent: 'center' }}  >{state.label || 'Select name...'}</Button>
                                                         </SelectMenu>
                                                     )}
                                                 </Component>
@@ -311,7 +317,8 @@ class EditTask extends React.Component {
                                             <div style={{ width: '80%', textAlign: 'center', display: "flex", alignItems: 'center', justifyContent: 'center' }} >
                                        
 
-                                                <Component initialState={{ selected:[this.props.monitor.id],label:this.props.monitor.name }} >
+                                                <Component initialState={{ selected:[this.props.monitor.id],
+                                                    label:this.props.monitor.name }} >
                                                     {({ state, setState }) => (
                                                         <SelectMenu
                                                             isMultiSelect

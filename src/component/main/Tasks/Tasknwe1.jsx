@@ -11,6 +11,7 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import "react-toastify/dist/ReactToastify.css";
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import AssingUser from './AssignUser';
+import { toast } from "react-toastify";
 import EditTask from './EditTask';
 import ShowFile from './ShowFile';
 import PersonIcon from '@material-ui/icons/Person';
@@ -21,6 +22,13 @@ import moment from 'moment';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import CommentIcon from '@material-ui/icons/Comment';
+import axios from "axios";
+import Cookies from "universal-cookie";
+import Host from "../../../assets/js/Host";
+import Lottie from "lottie-react-web";
+ import loading from '../../../assets/js/loading.json';
+const cookies = new Cookies();
+var spin;
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -54,6 +62,42 @@ export default function ControlledExpansionPanels(props) {
 
 
   // };
+
+ 
+
+  function Delete(data) {
+    spin=true;
+    var headers = {
+      "Content-Type": "application/json",
+      jwt: cookies.get("token")
+    };
+   
+    axios({
+      url: Host + `tasks/task/${data}`,
+      method: "DELETE",
+      headers: headers
+    })
+      .then(response => {
+        if (response.data.status===false) {
+          toast.error(response.data.data.text)
+          spin=false;
+      }
+      else if (response.data.status===true) {
+        const { onProfileDelete } = props
+          onProfileDelete() 
+     toast.success("deleted successfully")
+     spin=false;
+      }
+      })
+      .catch(err => {
+        toast.error("Network Error")
+        spin=false;
+      });
+    
+    }
+
+
+
   return (
 
     <div className="ControlledExpansionPanels"  >
@@ -139,12 +183,12 @@ export default function ControlledExpansionPanels(props) {
             id="panel1bh-header"
           >
             <div style={{ width: '100%' }}   >
-              <div style={{color:'#2e6b95',fontSize:'16px',fontWeight:'600'}}  > {props.name}   </div>
+              <div style={{ color: '#2e6b95', fontSize: '16px', fontWeight: '600' }}  > {props.name}   </div>
 
               <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }} >
                 <div style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
                   <div style={{ display: 'flex', alignItems: 'center' }}  >
-                    <PersonIcon style={{ fontSize: 14,marginRight:4 }} /> {props.createdby}
+                    <PersonIcon style={{ fontSize: 14, marginRight: 4 }} /> {props.createdby}
                     {props.monitor.name !== null ? (<div style={{ marginLeft: 15 }} >  <img src={require('../../../assets/img/2.png')} alt='img' style={{ height: 15 }} />  {props.monitor.name} </div>) : (null)}
                   </div>
                   <div style={{ width: '19%' }}   > {props.time === '1970-01-01T00:00:00.000Z' ? (
@@ -167,42 +211,42 @@ export default function ControlledExpansionPanels(props) {
                 </div>
 
               </div>
-           
-              <div style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100',display:'flex',alignItems:'center' }}  > 
-                <PeopleAltIcon style={{ fontSize: 14,marginRight:4 }} />  
+
+              <div style={{ color: 'rgb(127, 127, 127)', fontSize: 14, fontWeight: '100', display: 'flex', alignItems: 'center' }}  >
+                <PeopleAltIcon style={{ fontSize: 14, marginRight: 4 }} />
                 {props.assigners.length > 0 ? (
-                <div style={{display:'flex',alignItems:'center'}} > {props.assigners[0].name} {props.assigners.length > 1 ? (
-                <span id='OthersParent' > +  {props.assigners.length - 1} Others <span id='OthersContent' > {props.assigners.map((p, i) => (<div key={i}  > {p.name} </div>))}  </span> </span>) : (null)}
-                 </div> 
-                 ) : (<span>No Body</span>)}
+                  <div style={{ display: 'flex', alignItems: 'center' }} > {props.assigners[0].name} {props.assigners.length > 1 ? (
+                    <span id='OthersParent' > +  {props.assigners.length - 1} Others <span id='OthersContent' > {props.assigners.map((p, i) => (<div key={i}  > {p.name} </div>))}  </span> </span>) : (null)}
+                  </div>
+                ) : (<span>No Body</span>)}
+              </div>
+
+
+
+              <div style={{ color: 'rgb(127, 127, 127)', fontSize: 10, fontWeight: '100', display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '3px' }}   >
+                <div  >
+                  {moment(props.created_at).format("lll")}
+                  <div>   # {props.id}
+
+                  </div>
                 </div>
-               
+                <div >
+                  <div id='icons_headerTask' >
+                    {props.files.length > 0 ? (<AttachFileIcon className='icon_file_head' />) : (null)}
+                    {props.geofences.geo_name !== "null" && props.geofences.geo_name !== null ? (<LocationOnIcon style={{ fontSize: 18 }} />) : (null)}
+                    {props.comments_count > 0 ? (<div>  {props.comments_count}  <CommentIcon style={{ fontSize: 18, color: '#3e83b2' }} />  </div>) : (null)}
 
-
-              <div style={{ color: 'rgb(127, 127, 127)', fontSize: 10, fontWeight: '100',display:'flex',alignItems:'center',justifyContent:'space-between',paddingRight:'3px' }}   > 
-              <div  >
-              {moment(props.created_at).format("lll")} 
-              <div>   # {props.id}  
-            
-                  </div> 
-                </div>   
-              <div >
-                <div id='icons_headerTask' >
-                  {props.files.length > 0 ? (<AttachFileIcon className='icon_file_head' />) : (null)}
-                  {props.geofences.geo_name !== "null" && props.geofences.geo_name !== null ? (<LocationOnIcon style={{ fontSize: 18 }} />) : (null)}
-                  {props.comments_count > 0 ? (<div>  {props.comments_count}  <CommentIcon style={{ fontSize: 18, color: '#3e83b2' }} />  </div>) : (null)}
-
+                  </div>
                 </div>
               </div>
-               </div>
 
 
-         
+
             </div>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgb(225, 227, 229)' }}  >
 
-            <div style={{ display: 'flex', justifyContent: 'space-between',height:'30px' }} >
+            <div style={{ display: 'flex', justifyContent: 'space-between', height: '30px' }} >
               <div>  {props.files.length > 0 ? (<ShowFile files={props.files} onProfileDelete={props} />) : (null)}</div>
 
               <div>
@@ -242,19 +286,45 @@ export default function ControlledExpansionPanels(props) {
             <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse' }} >
               <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', width: '50%' }} >
                 <AssingUser users={props.users} id={props.id} onProfileDelete={props} assigned={props.assigned} />
+                {props.status !== "new" &&  props.task_type==="حذف" ? (null):(
                 <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} title={props.name}
                   time={props.time} desc={props.desc} status={props.status} type={props.type} task_type={props.task_type}
                   users={props.users} Geofences={props.Geofences} geofences={props.geofences} weight={props.weight} onRefreshGeo={props}
                   monitor={props.monitor} />
-                <AttachFile id={props.id} onProfileDelete={props}    />
+                )}
+
+                <AttachFile id={props.id} onProfileDelete={props} />
               </div>
 
               <Status status={props.status} onProfileDelete={props} id={props.id} />
 
             </div>
-            {JSON.parse(localStorage.getItem("roles").includes(9))===false?(null):(  <span style={{display:'flex',justifyContent:'flex-end',cursor:'help'}} >
-                <img src={require('../../../assets/img/log1.png')} alt='img' style={{height:20}} onClick={()=>{ window.open(`https://www.iraq-gis.com/` +`LogTable?id=${props.id}&name=${"Task"}`, '_blank')}}  />
-                 </span>   )}
+            <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end'}}  >
+            <span style={{marginRight:10}}  >
+              {props.status === "rejected" && JSON.parse(localStorage.getItem("roles")).includes(7) ? (
+                <i className="far fa-trash-alt"  id="dels" onClick={() => {                   
+                    if (window.confirm('Delete the Task?')) { Delete(props.id) }
+                  }}></i>
+              ) : (null)}
+                 </span>
+           
+            {JSON.parse(localStorage.getItem("roles")).includes(9) === false ? (null) : (<span style={{ display: 'flex', justifyContent: 'flex-end', cursor: 'help' }} >
+              <img src={require('../../../assets/img/log1.png')} alt='img' style={{ height: 20 }} onClick={() => { window.open(`https://www.iraq-gis.com/` + `LogTable?id=${props.id}&name=${"Task"}`, '_blank') }} />
+            </span>)}
+        
+                 </div>
+                 {spin===true ? (
+                      <div style={{ width: "100%", position: "absolute" }}>
+                        <Lottie
+                          options={{
+                            animationData: loading
+                          }}
+                          width={300}
+                          height={150}
+                          position="absolute"
+                        />
+                      </div>
+                    ) : null}
           </ExpansionPanelDetails>
 
           <div id='pan_main'  >

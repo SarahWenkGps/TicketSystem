@@ -370,226 +370,227 @@ isVisible(){
             ) {
               return (
                 <div id="main_sec">
-         { JSON.parse(localStorage.getItem("roles").includes("2"))===false  ? (
-                null               
+               
+         { JSON.parse(localStorage.getItem("roles")).includes(1)  ? (
+                 <div id="main_row">
+                 <div style={{ width: 150 }}>
+                   <Component initialState={{ isShown: false, spin: false }}>
+                     {({ state, setState }) => (
+                       <Pane>
+                         <Dialog
+                           isShown={state.isShown}
+                           onCloseComplete={() => setState({ isShown: false })}
+                           hasHeader={false}
+                           shouldCloseOnOverlayClick={false}
+                           confirmLabel="Save"
+                           cancelLabel="Cancel"
+                           onConfirm={() => {
+                             if (this.state.username.length < 3) {
+                            return   toast.warning('userename must be more than 3 char')
+                             }
+                               if (this.state.name.length < 3) {
+                                 return  toast.warning('name must be more than 3 char')
+                             }
+                               if (this.state.password.length < 3) {
+                                 return  toast.warning('password must be more than 3 char')
+                             }
+                             if (this.state.email.length < 5) {
+                               return  toast.warning('mail must be more than 5 char')
+                           }
+                              if (this.state.con_password !== this.state.password) {
+                               return   toast.warning('please confirm password')
+                           }
+
+                           var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                           if (reg.test(this.state.email) == false) 
+                           {
+                             return  toast.warning('Invalid Email Address');
+                              
+                           }
+                             setState({ spin: true })
+
+
+
+                             const jwt = cookies.get("token");
+                             var headers = {
+                               'jwt': jwt,
+                               'Access-Control-Allow-Origin': '*',
+                               'Content-Type': 'application/json',
+                             };
+
+                             axios({
+                               url: Host + `users/user`,
+                               method: "POST",
+
+                               headers: headers,
+                               data: {
+                                 username: this.state.username,
+                                 password: this.state.password,
+                                 department_id: this.state.dep_nm,
+                                 email: this.state.email,
+                                 name: this.state.name,
+                                 phone:this.state.phone,
+                                 ip_phone:this.state.TelePhone,
+                                 birthdate:this.state.Birthdate
+
+                               }
+                             })
+                               .then(response => {
+                                 // console.log(response.data);
+                                 if (response.data.status === false) {
+                                   toast.error(response.data.data.message.text)
+                                   setState({ spin: false })
+                                 }
+                                 else if (response.data.status === true) {
+                                   setState({ isShown: false, spin: false })
+                                   this.componentDidMount();
+                                   this.setState({username:"",password:"",dep_nm:"",email:"",name:"",con_password:"",phone:"",Birthdate:"",TelePhone:""})
+                                 }
+                               })
+                               .catch(err => {
+                                 toast.error("Network Error")
+                                 setState({ spin: false });
+                               });
+                           }}
+                         >
+                           <div>
+                             <div id="new_itemnav"> Create New User </div>
+                             <div className="mod1">
+                               <div id='dailog' style={{ marginTop: 15 }} >
+                                 <div id='dialog_title'>
+                                   Username </div>
+                                 <div style={{ width: "80%", textAlign: "center" }}>
+                                   <input type="text" id="field2" placeholder="Username"
+                                     value={this.state.username}
+                                     onChange={e => {
+                                       this.setState({ username: e.target.value })
+                                     
+                                     }} />
+                                 </div>
+                               </div>
+
+                               <div id='dailog'>
+                                 <div id='dialog_title'>Name</div>
+                                 <div style={{ width: "80%", textAlign: "center" }}>
+                                   <input
+                                     type="text"
+                                     id="field2"
+                                     placeholder="Name"
+                                     value={this.state.name}
+                                     onChange={e => {
+                                       this.setState({ name: e.target.value })
+
+                                     }}
+                                   />
+                                 </div>
+                               </div>
+                               <div id='dailog' >
+                                 <div id='dialog_title' > Password </div>
+                                 <div style={{ width: "80%", textAlign: "center" }}>
+                                   <input
+                                     type="password"
+                                     id="field2"
+                                     placeholder="******"
+                                     value={this.state.password}
+                                     onChange={e => {
+                                       this.setState({ password: e.target.value }) }}
+                                   />
+                                 </div>
+                               </div>
+
+                               <div id='dailog' >
+                                         <div id='dialog_title' >   Confirm  Password  </div>
+                                        <div style={{ width: '80%', textAlign: 'center' }} >
+                                             <input type='password' id='field2' placeholder=' ****** '
+                                                 value={this.state.con_password} onChange={(e) =>
+                                                     this.setState({ con_password: e.target.value })} /> </div>
+                                     </div>
+
+                               <div id='dailog' >
+                                 <div id='dialog_title'> Email </div>
+                                 <div style={{ width: "80%", textAlign: "center" }}>
+                                   <input type="email" id="field2" placeholder="Email"
+                                     value={this.state.email}
+                                     onChange={e => {
+                                       this.setState({ email: e.target.value })
+
+                                     }} />
+                                 </div>
+                               </div>
+
+                               <div id='dailog' >
+                                 <div id='dialog_title'> Phone </div>
+                                 <div style={{ width: "80%", textAlign: "center" }}>
+                                   <input type="number" id="field2" placeholder="964**********"
+                                     value={this.state.phone}
+                                     onChange={e => {
+                                       this.setState({ phone: e.target.value })
+                                     }} />
+                                 </div>
+                               </div>
+
+                               <div id='dailog' >
+                                 <div id='dialog_title'> Ext. </div>
+                                 <div style={{ width: "80%", textAlign: "center" }}>
+                                   <input type="number" id="field2" placeholder="***"
+                                     value={this.state.TelePhone}
+                                     onChange={e => {
+                                       this.setState({ TelePhone: e.target.value })
+                                     }} />
+                                 </div>
+                               </div>
+                               <div id='dailog' >
+                                 <div id='dialog_title'> Birthdate </div>
+                                 <div style={{ width: "80%", textAlign: "center" }}>
+                                   <input type="date" id="field2" placeholder="Birthdate"
+                                     value={this.state.Birthdate}
+                                     onChange={e => {
+                                       this.setState({ Birthdate: e.target.value })
+                                     }} />
+                                 </div>
+                               </div>
+
+                               <div id='dailog' >
+                                 <div id='dialog_title' > Department </div>
+                                 <div style={{ width: "80%", textAlign: "center", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                   <Select onChange={e => { this.setState({ dep_nm: e.value }); }}
+                                     value={selectedOption}
+                                     styles={customStyles}
+                                     options={this.state.dapts}
+                                   />
+                                 </div>
+                               </div>
+                               {state.spin ? (
+                                 <div style={{ width: "100%", position: "absolute" }}>
+                                   <Lottie
+                                     options={{
+                                       animationData: loading
+                                     }}
+                                     width={300}
+                                     height={150}
+                                     position="absolute"
+                                   />
+                                 </div>
+                               ) : null}
+                             </div>
+                           </div>
+                         </Dialog>
+
+                         <div
+                           onClick={() => setState({ isShown: true })}
+                           id="new"
+                         >
+                           New
+                       </div>
+                       </Pane>
+                     )}
+                   </Component>
+                 </div>
+
+
+               </div>             
                 ) : (
-                  <div id="main_row">
-                  <div style={{ width: 150 }}>
-                    <Component initialState={{ isShown: false, spin: false }}>
-                      {({ state, setState }) => (
-                        <Pane>
-                          <Dialog
-                            isShown={state.isShown}
-                            onCloseComplete={() => setState({ isShown: false })}
-                            hasHeader={false}
-                            shouldCloseOnOverlayClick={false}
-                            confirmLabel="Save"
-                            cancelLabel="Cancel"
-                            onConfirm={() => {
-                              if (this.state.username.length < 3) {
-                             return   toast.warning('userename must be more than 3 char')
-                              }
-                                if (this.state.name.length < 3) {
-                                  return  toast.warning('name must be more than 3 char')
-                              }
-                                if (this.state.password.length < 3) {
-                                  return  toast.warning('password must be more than 3 char')
-                              }
-                              if (this.state.email.length < 5) {
-                                return  toast.warning('mail must be more than 5 char')
-                            }
-                               if (this.state.con_password !== this.state.password) {
-                                return   toast.warning('please confirm password')
-                            }
-
-                            var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-                            if (reg.test(this.state.email) == false) 
-                            {
-                              return  toast.warning('Invalid Email Address');
-                               
-                            }
-                              setState({ spin: true })
-
-
-
-                              const jwt = cookies.get("token");
-                              var headers = {
-                                'jwt': jwt,
-                                'Access-Control-Allow-Origin': '*',
-                                'Content-Type': 'application/json',
-                              };
-
-                              axios({
-                                url: Host + `users/user`,
-                                method: "POST",
-
-                                headers: headers,
-                                data: {
-                                  username: this.state.username,
-                                  password: this.state.password,
-                                  department_id: this.state.dep_nm,
-                                  email: this.state.email,
-                                  name: this.state.name,
-                                  phone:this.state.phone,
-                                  ip_phone:this.state.TelePhone,
-                                  birthdate:this.state.Birthdate
-
-                                }
-                              })
-                                .then(response => {
-                                  // console.log(response.data);
-                                  if (response.data.status === false) {
-                                    toast.error(response.data.data.message.text)
-                                    setState({ spin: false })
-                                  }
-                                  else if (response.data.status === true) {
-                                    setState({ isShown: false, spin: false })
-                                    this.componentDidMount();
-                                    this.setState({username:"",password:"",dep_nm:"",email:"",name:"",con_password:"",phone:"",Birthdate:"",TelePhone:""})
-                                  }
-                                })
-                                .catch(err => {
-                                  toast.error("Network Error")
-                                  setState({ spin: false });
-                                });
-                            }}
-                          >
-                            <div>
-                              <div id="new_itemnav"> Create New User </div>
-                              <div className="mod1">
-                                <div id='dailog' style={{ marginTop: 15 }} >
-                                  <div id='dialog_title'>
-                                    Username </div>
-                                  <div style={{ width: "80%", textAlign: "center" }}>
-                                    <input type="text" id="field2" placeholder="Username"
-                                      value={this.state.username}
-                                      onChange={e => {
-                                        this.setState({ username: e.target.value })
-                                      
-                                      }} />
-                                  </div>
-                                </div>
-
-                                <div id='dailog'>
-                                  <div id='dialog_title'>Name</div>
-                                  <div style={{ width: "80%", textAlign: "center" }}>
-                                    <input
-                                      type="text"
-                                      id="field2"
-                                      placeholder="Name"
-                                      value={this.state.name}
-                                      onChange={e => {
-                                        this.setState({ name: e.target.value })
-
-                                      }}
-                                    />
-                                  </div>
-                                </div>
-                                <div id='dailog' >
-                                  <div id='dialog_title' > Password </div>
-                                  <div style={{ width: "80%", textAlign: "center" }}>
-                                    <input
-                                      type="password"
-                                      id="field2"
-                                      placeholder="******"
-                                      value={this.state.password}
-                                      onChange={e => {
-                                        this.setState({ password: e.target.value }) }}
-                                    />
-                                  </div>
-                                </div>
-
-                                <div id='dailog' >
-                                          <div id='dialog_title' >   Confirm  Password  </div>
-                                         <div style={{ width: '80%', textAlign: 'center' }} >
-                                              <input type='password' id='field2' placeholder=' ****** '
-                                                  value={this.state.con_password} onChange={(e) =>
-                                                      this.setState({ con_password: e.target.value })} /> </div>
-                                      </div>
-
-                                <div id='dailog' >
-                                  <div id='dialog_title'> Email </div>
-                                  <div style={{ width: "80%", textAlign: "center" }}>
-                                    <input type="email" id="field2" placeholder="Email"
-                                      value={this.state.email}
-                                      onChange={e => {
-                                        this.setState({ email: e.target.value })
-
-                                      }} />
-                                  </div>
-                                </div>
-
-                                <div id='dailog' >
-                                  <div id='dialog_title'> Phone </div>
-                                  <div style={{ width: "80%", textAlign: "center" }}>
-                                    <input type="number" id="field2" placeholder="964**********"
-                                      value={this.state.phone}
-                                      onChange={e => {
-                                        this.setState({ phone: e.target.value })
-                                      }} />
-                                  </div>
-                                </div>
-
-                                <div id='dailog' >
-                                  <div id='dialog_title'> Ext. </div>
-                                  <div style={{ width: "80%", textAlign: "center" }}>
-                                    <input type="number" id="field2" placeholder="***"
-                                      value={this.state.TelePhone}
-                                      onChange={e => {
-                                        this.setState({ TelePhone: e.target.value })
-                                      }} />
-                                  </div>
-                                </div>
-                                <div id='dailog' >
-                                  <div id='dialog_title'> Birthdate </div>
-                                  <div style={{ width: "80%", textAlign: "center" }}>
-                                    <input type="date" id="field2" placeholder="Birthdate"
-                                      value={this.state.Birthdate}
-                                      onChange={e => {
-                                        this.setState({ Birthdate: e.target.value })
-                                      }} />
-                                  </div>
-                                </div>
-
-                                <div id='dailog' >
-                                  <div id='dialog_title' > Department </div>
-                                  <div style={{ width: "80%", textAlign: "center", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                    <Select onChange={e => { this.setState({ dep_nm: e.value }); }}
-                                      value={selectedOption}
-                                      styles={customStyles}
-                                      options={this.state.dapts}
-                                    />
-                                  </div>
-                                </div>
-                                {state.spin ? (
-                                  <div style={{ width: "100%", position: "absolute" }}>
-                                    <Lottie
-                                      options={{
-                                        animationData: loading
-                                      }}
-                                      width={300}
-                                      height={150}
-                                      position="absolute"
-                                    />
-                                  </div>
-                                ) : null}
-                              </div>
-                            </div>
-                          </Dialog>
-
-                          <div
-                            onClick={() => setState({ isShown: true })}
-                            id="new"
-                          >
-                            New
-                        </div>
-                        </Pane>
-                      )}
-                    </Component>
-                  </div>
-
-
-                </div>           
+                  null      
                   )}
 
                 
@@ -597,10 +598,11 @@ isVisible(){
            
                
 
-                       { JSON.parse(localStorage.getItem("roles").includes("2"))===false  ? (
-                 <UserTable data={this.state.Usersdata}/>                 
+                       { JSON.parse(localStorage.getItem("roles")).includes(2)  ? (
+                 <AdminTable data={this.state.Usersdata}/>   
+                              
                 ) : (
-                  <AdminTable data={this.state.Usersdata}/>              
+                  <UserTable data={this.state.Usersdata}/>         
                   )}
                
 

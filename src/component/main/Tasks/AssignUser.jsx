@@ -28,7 +28,8 @@ class AssingUser extends React.Component {
 
    
     assign_user() {
-        if (this.state.id.length > 0) {
+        // if (this.state.id.length > 0) {
+            
             this.setState({ spin: true })
             var headers = {
                 jwt: cookies.get("token")
@@ -65,10 +66,10 @@ class AssingUser extends React.Component {
                       });
           
             
-        }
-        else{
-            return toast.error("Select User First")
-        }
+        // }
+        // else{
+        //     return toast.error("Select User First")
+        // }
        
     }
 

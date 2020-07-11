@@ -45,7 +45,17 @@ class Notifications extends React.Component {
 
         this.setState({ data: res.data.data })
         this.setState({ watt: "no" });
-
+  
+        // var result = Object.values(res.data.data.reduce((c, v) => {
+        //   let k = v.task_title + '-' + v.task_id;
+        //   c[k] = c[k] || [];
+        //   c[k].push(v);
+        //   return c;
+        // }, {})).reduce((c, v) => v.length > 1 ? c.concat(v) : c, []);
+        
+        // console.log(result);
+   
+        
       })
   }
 
@@ -80,6 +90,9 @@ class Notifications extends React.Component {
       headers: headers,
 
     })
+    .then(res =>{
+      this.componentDidMount();
+    })
   }
 
   render() {
@@ -113,11 +126,15 @@ class Notifications extends React.Component {
         <Row style={{ width: '100%', display: 'flex' }}   >
           {this.state.data.map((p, i) => (
             <Col md={6} key={i}  onClick={()=>{
-              {window.open(`https://www.iraq-gis.com/`+`NoteTask?id=${p.task_id}`,'_blank')}
               this.setRead(p.activity_id);
+              setTimeout(() => {
+                {window.open(`https://www.iraq-gis.com/`+`NoteTask?id=${p.task_id}`,'_blank')}
+              }, 200);
+            
+           
                 }}   >
 
-              <Noti type={p.type} id={p.task_id} note={p.note} commenter={p.commenter} time={p.date_time}
+              <Noti type={p.type} id={p.task_id} note={p.note} commenter={p.commenter} time={p.date_time} task_title={p.task_title}
                 user_updater={p.user_updater} assign_from={p.assign_from} assign_to={p.assign_to} activity_id={p.activity_id} onProfileDelete={() => this.componentDidMount()}
               />
             </Col>
