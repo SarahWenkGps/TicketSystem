@@ -62,6 +62,7 @@ render() {
       };
   return (
   <div style={{width:'100%'}} >
+  
     <MuiThemeProvider theme={this.getMuiTheme()}>
                     <MaterialDatatable
                       data={this.props.data}

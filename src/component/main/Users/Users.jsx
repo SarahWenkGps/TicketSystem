@@ -68,6 +68,7 @@ class Users extends Component {
       verified: "",
       data: [],
       Usersdata: [],
+      Admindata:[],
       Users: [],
       check: "",
       watt: "yes",
@@ -177,7 +178,7 @@ isVisible(){
       headers: headers,
     })
       .then(res => {
-        // console.log('users',res.data.data);       
+        console.log('users',res.data.data);       
         if (res.data.status === false) {
           cookies.remove("token");
           window.location.href = "/"
@@ -185,9 +186,11 @@ isVisible(){
           this.setState({ watt: "no" });
           cookies.set("userslength", res.data.data.length)
       
-          let arr = [];
+          let arr = []; let arrUser = [];
           for (let index = 0; index < res.data.data.length; index++) {
-
+         if (JSON.parse(localStorage.getItem("roles")).includes(2)) {
+           
+        
   
             let obj = {
               hash: [index + 1],
@@ -275,9 +278,7 @@ isVisible(){
                 </Component>
               ),
 
-              edit: (
-              
-              
+              edit: (                            
                      <div>
 
     <DropdownButton
@@ -302,46 +303,28 @@ isVisible(){
         <Dropdown.Item eventKey="4" style={{display:'flex',justifyContent:'center'}}  >   <div className='iconUserDialog' onClick={()=>{window.open(`https://www.iraq-gis.com/` +`LogTable?id=${res.data.data[index].user_id}&name=${"user"}`, '_blank')}}   > 
                   <img src={require('../../../assets/img/log.png')} alt='img' style={{height:25}} /></div> </Dropdown.Item>
       </DropdownButton>
-                    </div>
-    
-      
-
-
-   
-           
-   
-                  
-                     
-                    
-                    
-                   
-
-                    
-    
-        
-             
-       
-
-     
-      
-          
-         
-
-
-      
-             
-
-     
-                                                       
+                    </div>                                                           
                 )
             };
             arr.push(obj);
-            // console.log('data11',this.state.arr);
+            this.setState({ Admindata: arr });
+         }else{
+           
+            let obj1 = {
+              hash: [index + 1],
+              username: res.data.data[index].username,
+              name: res.data.data[index].name,
+              depa: (res.data.data[index].department.name==="unknown"?(null):(res.data.data[index].department.name)),
+              email: res.data.data[index].email,
+              ip_phone:res.data.data[index].ip_phone,
+              phone:res.data.data[index].phone,
+              birthdate:(res.data.data[index].birthdate===null?(null):(moment(res.data.data[index].birthdate).format('L'))),
+             
           }
-          this.setState({
-            Usersdata: arr
-          });
-
+          arrUser.push(obj1);
+        }
+          this.setState({ Usersdata:arrUser});
+      } 
         }
       })
       .catch(err => {
@@ -594,12 +577,12 @@ isVisible(){
                   )}
 
                 
-             
+
            
                
 
                        { JSON.parse(localStorage.getItem("roles")).includes(2)  ? (
-                 <AdminTable data={this.state.Usersdata}/>   
+                 <AdminTable data={this.state.Admindata}/>   
                               
                 ) : (
                   <UserTable data={this.state.Usersdata}/>         

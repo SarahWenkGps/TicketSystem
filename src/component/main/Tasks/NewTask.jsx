@@ -118,7 +118,7 @@ class NewTask extends React.Component {
                                 toast.success('task created successfully')
                                 this.setState({
                                     isShown: false, spin: false, task_name: "", description: "", startDate: new Date(),
-                                    priority_id: "", geo_name: "", dimentions: [], weight: "", users_id: "",moniter:null
+                                    priority_id: "", geo_name: "", dimentions: [], weight: 2, users_id: "",moniter:null
                                 })
                             })
                     }else{
@@ -127,7 +127,7 @@ class NewTask extends React.Component {
                     toast.success('task created successfully')
                     this.setState({
                         isShown: false, spin: false, task_name: "", description: "", startDate: new Date(),
-                        priority_id: "", geo_name: "", dimentions: [], weight: "", users_id: "" })
+                        priority_id: "", geo_name: "", dimentions: [], weight: 2, users_id: "" })
                     }
                 }
                 else if (res.data.status === false) {
@@ -195,7 +195,7 @@ class NewTask extends React.Component {
                             toast.success('task created successfully')
                             this.setState({
                                 isShown: false, spin: false, task_name: "", description: "", startDate: new Date(),
-                                priority_id: "", geo_name: "", dimentions: [], weight: "", moniter:null
+                                priority_id: "", geo_name: "", dimentions: [], weight:2, moniter:null
                             })
                         })
                     }else{
@@ -204,7 +204,7 @@ class NewTask extends React.Component {
                     toast.success('task created successfully')
                     this.setState({
                         isShown: false, spin: false, task_name: "", description: "", startDate: new Date(),
-                        priority_id: "", geo_name: "", dimentions: [], weight: "" })
+                        priority_id: "", geo_name: "", dimentions: [], weight: 2 })
                 }
             }
 

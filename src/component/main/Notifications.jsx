@@ -20,7 +20,8 @@ class Notifications extends React.Component {
       watt: "yes",
       spin: false,
       check: "",
-      redirect: false
+      redirect: false,
+      arrayUniqueByKey:[],
     };
   }
 
@@ -42,19 +43,28 @@ class Notifications extends React.Component {
       headers: headers,
     })
       .then(res => {
+// console.log(res.data.data);
 
+const result = [];
+const map = new Map();
+for (const item of res.data.data) {
+  if(!map.has(item.task_id)){
+      map.set(item.task_id, true);   
+      result.push(
+        item
+      );
+  }
+}
+// console.log(result)
         this.setState({ data: res.data.data })
         this.setState({ watt: "no" });
-  
-        // var result = Object.values(res.data.data.reduce((c, v) => {
-        //   let k = v.task_title + '-' + v.task_id;
-        //   c[k] = c[k] || [];
-        //   c[k].push(v);
-        //   return c;
-        // }, {})).reduce((c, v) => v.length > 1 ? c.concat(v) : c, []);
+        // const key = 'task_id';
+        // const reverse = res.data.data.reverse()
+        // const arrayUniqueByKey = [...new Map(reverse.map(item =>
+        //   [item[key], item])).values()];
         
-        // console.log(result);
-   
+        // console.log(arrayUniqueByKey);
+   this.setState({arrayUniqueByKey:result})
         
       })
   }
@@ -110,13 +120,11 @@ class Notifications extends React.Component {
      
      
      <div>
-{/* {this.renderRedirect()} */}
+
 
         <div>
 
-          {/* <button onClick={()=>{
-        this.setRedirect()
-          }} >nnnnn</button> */}
+        
           {this.state.data.length > 0 ? (
             <div id='clear_noti' onClick={() => {
               this.clearNoti();
@@ -124,19 +132,13 @@ class Notifications extends React.Component {
           ) : (null)}
         </div>
         <Row style={{ width: '100%', display: 'flex' }}   >
-          {this.state.data.map((p, i) => (
-            <Col md={6} key={i}  onClick={()=>{
-              this.setRead(p.activity_id);
-              setTimeout(() => {
-                {window.open(`https://www.iraq-gis.com/`+`NoteTask?id=${p.task_id}`,'_blank')}
-              }, 200);
-            
-           
-                }}   >
+          {this.state.arrayUniqueByKey.map((p, i) => (
+            <Col md={6} key={i}    >
 
               <Noti type={p.type} id={p.task_id} note={p.note} commenter={p.commenter} time={p.date_time} task_title={p.task_title}
                 user_updater={p.user_updater} assign_from={p.assign_from} assign_to={p.assign_to} activity_id={p.activity_id} onProfileDelete={() => this.componentDidMount()}
-              />
+                arrayUniqueByKey={this.state.arrayUniqueByKey} allData={this.state.data}
+             />
             </Col>
           ))}
         </Row>
