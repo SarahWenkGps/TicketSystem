@@ -71,11 +71,16 @@ class Tasks extends React.Component {
       Geofences: [],
       height: window.innerHeight,
       message: 'not at bottom',
-      force:0,
-      deadTimeFilter:null,
+      force: 0,
+      deadTimeFilter: null,
+      ids: [],
+      userarr: [],
+      newtype: [],
+      filter: [],
+      dataF: [],
     }
     this.filterRef = React.createRef();
-    // this.handleScroll = this.handleScroll.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
 
@@ -84,31 +89,31 @@ class Tasks extends React.Component {
     this.filterRef.current.clearAll();
   }
 
-//   handleScroll() {
-//     const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
-//     const body = document.body;
-//     const html = document.documentElement;
-//     const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-//     const windowBottom = windowHeight + window.pageYOffset;
-//     if (windowBottom >= docHeight) {
-//         this.setState({
-//             message: 'bottom reached'
-//         });
-//     } else {
-//         this.setState({
-//             message: 'not at bottom'
-//         });
-//     }
-// }
+  handleScroll() {
+    const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
+    const body = document.body;
+    const html = document.documentElement;
+    const docHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+    const windowBottom = windowHeight + window.pageYOffset;
+    if (windowBottom >= docHeight) {
+      this.setState({
+        message: 'bottom reached'
+      });
+    } else {
+      this.setState({
+        message: 'not at bottom'
+      });
+    }
+  }
 
 
 
-componentWillUnmount() {
-  // window.removeEventListener("scroll", this.handleScroll);
-}
-  
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
+
   componentDidMount() {
-    // window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll);
     this.setState({ spin: true })
     if (cookies.get("token")) {
       this.setState({ check: "login" })
@@ -117,9 +122,9 @@ componentWillUnmount() {
       jwt: cookies.get("token"),
     };
     this.getTasks();
-    setInterval(() => {
-      this.getTasks();
-    }, 100000);
+    // setInterval(() => {
+    //   this.getTasks();
+    // }, 100000);
     axios({
       url: Host + `tasks/statuses`,
       method: "GET",
@@ -147,16 +152,21 @@ componentWillUnmount() {
     })
       .then(res => {
         let arr = [];
+        let idarr = [];
+
         for (let index = 0; index < res.data.data.length; index++) {
 
           let obj = {
             label: res.data.data[index].name,
             value: res.data.data[index].user_id,
           }
+
           arr.push(obj);
+          idarr.push(res.data.data[index].user_id);
+
         }
         this.setState({
-          users: arr
+          users: arr, ids: idarr, selected_AssignFrom: idarr, selected_AssignTo: idarr,
         });
       })
       .catch(err => {
@@ -175,14 +185,22 @@ componentWillUnmount() {
           window.location.href = "/"
         } else {
           let arr = [];
+          let userarr = [];
+          let newtype = [];
           for (let index = 0; index < res.data.data.length; index++) {
             let obj = {
               label: res.data.data[index].name,
               value: res.data.data[index].task_type_id,
             }
+            let obj1 = {
+              label: res.data.data[index].name,
+              value: res.data.data[index].name,
+            }
             arr.push(obj)
+            userarr.push(res.data.data[index].name)
+            newtype.push(obj1)
           }
-          this.setState({ type: arr })
+          this.setState({ type: arr, userarr: userarr, selected_taskType: userarr, newtype: newtype })
         }
       })
 
@@ -191,6 +209,56 @@ componentWillUnmount() {
     this.getGeofences();
 
   }
+
+
+  filterResult() {
+    let filters = this.state.tasks.filter((dog) => {
+
+      return (
+        (dog.task_title.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+          dog.description.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+          dog.status.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+          dog.issuer_user.name.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+          dog.created_at.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+          dog.assigners.map((p, i) => (p.name)).toString().toLowerCase().includes(this.state.search.toString().toLowerCase())) &&
+        (dog.status === this.state.status1 || dog.status === this.state.status2 || dog.status === this.state.status3 ||
+          dog.status === this.state.status4 || dog.status === this.state.status5 || dog.status === this.state.status6
+        ) &&
+
+        (
+          this.state.selected_AssignFrom.includes(dog.issuer_user.id)
+
+        ) &&
+        (
+          this.state.selected_AssignTo.some(ai => (dog.assigners.map((p, i) => (p.user_id))).includes(ai))
+
+        )
+        &&
+        (
+          this.state.selected_taskType.toString().toLowerCase().includes(dog.task_type)
+
+        )
+        && (
+          this.state.deadTimeFilter != null ? (
+            dog.dead_time !== "1970-01-01T00:00:00.000Z" &&
+            moment(dog.dead_time).format("X") < this.state.deadTimeFilter
+
+          ) : (dog.dead_time)
+        )
+
+      )
+    })
+    // console.log(filters);
+
+    this.setState({ dataF: filters })
+  }
+
+
+
+
+
+
+
 
   getpriorities() {
     var headers = {
@@ -209,17 +277,17 @@ componentWillUnmount() {
 
       })
   }
-RefreshGeofences(){
-  this.setState({force:1})
-  setTimeout(() => {
-    this.getGeofences();
-  }, 200);
-}
+  RefreshGeofences() {
+    this.setState({ force: 1 })
+    setTimeout(() => {
+      this.getGeofences();
+    }, 200);
+  }
   getGeofences() {
     var headers = {
       jwt: cookies.get("token"),
     };
-    
+
     axios({
       url: Host + `tasks/task_geofences?params={"force":${this.state.force}}`,
       method: "GET",
@@ -234,11 +302,12 @@ RefreshGeofences(){
       })
   }
 
-  getTasks() {
+  async getTasks() {
+    this.setState({ spin: true })
     var headers = {
       jwt: cookies.get("token"),
     };
-    axios({
+    await axios({
       url: Host + `tasks/tasks?params={"from_date":${this.state.date1},"to_date":${this.state.date2}}`,
       method: "GET",
       headers: headers,
@@ -252,41 +321,12 @@ RefreshGeofences(){
           window.location.href = "/"
         } else {
 
-
+          // console.log(response.data.data);
           this.setState({ tasks: response.data.data })
-
-          let data = response.data.data
-
-          let newdata = data.filter(f =>
-            f.status === 'new'
-          )
-          this.setState({
-            new: newdata
-          })
-
-          let assignedata = data.filter(f =>
-            f.status === "archived")
-          this.setState({
-            archived: assignedata
-          })
-          let inprogressdata = data.filter(f =>
-            f.status === "in progress")
-          this.setState({
-            inprogress: inprogressdata
-          })
-          let closeddata = data.filter(f =>
-            f.status === "closed")
-          this.setState({
-            closed: closeddata
-          })
-          let approveddata = data.filter(f =>
-            f.status === "approved")
-          this.setState({ approved: approveddata })
-
-          let rejecteddata = data.filter(f =>
-            f.status === "rejected")
-          this.setState({ rejected: rejecteddata })
-
+          this.setState({ spin: false })
+          setTimeout(() => {
+            this.filterResult();
+          }, 200);
         }
 
       })
@@ -302,6 +342,9 @@ RefreshGeofences(){
   handleInput = (e) => {
     // console.log(e.target.value);
     this.setState({ search: e.target.value })
+    setTimeout(() => {
+      this.filterResult();
+    }, 100);
   }
 
   allTime() {
@@ -377,44 +420,46 @@ RefreshGeofences(){
     c.style.color = "#828282";
   }
   render() {
-    let filter = this.state.tasks.filter((dog) => {
 
-      return (
-        (dog.task_title.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
-        dog.description.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
-          dog.status.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
-          dog.issuer_user.name.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
-          dog.created_at.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
-          dog.assigners.map((p, i) => (p.name)).toString().toLowerCase().includes(this.state.search.toString().toLowerCase())) &&
-        (dog.status === this.state.status1 || dog.status === this.state.status2 || dog.status === this.state.status3 ||
-          dog.status === this.state.status4 || dog.status === this.state.status5 || dog.status === this.state.status6
-        ) &&
+    // let filter = this.state.tasks.filter((dog) => {
 
-        (
-          dog.issuer_user.id.toString().toLowerCase().includes(this.state.selected_AssignFrom)
-        ) &&
-        (
-          dog.assigners.map((p, i) => (p.user_id)).toString().toLowerCase().includes(this.state.selected_AssignTo)
-        )
-        && (
-          // dog.task_type.toString().toLowerCase().includes(this.state.selected_taskType)
-          dog.task_type !== null ? (dog.task_type.toString().toLowerCase().includes(this.state.selected_taskType)) : (<div></div>)
-        )
-    &&(
-    this.state.deadTimeFilter!=null?(
-      dog.dead_time!=="1970-01-01T00:00:00.000Z" &&   
-      moment(dog.dead_time).format("X")  < this.state.deadTimeFilter 
-    
-    ):(dog.dead_time)
-    )
+    //   return (
+    //     (dog.task_title.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+    //       dog.description.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+    //       dog.status.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+    //       dog.issuer_user.name.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+    //       dog.created_at.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
+    //       dog.assigners.map((p, i) => (p.name)).toString().toLowerCase().includes(this.state.search.toString().toLowerCase())) &&
+    //     (dog.status === this.state.status1 || dog.status === this.state.status2 || dog.status === this.state.status3 ||
+    //       dog.status === this.state.status4 || dog.status === this.state.status5 || dog.status === this.state.status6
+    //     ) &&
 
-      )
+    //     (
+    //       this.state.selected_AssignFrom.includes(dog.issuer_user.id)
+    //       // dog.issuer_user.id.toString().toLowerCase().includes(this.state.selected_AssignFrom) 
+    //     ) &&
+    //     // (
+
+    //     //   this.state.selected_AssignTo.includes(dog.assigners.map((p, i) => (p.user_id)))
+    //     // )
+    //     // && 
+    //     (
+    //       this.state.selected_taskType.toString().toLowerCase().includes(dog.task_type)
+    //       // dog.task_type !== null ? (dog.task_type.toString().toLowerCase().includes(this.state.selected_taskType)) : (<div></div>)
+    //     )
+    //     && (
+    //       this.state.deadTimeFilter != null ? (
+    //         dog.dead_time !== "1970-01-01T00:00:00.000Z" &&
+    //         moment(dog.dead_time).format("X") < this.state.deadTimeFilter
+
+    //       ) : (dog.dead_time)
+    //     )
+
+    //   )
 
 
 
-
-
-    })
+    // })
 
 
     return (
@@ -429,7 +474,9 @@ RefreshGeofences(){
             ) {
               return (
                 <div >
-
+                  {/* <button onClick={() => {
+                    console.log(this.state.selected_AssignTo);
+                  }} >nnn</button> */}
                   <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }} >
 
                     <Checkbox
@@ -446,6 +493,9 @@ RefreshGeofences(){
                           this.setState({ status1: '' })
                           // console.log(this.state.status1 === undefined);
                         }
+                        setTimeout(() => {
+                          this.filterResult();
+                        }, 200);
                       }}
                     />
                     <Checkbox
@@ -459,18 +509,26 @@ RefreshGeofences(){
                         } else {
                           this.setState({ status2: '' })
                         }
+                        setTimeout(() => {
+                          this.filterResult();
+                        }, 200);
                       }}
                     />
                     <Checkbox
                       label="Closed"
                       checked={this.state.checked3}
                       onChange={e => {
+
+                        // console.log(e.target.checked);
                         this.setState({ checked3: e.target.checked })
                         if (this.state.checked3 === false) {
                           this.setState({ status3: 'closed' })
                         } else {
                           this.setState({ status3: '' })
                         }
+                        setTimeout(() => {
+                          this.filterResult();
+                        }, 200);
                       }}
                     />
                     <Checkbox
@@ -483,6 +541,9 @@ RefreshGeofences(){
                         } else {
                           this.setState({ status4: '' })
                         }
+                        setTimeout(() => {
+                          this.filterResult();
+                        }, 200);
                       }}
                     />
                     <Checkbox
@@ -495,6 +556,9 @@ RefreshGeofences(){
                         } else {
                           this.setState({ status5: '' })
                         }
+                        setTimeout(() => {
+                          this.filterResult();
+                        }, 200);
                       }}
                     />
                     <Checkbox
@@ -507,6 +571,9 @@ RefreshGeofences(){
                         } else {
                           this.setState({ status6: '' })
                         }
+                        setTimeout(() => {
+                          this.filterResult();
+                        }, 200);
                       }}
                     /></div>
 
@@ -519,12 +586,24 @@ RefreshGeofences(){
                           title="Select names"
                           options={this.state.users}
                           onSelect={item => {
-                            const selected = [state.selected, item.value]
-                            this.setState({ selected_AssignFrom: item.value })
+                            const selected = [...state.selected, item.value]
                             const selectedItems = selected
                             const selectedItemsLength = selectedItems.length
                             let selectedNames = ''
-                            
+                            if (selectedItemsLength === 0) {
+                              selectedNames = ''
+                            } else if (selectedItemsLength === 1) {
+                              selectedNames = selectedItems.toString()
+                            } else if (selectedItemsLength > 1) {
+                              selectedNames = selectedItemsLength.toString() + ' selected...'
+                            }
+                            this.setState({
+                              selected_AssignFrom: selected,
+                              selectedNames
+                            })
+                            setTimeout(() => {
+                              this.filterResult();
+                            }, 200);
                             setState({
                               selected,
                               selectedNames
@@ -538,17 +617,30 @@ RefreshGeofences(){
                             const selectedItemsLength = selectedItems.length
                             let selectedNames = ''
                             if (selectedItemsLength === 0) {
-                              selectedNames = ''
+                              selectedNames = '';
+
                             } else if (selectedItemsLength === 1) {
                               selectedNames = selectedItems.toString()
                             } else if (selectedItemsLength > 1) {
                               selectedNames = selectedItemsLength.toString() + ' selected...'
                             }
+                            if (selectedItemsLength === 0) {
+                              this.setState({ selected_AssignFrom: this.state.ids })
+
+                            } else if (selectedItemsLength !== 0) {
+                              this.setState({ selected_AssignFrom: selectedItems, selectedNames })
+                            }
+                            setTimeout(() => {
+                              this.filterResult();
+                            }, 200);
                             setState({ selected: selectedItems, selectedNames })
-                            this.setState({ selected_AssignFrom: "" })
+
+
                           }}
                         >
-                          <Button  >{'Created By '}</Button>
+                          <Button onMouseOver={() => {
+
+                          }} >{'Created By '}</Button>
                         </SelectMenu>
                       )}
                     </Component>
@@ -560,11 +652,26 @@ RefreshGeofences(){
                           title="Select names"
                           options={this.state.users}
                           onSelect={item => {
-                            const selected = [state.selected, item.value]
-                            this.setState({ selected_AssignTo: item.value })
+
+
+                            const selected = [...state.selected, item.value]
                             const selectedItems = selected
                             const selectedItemsLength = selectedItems.length
                             let selectedNames = ''
+                            if (selectedItemsLength === 0) {
+                              selectedNames = ''
+                            } else if (selectedItemsLength === 1) {
+                              selectedNames = selectedItems.toString()
+                            } else if (selectedItemsLength > 1) {
+                              selectedNames = selectedItemsLength.toString() + ' selected...'
+                            }
+                            this.setState({
+                              selected_AssignTo: selected,
+                              selectedNames
+                            })
+                            setTimeout(() => {
+                              this.filterResult();
+                            }, 200);
                             setState({
                               selected,
                               selectedNames
@@ -584,27 +691,57 @@ RefreshGeofences(){
                             } else if (selectedItemsLength > 1) {
                               selectedNames = selectedItemsLength.toString() + ' selected...'
                             }
+                            if (selectedItemsLength === 0) {
+                              this.setState({ selected_AssignTo: this.state.ids })
+
+                            } else if (selectedItemsLength !== 0) {
+                              this.setState({ selected_AssignTo: selectedItems, selectedNames })
+                            }
+                            setTimeout(() => {
+                              this.filterResult();
+                            }, 200);
                             setState({ selected: selectedItems, selectedNames })
-                            this.setState({ selected_AssignTo: "" })
+
                           }}
                         >
                           <Button  >{'Assigned To '}</Button>
                         </SelectMenu>
                       )}
                     </Component>
-                    <Component initialState={{ selected: '' }} >
+                    <Component initialState={{
+                      selected: [],
+                      options: this.state.type
+                        .map(label => ({ label: label.name, value: label.task_type_id })),
+
+                    }}
+                    >
                       {({ state, setState }) => (
                         <SelectMenu
                           isMultiSelect
+                          options={this.state.newtype}
                           selected={state.selected}
-                          title="Select names"
-                          options={this.state.type}
+
                           onSelect={item => {
-                            const selected = [state.selected, item.value]
-                            this.setState({ selected_taskType: item.label })
+
+
+                            const selected = [...state.selected, item.value]
                             const selectedItems = selected
                             const selectedItemsLength = selectedItems.length
                             let selectedNames = ''
+                            if (selectedItemsLength === 0) {
+                              selectedNames = ''
+                            } else if (selectedItemsLength === 1) {
+                              selectedNames = selectedItems.toString()
+                            } else if (selectedItemsLength > 1) {
+                              selectedNames = selectedItemsLength.toString() + ' selected...'
+                            }
+                            this.setState({
+                              selected_taskType: selected,
+                              selectedNames
+                            })
+                            setTimeout(() => {
+                              this.filterResult();
+                            }, 200);
                             setState({
                               selected,
                               selectedNames
@@ -624,37 +761,48 @@ RefreshGeofences(){
                             } else if (selectedItemsLength > 1) {
                               selectedNames = selectedItemsLength.toString() + ' selected...'
                             }
+                            if (selectedItemsLength === 0) {
+                              this.setState({ selected_taskType: this.state.userarr })
+
+                            } else if (selectedItemsLength !== 0) {
+                              this.setState({ selected_taskType: selectedItems, selectedNames })
+                            }
+                            setTimeout(() => {
+                              this.filterResult();
+                            }, 200);
                             setState({ selected: selectedItems, selectedNames })
-                            this.setState({ selected_taskType: "" })
+
                           }}
                         >
-                          <Button>{'Task Type'}</Button>
+                          <Button   >{'Task Type'}</Button>
                         </SelectMenu>
                       )}
                     </Component>
 
 
-<div id='deadTime'  onClick={()=>{
-// console.log(moment(moment().format('L')).add(1,'day').format("X"));
+                    <div id='deadTime' onClick={() => {
+                      // console.log(moment(moment().format('L')).add(1,'day').format("X"));
 
-   if (this.state.deadTimeFilter===null) {
-    this.setState({
-      deadTimeFilter: moment(moment().format('L')).add(1,'day').format("X")
-    })
-    var x = document.getElementById("deadTime");
-    x.style.backgroundImage = "linear-gradient(rgb(227, 14, 14), rgb(229, 75, 118))";
-    x.style.color = "#FFF";
-   }else{
-    this.setState({
-      deadTimeFilter: null
-    })
-    var x = document.getElementById("deadTime");
-    x.style.backgroundImage = "linear-gradient(rgb(255, 255, 255), rgb(244, 245, 247))";
-    x.style.color = "#828282";
-   }
-   
-  
-}}  >Dead Line</div>
+                      if (this.state.deadTimeFilter === null) {
+                        this.setState({
+                          deadTimeFilter: moment(moment().format('L')).add(1, 'day').format("X")
+                        })
+                        var x = document.getElementById("deadTime");
+                        x.style.backgroundImage = "linear-gradient(rgb(227, 14, 14), rgb(229, 75, 118))";
+                        x.style.color = "#FFF";
+                      } else {
+                        this.setState({
+                          deadTimeFilter: null
+                        })
+                        var x = document.getElementById("deadTime");
+                        x.style.backgroundImage = "linear-gradient(rgb(255, 255, 255), rgb(244, 245, 247))";
+                        x.style.color = "#828282";
+                      }
+                      setTimeout(() => {
+                        this.filterResult();
+                      }, 200);
+
+                    }}  >Dead Line</div>
 
                   </div>
 
@@ -666,13 +814,14 @@ RefreshGeofences(){
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%' }}>
                       <div id='searchdiv' >
                         <input type='text' onChange={this.handleInput} placeholder='Search' id='search' />
+
                         <div style={{ display: 'flex', marginLeft: '10%' }}  >
                           <RangePicker onDateSelected={this.onDateChanges}
                             selectTime={true}
                             onClose={() => {
-                              this.componentDidMount();
+                              this.getTasks();
                             }} />
-                         
+
                           <div onClick={() => {
                             this.setState({ date1: 0, date2: 0 })
                             setTimeout(() => {
@@ -680,29 +829,29 @@ RefreshGeofences(){
                               this.allTime();
                             }, 200);
                           }} id="date_btn1" > All Time </div>
-                         
-                         <div onClick={() => {
-                            this.setState({ date1: moment(moment().format('L')).subtract(7, 'day').format("X")* 1000, date2: 0 })
+
+                          <div onClick={() => {
+                            this.setState({ date1: moment(moment().format('L')).subtract(7, 'day').format("X") * 1000, date2: 0 })
                             setTimeout(() => {
-                              this.componentDidMount();
+                              this.getTasks();
                               this.Week();
                             }, 200);
                             // console.log(moment().subtract(7, 'day'));
-                            
+
                           }} id="date_btn3" > Week  </div>
-                         
+
                           <div onClick={() => {
-                            this.setState({ date1: moment(moment().format('L')).subtract(1, 'day').format("X")* 1000, date2: moment(moment().format('L')).format("X") * 1000 })
+                            this.setState({ date1: moment(moment().format('L')).subtract(1, 'day').format("X") * 1000, date2: moment(moment().format('L')).format("X") * 1000 })
                             setTimeout(() => {
-                              this.componentDidMount();
+                              this.getTasks();
                               this.yesterday();
                             }, 200);
                           }} id="date_btn2" > Yesterday  </div>
-                          
+
                           <div onClick={() => {
                             this.setState({ date1: moment(moment().format('L')).format("X") * 1000, date2: 0 })
                             setTimeout(() => {
-                              this.componentDidMount();
+                              this.getTasks();
                               this.today();
                             }, 200);
                           }} id="date_btn" > Today  </div>
@@ -727,18 +876,18 @@ RefreshGeofences(){
 
                       <NewTask onProfileDelete={() => this.componentDidMount()} users={this.state.users} key={1} onRefreshGeo={() => this.RefreshGeofences()}
                         type={this.state.type} priorities={this.state.priorities} Geofences={this.state.Geofences} />
-                      <span className='filter_span' > {filter.length} Tasks </span>
+                      <span className='filter_span' > {this.state.dataF.length} Tasks </span>
                       <Row style={{ width: '100%', display: 'flex' }}   >
 
 
-                        {filter.map((item, i) => (
+                        {this.state.dataF.map((item, i) => (
                           <Col md={6} key={i} id='noti_Get' style={{ marginTop: 40 }}    >
                             <Tasknwe1 name={item.task_title} time={item.dead_time} desc={item.description}
                               id={item.task_id} users={this.state.users} assigners={item.assigners}
                               onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
                               createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count}
                               type={this.state.type} task_type={item.task_type} monitor={item.monitor} files={item.files} priority={item.priority} geofences={item.geofences}
-                              Geofences={this.state.Geofences} weight={item.weight} onRefreshGeo={() => this.RefreshGeofences()}    />
+                              Geofences={this.state.Geofences} weight={item.weight} onRefreshGeo={() => this.RefreshGeofences()} />
 
                           </Col>
                         ))}

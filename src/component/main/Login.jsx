@@ -189,6 +189,12 @@ class Login extends Component {
 
 
                 </div>
+
+<div>
+    <div style={{textAlign:'center',color:'rgb(112, 112, 112)',marginTop:5,padding:5,fontSize:18}} >© 2020 Integrated Solutions . All rights reserved </div>
+</div>
+
+
             </div>
             
         );

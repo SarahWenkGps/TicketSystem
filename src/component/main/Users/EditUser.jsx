@@ -208,7 +208,7 @@ class EditUser extends React.Component {
                           selected={state.birthdate}
                           onChange={(date)=> {
                             setState({birthdate:date})
-                            console.log(date,new Date(this.props.birthdate));
+                            // console.log(date,new Date(this.props.birthdate));
                             
                            }}
                           locale="ar-iq"
@@ -260,9 +260,14 @@ class EditUser extends React.Component {
                     department: this.props.department,
                     phone: this.props.phone,
                     ip_phone: this.props.ip_phone,
-                    birthdate: new Date(this.props.birthdate)
+                    
                   })
-                }}
+if (this.props.birthdate!=="0000-00-00" && this.props.birthdate!==null  ) {
+  setState({birthdate: new Date(this.props.birthdate)})
+}
+                  
+
+}}
 
               >
                 <i className="fas fa-edit" id="edit"></i>

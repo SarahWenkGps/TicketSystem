@@ -22,9 +22,42 @@ class Noti extends React.Component {
     super(props);
     this.myRef = React.createRef();
     this.state = {
-
+      assignedata:[]
     };
   }
+
+
+ async setReadAll() {
+    var headers = {
+      jwt: cookies.get("token"),
+    };
+    var count=0;
+    for (let index = 0; index < this.state.assignedata.length; index++) {
+      count++;
+    await  axios({
+        url: Host + `notifications/read_notification/${this.state.assignedata[index].activity_id}`,
+        method: "POST",
+        headers: headers,
+  
+      })
+        .then(res => {
+          const { onProfileDelete } = this.props
+          onProfileDelete()
+          console.log(count,this.state.assignedata.length);
+          if (count === this.state.assignedata.length) {
+            toast.success("Done")
+          }
+         
+        })
+      
+    }
+  
+  }
+
+
+
+
+
   setRead(data) {
     var headers = {
       jwt: cookies.get("token"),
@@ -121,82 +154,78 @@ class Noti extends React.Component {
                     topOffset={200}
                     width={900}
                     height={900}
-                   
+
                   >
-{state.assignedata.length>1?(
-   state.assignedata.map((p,i) =>
-    <div  key={i} id='notification_main'  >
+                    {state.assignedata.length > 1 ? (
+                      state.assignedata.map((p, i) =>
+                        <div key={i} id='notification_main'  >
 
-      {p.type === 'task_assgin' ? (
-        <div id='type_btn1' style={{ backgroundColor: '#94D295' }}  > Task Assign  <NotificationsIcon />  </div>
-      ) : (null)}
-      {p.type === 'task_status_changed' ? (
-        <div id='type_btn1'   > Task Status Changed    <NotificationsIcon />  </div>
-      ) : (null)}
-      {p.type === 'task_updated' ? (
-        <div id='type_btn1' style={{ backgroundColor: '#FF8847' }}   > Task Updated    <NotificationsIcon />  </div>
-      ) : (null)}
-      {p.type === 'comment' ? (
-        <div id='type_btn1' style={{ backgroundColor: '#946F5D' }}   > Task Comment   <NotificationsIcon />  </div>
-      ) : (null)}
-      <div id='noti_date'  >  {moment(p.date_time).format("LLL")}   </div>
-      <div id='notiTitle' >{p.task_title}</div>
-      <div id='noti_text' >
+                          {p.type === 'task_assgin' ? (
+                            <div id='type_btn1' style={{ backgroundColor: '#94D295' }}  > Task Assign  <NotificationsIcon />  </div>
+                          ) : (null)}
+                          {p.type === 'task_status_changed' ? (
+                            <div id='type_btn1'   > Task Status Changed    <NotificationsIcon />  </div>
+                          ) : (null)}
+                          {p.type === 'task_updated' ? (
+                            <div id='type_btn1' style={{ backgroundColor: '#FF8847' }}   > Task Updated    <NotificationsIcon />  </div>
+                          ) : (null)}
+                          {p.type === 'comment' ? (
+                            <div id='type_btn1' style={{ backgroundColor: '#946F5D' }}   > Task Comment   <NotificationsIcon />  </div>
+                          ) : (null)}
+                          <div id='noti_date'  >  {moment(p.date_time).format("LLL")}   </div>
+                          <div id='notiTitle' >{p.task_title}</div>
+                          <div id='noti_text' >
 
-        <span id='span_noti1' >
-          {p.commenter} {p.assign_to}  </span> {p.note}
-        <span id='span_noti2'>{p.user_updater} {p.assign_from} </span>    </div>
+                            <span id='span_noti1' >
+                              {p.commenter} {p.assign_to}  </span> {p.note}
+                            <span id='span_noti2'>{p.user_updater} {p.assign_from} </span>    </div>
 
-      <div id='noti_btn_dwn' >
+                          <div id='noti_btn_dwn' >
 
-        <Tooltip title="Set Read" onClick={() => {
-          this.setRead(p.activity_id);
-        }}>
-          <IconButton aria-label="Set Read">
-            <CheckCircleIcon style={{ color: '#68ff7a' }} />
-          </IconButton>
-        </Tooltip>
-
-      </div>
-
-    </div>
- 
-    )
-):(
- 
-    <div id='Not_notic'  >
-  No More Notifications
-</div>
- 
-
-)}
-
-
-
-                   
-                 </Dialog>
-
+                            <Tooltip title="Set Read" onClick={() => {
+                              this.setRead(p.activity_id);
+                            }}>
+                              <IconButton aria-label="Set Read">
+                                <CheckCircleIcon style={{ color: '#68ff7a' }} />
+                              </IconButton>
+                           </Tooltip>
+                          </div>
+                        </div>
+                      )
+                    ) : (
+                        <div id='Not_notic'  >
+                          No More Notifications
+                        </div>
+                      )}
+                  </Dialog>
                   <div onClick={() => {
                     setState({ isShown: true })
                     let assignedata = this.props.allData.filter(f =>
                       f.task_id === this.props.id)
-                    // console.log(assignedata.length);
+                  //  console.log(assignedata);
                     setState({ assignedata: assignedata })
 
                   }}
-                    style={{ color: '#dbdfdf', paddingRight: 15 ,cursor:'pointer'}}   >  Show  More Notifications  </div>
+                    style={{ color: '#dbdfdf', paddingRight: 15, cursor: 'pointer' }}   >  Show  More Notifications  </div>
                 </Pane>
               )}
             </Component>
 
-            <Tooltip title="Show Task" onClick={()=>{
-              this.setRead(this.props.activity_id);
-              setTimeout(() => {
-                {window.open(`https://www.iraq-gis.com/`+`NoteTask?id=${this.props.id}`,'_blank')}
-              }, 200);
-            
-           
-                }} >
+            <Tooltip title="Show Task" onClick={() => {
+                  let assignedata = this.props.allData.filter(f =>
+                    f.task_id === this.props.id)
+                 console.log(assignedata);
+                  this.setState({ assignedata: assignedata })
+             setTimeout(() => {
+              this.setReadAll();
+              { window.open(`https://www.iraq-gis.com/` + `NoteTask?id=${this.props.id}`, '_blank') }
+             }, 200);
+              // setTimeout(() => {
+              //   
+              // }, 200);
+
+
+            }} >
               <IconButton aria-label="Show Task">
                 <VisibilityIcon style={{ color: '#68ff7a' }} />
               </IconButton>

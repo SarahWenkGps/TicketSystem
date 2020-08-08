@@ -33,6 +33,7 @@ class App extends React.Component {
       desc: '',
       commenter: '',
       body: '',
+      title:"",
     };
     this.showNotifications = this.showNotifications.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -62,8 +63,9 @@ class App extends React.Component {
           headers: headers,
         })
           .then(res => {
-            if (res.data.data.length > 0) {
             // console.log(res.data.data);
+            if (res.data.data.length > 0) {
+           
               var arr = []
               if (res.data.data[0].assign_to !== undefined) {
                 arr.push(res.data.data[0].assign_to)
@@ -82,9 +84,10 @@ class App extends React.Component {
               this.setState({ body: arr.join(' ') })
             }
             if (res.data.data.length > this.state.noti) {
+              this.setState({title:res.data.data[0].task_title })
               this.showNotifications();
             }
-            this.setState({ noti: res.data.data.length })
+            this.setState({ noti: res.data.data.length})
           })
       }, 10000);
 
@@ -225,7 +228,7 @@ class App extends React.Component {
         />
         <ReactNotifications
           onRef={ref => (this.n = ref)} // Required
-          title="New Notifications " // Required
+          title={this.state.title}// Required
           body={this.state.body}
           icon={img}
           tag="abcdef"
@@ -238,7 +241,9 @@ class App extends React.Component {
           action: {
           }
         }} >
+           
           <Switch>
+           
             <Route exact path='/' component={Login} />
             <Route path='/Task_type' component={Si} />
             <Route path='/Users' component={Si} />
