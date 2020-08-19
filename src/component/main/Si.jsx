@@ -24,6 +24,7 @@ import Context from '../../assets/js/context';
 import Task_type from './Task_type';
 import Users from './Users/Users';
 import Tasks from './Tasks/Tasks';
+import Detials_TaskEdite from './Tasks/Detials_TaskEdite';
 import NoteTask from './Tasks/NoteTask';
 import UserInfo from '../common/UserInfo';
 import LogTable from '../common/LogTable';
@@ -53,7 +54,9 @@ function rendertitile(props) {
     return (<div>  Notification   </div>)
   }
 
-
+  else if (props.match.path === '/Detials_TaskEdite') {
+    return (<div>  Edite  Task    </div>)
+  }
   else if (props.match.path === '/Tasks') {
     return (<div>  Tasks   </div>)
   }
@@ -185,6 +188,9 @@ export default function PersistentDrawerLeft(props) {
     }
     else if (props.match.path === '/LogTable') {
       return (<LogTable />)
+    }
+    else if (props.match.path === '/Detials_TaskEdite') {
+      return (<Detials_TaskEdite />)
     }
   }
   return (

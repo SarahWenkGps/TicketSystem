@@ -14,7 +14,9 @@
     min-height: 600px; */
   width: 100%;
 }
-
+.MuiExpansionPanel-root.Mui-expanded {
+  margin:0px;
+}
 #icons_headerTask {
   display: flex;
   justify-content: space-between;

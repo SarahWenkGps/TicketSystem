@@ -49,7 +49,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
-
+  expanded:{
+    margin:'0px'
+  }
 }));
 
 
@@ -103,9 +105,10 @@ export default function ControlledExpansionPanels(props) {
 
       <div   >
         {props.status === "approved" ? (
-          <div id='head_task' >   <div id='tit_task' style={{ backgroundColor: '#188718b5' }} >Approved  </div>
+          <div id='head_task' style={{height:35 ,fontSize:'16.5px' }}  >  
+           <div id='tit_task' style={{ backgroundColor: '#188718b5',minWidth:200 }} >Approved  </div>
             <div className='weight' > {props.weight} </div>
-            <div className='task_type_style'>  {props.task_type} </div>
+            <div className='task_type_style'  >  {props.task_type} </div>
             {/* <div className='task_priority'  > {props.priority}  </div> */}
 
           </div>
@@ -113,9 +116,10 @@ export default function ControlledExpansionPanels(props) {
             null
           )}
         {props.status === "rejected" ? (
-          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: '#da251e' }} >Rejected</div>
+          <div id='head_task' style={{height:35,fontSize:'16.5px'}} >   
+            <div id='tit_task' style={{ backgroundColor: '#da251e',minWidth:200 }} >Rejected</div>
             <div className='weight' > {props.weight} </div>
-            <div className='task_type_style'>  {props.task_type} </div>
+            <div className='task_type_style'   >  {props.task_type} </div>
             {/* <div className='task_priority'  > {props.priority}  </div> */}
 
           </div>
@@ -123,9 +127,10 @@ export default function ControlledExpansionPanels(props) {
             null
           )}
         {props.status === "closed" ? (
-          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: 'gray' }} >Closed </div>
+          <div id='head_task' style={{height:35,fontSize:'16.5px'}} >  
+            <div id='tit_task' style={{ backgroundColor: 'gray',minWidth:200 }} >Closed </div>
             <div className='weight' > {props.weight} </div>
-            <div className='task_type_style'>  {props.task_type} </div>
+            <div className='task_type_style'    >  {props.task_type} </div>
             {/* <div className='task_priority'  > {props.priority}  </div>  */}
 
           </div>
@@ -133,9 +138,10 @@ export default function ControlledExpansionPanels(props) {
             null
           )}
         {props.status === "new" ? (
-          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: '#2e6b95' }} >New </div>
+          <div id='head_task' style={{height:35,fontSize:'16.5px'}} >   
+            <div id='tit_task' style={{ backgroundColor: '#2e6b95',minWidth:200 }} >New </div>
             <div className='weight' > {props.weight} </div>
-            <div className='task_type_style'>  {props.task_type} </div>
+            <div className='task_type_style'   >  {props.task_type} </div>
             {/* <div className='task_priority'  > {props.priority}  </div> */}
 
           </div>
@@ -143,9 +149,10 @@ export default function ControlledExpansionPanels(props) {
             null
           )}
         {props.status === "in progress" ? (
-          <div id='head_task' >    <div id='tit_task' style={{ backgroundColor: '#f06105cc' }} > In progress </div>
+          <div id='head_task' style={{height:35,fontSize:'16.5px'}} >  
+            <div id='tit_task' style={{ backgroundColor: '#f06105cc',minWidth:200 }} > In progress </div>
             <div className='weight' > {props.weight} </div>
-            <div className='task_type_style'>  {props.task_type} </div>
+            <div className='task_type_style'   >  {props.task_type} </div>
             {/* <div className='task_priority'  > {props.priority}  </div>  */}
 
           </div>
@@ -153,9 +160,10 @@ export default function ControlledExpansionPanels(props) {
             null
           )}
         {props.status === "assigned" ? (
-          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: '#d5ad00d4' }} > Assigned </div>
+          <div id='head_task' style={{height:35,fontSize:'16.5px'}} >   
+            <div id='tit_task' style={{ backgroundColor: '#d5ad00d4',minWidth:200 }} > Assigned </div>
             <div className='weight' > {props.weight} </div>
-            <div className='task_type_style'>  {props.task_type} </div>
+            <div className='task_type_style'   >  {props.task_type} </div>
             {/* <div className='task_priority'  > {props.priority}  </div> */}
 
           </div>
@@ -163,9 +171,10 @@ export default function ControlledExpansionPanels(props) {
             null
           )}
         {props.status === "archived" ? (
-          <div id='head_task' >     <div id='tit_task' style={{ backgroundColor: 'black' }} > Archived </div>
+          <div id='head_task' style={{height:35,fontSize:'16.5px'}} >    
+           <div id='tit_task' style={{ backgroundColor: 'black',minWidth:200 }} > Archived </div>
             <div className='weight' > {props.weight} </div>
-            <div className='task_type_style'>  {props.task_type} </div>
+            <div className='task_type_style' >  {props.task_type} </div>
             {/* <div className='task_priority'  > {props.priority}  </div> */}
 
           </div>
@@ -174,7 +183,7 @@ export default function ControlledExpansionPanels(props) {
           )}
 
         <ExpansionPanel square expanded={expanded === 'panel1'} onChange={handleChange('panel1')}
-          style={{ backgroundColor: 'rgba(241, 237, 237, 0.42)', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey' }} >
+          style={{ backgroundColor: 'rgba(241, 237, 237, 0.42)', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey',margin:'0px' }} >
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1bh-content"

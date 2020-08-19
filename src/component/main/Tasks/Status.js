@@ -92,7 +92,7 @@ export default function OpenIconSpeedDial(props) {
   return (
     <div className={classes.root}>
       {/* <Button onClick={handleVisibility}>Toggle Speed Dial</Button> */}
-      <SpeedDial
+      <SpeedDial 
         ariaLabel="SpeedDial openIcon example"
         className={classes.speedDial}
         hidden={hidden}

@@ -218,7 +218,7 @@ class Noti extends React.Component {
                   this.setState({ assignedata: assignedata })
              setTimeout(() => {
               this.setReadAll();
-              { window.open(`https://www.iraq-gis.com/` + `NoteTask?id=${this.props.id}`, '_blank') }
+              { window.open(`https://www.iraq-gis.com/` + `Detials_TaskEdite?id=${this.props.id}`, '_blank') }
              }, 200);
               // setTimeout(() => {
               //   

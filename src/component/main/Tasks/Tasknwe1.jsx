@@ -4,6 +4,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import EditIcon from '@material-ui/icons/Edit';
 import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 import Details from './Details';
@@ -11,13 +12,18 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import "react-toastify/dist/ReactToastify.css";
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import AssingUser from './AssignUser';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
 import { toast } from "react-toastify";
 import EditTask from './EditTask';
 import ShowFile from './ShowFile';
 import PersonIcon from '@material-ui/icons/Person';
 import Comments from './Comments';
+import SpeedDial from '@material-ui/lab/SpeedDial';
 import AttachFile from './AttachFile';
 import Status from './Status';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import moment from 'moment';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
@@ -26,7 +32,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import Host from "../../../assets/js/Host";
 import Lottie from "lottie-react-web";
- import loading from '../../../assets/js/loading.json';
+import loading from '../../../assets/js/loading.json';
 const cookies = new Cookies();
 var spin;
 const useStyles = makeStyles((theme) => ({
@@ -63,38 +69,45 @@ export default function ControlledExpansionPanels(props) {
 
   // };
 
- 
+  function copyCodeToClipboard()  {
+    var dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = `https://www.iraq-gis.com/Detials_TaskEdite?id=${props.id}`
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+  }
 
   function Delete(data) {
-    spin=true;
+    spin = true;
     var headers = {
       "Content-Type": "application/json",
       jwt: cookies.get("token")
     };
-   
+
     axios({
       url: Host + `tasks/task/${data}`,
       method: "DELETE",
       headers: headers
     })
       .then(response => {
-        if (response.data.status===false) {
+        if (response.data.status === false) {
           toast.error(response.data.data.text)
-          spin=false;
-      }
-      else if (response.data.status===true) {
-        const { onProfileDelete } = props
-          onProfileDelete() 
-     toast.success("deleted successfully")
-     spin=false;
-      }
+          spin = false;
+        }
+        else if (response.data.status === true) {
+          const { onProfileDelete } = props
+          onProfileDelete()
+          toast.success("deleted successfully")
+          spin = false;
+        }
       })
       .catch(err => {
         toast.error("Network Error")
-        spin=false;
+        spin = false;
       });
-    
-    }
+
+  }
 
 
 
@@ -176,7 +189,7 @@ export default function ControlledExpansionPanels(props) {
           )}
 
         <ExpansionPanel
-          style={{ backgroundColor: 'rgba(241, 237, 237, 0.42)', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey' }} >
+          style={{ backgroundColor: 'rgba(241, 237, 237, 0.42)', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey',margin:"0px" }} >
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1bh-content"
@@ -284,51 +297,86 @@ export default function ControlledExpansionPanels(props) {
 
 
             <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse' }} >
-              <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', width: '50%' }} >
+      
+        </div>
+        <div>
+     
+              {/* <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', width: '50%' }} >
                 <AssingUser users={props.users} id={props.id} onProfileDelete={props} assigned={props.assigned} />
-                {props.status !== "new" &&  props.task_type==="حذف" ? (null):(
-                <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} title={props.name}
-                  time={props.time} desc={props.desc} status={props.status} type={props.type} task_type={props.task_type}
-                  users={props.users} Geofences={props.Geofences} geofences={props.geofences} weight={props.weight} onRefreshGeo={props}
-                  monitor={props.monitor} />
+                {props.status !== "new" && props.task_type === "حذف" ? (null) : (
+                  <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} title={props.name}
+                    time={props.time} desc={props.desc} status={props.status} type={props.type} task_type={props.task_type}
+                    users={props.users} Geofences={props.Geofences} geofences={props.geofences} weight={props.weight} onRefreshGeo={props}
+                    monitor={props.monitor} />
                 )}
 
                 <AttachFile id={props.id} onProfileDelete={props} />
-              </div>
+              </div> */}
+              <div style={{ display: 'flex', alignItems: 'center', width: '100%',paddingTop:10 }} >
 
-              <Status status={props.status} onProfileDelete={props} id={props.id} />
+                <Tooltip title="Edit Task" onClick={() => {
+                  window.open(`https://www.iraq-gis.com/` + `Detials_TaskEdite?id=${props.id}`, '_blank')
+                }}>
+                  <IconButton aria-label="Edit Task" style={{ backgroundColor: '#9b999999', borderRadius: "300px",marginRight:10 }}  >
+                    <EditIcon style={{ color: 'rgb(46 107 149)' }} />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Copy URL" onClick={() => copyCodeToClipboard()}>
+                  <IconButton aria-label="Copy URL" style={{ backgroundColor: '#9b999999', borderRadius: "300px",marginRight:10 }}  >
+                    <FileCopyIcon style={{ color: 'rgb(46 107 149)' }} />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Refresh Task" onClick={() => {
+                  const { onRefTask } = props
+                  onRefTask()
+                }}>
+                  <IconButton aria-label="Refresh Task" style={{ backgroundColor: '#9b999999', borderRadius: "300px" }}  >
+                    <RefreshIcon style={{ color: 'rgb(46 107 149)' }} />
+                  </IconButton>
+                </Tooltip>
+              </div>
+          
 
             </div>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end'}}  >
-            <span style={{marginRight:10}}  >
-              {props.status === "rejected" && JSON.parse(localStorage.getItem("roles")).includes(7) ? (
-                <i className="far fa-trash-alt"  id="dels" onClick={() => {                   
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}  >
+              <span style={{ marginRight: 10 }}  >
+                {props.status === "rejected" && JSON.parse(localStorage.getItem("roles")).includes(7) ? (
+                  <i className="far fa-trash-alt" id="dels" onClick={() => {
                     if (window.confirm('Delete the Task?')) { Delete(props.id) }
                   }}></i>
-              ) : (null)}
-                 </span>
-           
-            {JSON.parse(localStorage.getItem("roles")).includes(9) === false ? (null) : (<span style={{ display: 'flex', justifyContent: 'flex-end', cursor: 'help' }} >
-              <img src={require('../../../assets/img/log1.png')} alt='img' style={{ height: 20 }} onClick={() => { window.open(`https://www.iraq-gis.com/` + `LogTable?id=${props.id}&name=${"Task"}`, '_blank') }} />
-            </span>)}
-        
-                 </div>
-                 {spin===true ? (
-                      <div style={{ width: "100%", position: "absolute" }}>
-                        <Lottie
-                          options={{
-                            animationData: loading
-                          }}
-                          width={300}
-                          height={150}
-                          position="absolute"
-                        />
-                      </div>
-                    ) : null}
+                ) : (null)}
+              </span>
+
+              {JSON.parse(localStorage.getItem("roles")).includes(9) === false ? (null) : (<span style={{ display: 'flex', justifyContent: 'flex-end', cursor: 'help' }} >
+                <img src={require('../../../assets/img/log1.png')} alt='img' style={{ height: 20 }} onClick={() => { window.open(`https://www.iraq-gis.com/` + `LogTable?id=${props.id}&name=${"Task"}`, '_blank') }} />
+              </span>)}
+
+            </div>
+            {spin === true ? (
+              <div style={{ width: "100%", position: "absolute" }}>
+                <Lottie
+                  options={{
+                    animationData: loading
+                  }}
+                  width={300}
+                  height={150}
+                  position="absolute"
+                />
+              </div>
+            ) : null}
           </ExpansionPanelDetails>
 
           <div id='pan_main'  >
-            <div style={{ width: '50%' }} ><Comments id={props.id} onProfileDelete={props} comment={props.comment} comments_count={props.comments_count} /></div>
+            <div style={{ width: '50%' }} >
+              <div id='coment1' style={{boxShadow:"inset 0 0 0 1px rgba(67, 90, 111, 0.14), inset 0 0px 0px 0 rgba(67, 90, 111, 0.06)",padding:3.5
+            ,color:'rgb(34 97 159 / 55%)'}}  >
+              Comments
+              </div>
+           
+              {/* <Comments id={props.id} onProfileDelete={props} comment={props.comment} comments_count={props.comments_count} /> */}
+              </div>
             <div style={{ width: '50%' }} ><Details id={props.id} onProfileDelete={props} /></div>
           </div>
 

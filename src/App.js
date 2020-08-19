@@ -12,6 +12,7 @@ import axios from "axios";
 import ReactNotifications from 'react-browser-notifications';
 import img from './assets/img/Logo.png';
 import Cookies from "universal-cookie";
+
 const cookies = new Cookies();
 class App extends React.Component {
   constructor(props) {
@@ -253,6 +254,8 @@ class App extends React.Component {
             <Route path='/Department' component={Si} />
             <Route path='/NoteTask' component={Si} />
             <Route path='/LogTable' component={Si} />
+            <Route path='/Detials_TaskEdite' component={Si} />
+         
           </Switch>
         </Context.Provider>
       </BrowserRouter>

@@ -360,6 +360,9 @@ class Tasks extends React.Component {
     var y = document.getElementById("date_btn1");
     y.style.backgroundColor = "rgb(106, 170, 104)";
     y.style.color = "#fff";
+    setTimeout(() => {
+      this.filterResult();
+    }, 100);
   }
 
   today() {
@@ -375,6 +378,9 @@ class Tasks extends React.Component {
     var y = document.getElementById("date_btn");
     y.style.backgroundColor = "rgb(106, 170, 104)";
     y.style.color = "#fff";
+    setTimeout(() => {
+      this.filterResult();
+    }, 100);
   }
   yesterday() {
     var x = document.getElementById("date_btn1");
@@ -389,6 +395,9 @@ class Tasks extends React.Component {
     var y = document.getElementById("date_btn2");
     y.style.backgroundColor = "rgb(106, 170, 104)";
     y.style.color = "#fff";
+    setTimeout(() => {
+      this.filterResult();
+    }, 100);
   }
   Week() {
     var x = document.getElementById("date_btn1");
@@ -403,6 +412,9 @@ class Tasks extends React.Component {
     var y = document.getElementById("date_btn3");
     y.style.backgroundColor = "rgb(106, 170, 104)";
     y.style.color = "#fff";
+    setTimeout(() => {
+      this.filterResult();
+    }, 100);
   }
   onDateChanges = (date, date2) => {
     this.setState({ date1: moment(date).format("X") * 1000, date2: moment(date2).format("X") * 1000 })
@@ -418,50 +430,12 @@ class Tasks extends React.Component {
     var c = document.getElementById("date_btn3");
     c.style.backgroundColor = "#fff";
     c.style.color = "#828282";
+    setTimeout(() => {
+      this.filterResult();
+    }, 100);
   }
   render() {
-
-    // let filter = this.state.tasks.filter((dog) => {
-
-    //   return (
-    //     (dog.task_title.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
-    //       dog.description.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
-    //       dog.status.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
-    //       dog.issuer_user.name.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
-    //       dog.created_at.toString().toLowerCase().includes(this.state.search.toString().toLowerCase()) ||
-    //       dog.assigners.map((p, i) => (p.name)).toString().toLowerCase().includes(this.state.search.toString().toLowerCase())) &&
-    //     (dog.status === this.state.status1 || dog.status === this.state.status2 || dog.status === this.state.status3 ||
-    //       dog.status === this.state.status4 || dog.status === this.state.status5 || dog.status === this.state.status6
-    //     ) &&
-
-    //     (
-    //       this.state.selected_AssignFrom.includes(dog.issuer_user.id)
-    //       // dog.issuer_user.id.toString().toLowerCase().includes(this.state.selected_AssignFrom) 
-    //     ) &&
-    //     // (
-
-    //     //   this.state.selected_AssignTo.includes(dog.assigners.map((p, i) => (p.user_id)))
-    //     // )
-    //     // && 
-    //     (
-    //       this.state.selected_taskType.toString().toLowerCase().includes(dog.task_type)
-    //       // dog.task_type !== null ? (dog.task_type.toString().toLowerCase().includes(this.state.selected_taskType)) : (<div></div>)
-    //     )
-    //     && (
-    //       this.state.deadTimeFilter != null ? (
-    //         dog.dead_time !== "1970-01-01T00:00:00.000Z" &&
-    //         moment(dog.dead_time).format("X") < this.state.deadTimeFilter
-
-    //       ) : (dog.dead_time)
-    //     )
-
-    //   )
-
-
-
-    // })
-
-
+  
     return (
       <Context.Consumer>
         {ctx => {
@@ -825,7 +799,7 @@ class Tasks extends React.Component {
                           <div onClick={() => {
                             this.setState({ date1: 0, date2: 0 })
                             setTimeout(() => {
-                              this.componentDidMount();
+                              this.getTasks();
                               this.allTime();
                             }, 200);
                           }} id="date_btn1" > All Time </div>
@@ -887,7 +861,7 @@ class Tasks extends React.Component {
                               onProfileDelete={() => this.componentDidMount()} status={item.status} allstatus={this.state.statuses}
                               createdby={item.issuer_user.name} created_at={item.created_at} assigned={item.assigners.map((p, i) => (p.user_id))} comments_count={item.comments_count}
                               type={this.state.type} task_type={item.task_type} monitor={item.monitor} files={item.files} priority={item.priority} geofences={item.geofences}
-                              Geofences={this.state.Geofences} weight={item.weight} onRefreshGeo={() => this.RefreshGeofences()} />
+                              Geofences={this.state.Geofences} weight={item.weight} onRefreshGeo={() => this.RefreshGeofences()}  onRefTask={() => this.getTasks()}  />
 
                           </Col>
                         ))}
