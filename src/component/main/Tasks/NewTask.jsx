@@ -113,8 +113,9 @@ class NewTask extends React.Component {
                             },
                         })
                             .then(res => {
-                                const { onProfileDelete } = this.props
-                                onProfileDelete()
+                                const { onRefTask } = this.props
+                                onRefTask()
+                           
                                 toast.success('task created successfully')
                                 this.setState({
                                     isShown: false, spin: false, task_name: "", description: "", startDate: new Date(),
@@ -122,8 +123,8 @@ class NewTask extends React.Component {
                                 })
                             })
                     }else{
-                    const { onProfileDelete } = this.props
-                    onProfileDelete()
+                        const { onRefTask } = this.props
+                        onRefTask()
                     toast.success('task created successfully')
                     this.setState({
                         isShown: false, spin: false, task_name: "", description: "", startDate: new Date(),
@@ -190,8 +191,8 @@ class NewTask extends React.Component {
                             },
                         })
                         .then(res => {
-                            const { onProfileDelete } = this.props
-                            onProfileDelete()
+                            const { onRefTask } = this.props
+                                onRefTask()
                             toast.success('task created successfully')
                             this.setState({
                                 isShown: false, spin: false, task_name: "", description: "", startDate: new Date(),
@@ -199,8 +200,8 @@ class NewTask extends React.Component {
                             })
                         })
                     }else{
-                    const { onProfileDelete } = this.props
-                    onProfileDelete()
+                        const { onRefTask } = this.props
+                        onRefTask()
                     toast.success('task created successfully')
                     this.setState({
                         isShown: false, spin: false, task_name: "", description: "", startDate: new Date(),

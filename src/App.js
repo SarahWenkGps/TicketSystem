@@ -35,6 +35,7 @@ class App extends React.Component {
       commenter: '',
       body: '',
       title:"",
+      SiFilter:[],
     };
     this.showNotifications = this.showNotifications.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -133,7 +134,7 @@ class App extends React.Component {
           // console.log(response.data);
           cookies.set("tasks", response.data.data.length)
           let data = response.data.data
-
+this.setState({SiFilter:data})
           let newdata = data.filter(f =>
             f.status === 'new'
           )

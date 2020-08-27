@@ -80,8 +80,8 @@ class AttachFile extends React.Component {
                       else if (response.data.status === true) {
                         toast.success("Info updated successfully");
                         setState({ isShown: false, spin: false })
-                        const { onProfileDelete } = this.props.onProfileDelete
-                        onProfileDelete()
+                        const { onRefTask } = this.props.onRefTask
+                        onRefTask()
                         //  console.log('data',this.props.fun);
                       }
                     })

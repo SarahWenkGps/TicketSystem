@@ -44,21 +44,16 @@ class AssingUser extends React.Component {
                     },
                 })
     
-                    .then(res => {
-                  
-                    
+                    .then(res => {                                     
                             if (res.data.status === true) {
                                 toast.success("user assigned successfully")
-                                const { onProfileDelete } = this.props.onProfileDelete
-                                onProfileDelete()
+                                const { onRefTask } = this.props.onRefTask
+                                onRefTask()
                                 this.setState({ spin: false })
                             } else if (res.data.status === false) {
                                 this.setState({ spin: false })
                                 toast.error(res.data.data.message.text)
-                            }
-                    
-    
-    
+                            }                        
                     })
                     .catch(err => {
                         toast.error("Network Error")

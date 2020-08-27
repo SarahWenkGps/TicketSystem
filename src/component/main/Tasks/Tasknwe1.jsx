@@ -69,7 +69,7 @@ export default function ControlledExpansionPanels(props) {
 
   // };
 
-  function copyCodeToClipboard()  {
+  function copyCodeToClipboard() {
     var dummy = document.createElement("textarea");
     document.body.appendChild(dummy);
     dummy.value = `https://www.iraq-gis.com/Detials_TaskEdite?id=${props.id}`
@@ -96,8 +96,8 @@ export default function ControlledExpansionPanels(props) {
           spin = false;
         }
         else if (response.data.status === true) {
-          const { onProfileDelete } = props
-          onProfileDelete()
+          const { onRefTask } = props
+          onRefTask()
           toast.success("deleted successfully")
           spin = false;
         }
@@ -189,7 +189,7 @@ export default function ControlledExpansionPanels(props) {
           )}
 
         <ExpansionPanel
-          style={{ backgroundColor: 'rgba(241, 237, 237, 0.42)', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey',margin:"0px" }} >
+          style={{ backgroundColor: 'rgba(241, 237, 237, 0.42)', display: 'flex', flexDirection: 'column', justifyContent: 'center', boxShadow: '1px 1px 4px 0px grey', margin: "0px" }} >
           <ExpansionPanelSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1bh-content"
@@ -260,7 +260,7 @@ export default function ControlledExpansionPanels(props) {
           <ExpansionPanelDetails style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgb(225, 227, 229)' }}  >
 
             <div style={{ display: 'flex', justifyContent: 'space-between', height: '30px' }} >
-              <div>  {props.files.length > 0 ? (<ShowFile files={props.files} onProfileDelete={props} />) : (null)}</div>
+              <div>  {props.files.length > 0 ? (<ShowFile files={props.files}  onRefTask={props}  onProfileDelete={props} />) : (null)}</div>
 
               <div>
                 <button className='btn_lang' onClick={() => {
@@ -276,7 +276,6 @@ export default function ControlledExpansionPanels(props) {
                   document.head.appendChild(x);
                 }} ><FormatAlignRightIcon style={{ fontSize: 16 }} /></button>
               </div>
-
             </div>
 
             <div className='location' >
@@ -288,96 +287,76 @@ export default function ControlledExpansionPanels(props) {
             </div>
 
             <div style={{ width: '100%', paddingBottom: 35, fontSize: 16, paddingTop: 10, height: 150, overflow: 'auto' }}  >
-
               {props.desc.split('\n').map((i, n) => {
                 return <p key={n} >{i}</p>
               })}
             </div>
 
+            <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse' }} >             
+              <AssingUser users={props.users} id={props.id} onProfileDelete={props}  onRefTask={props}  assigned={props.assigned} />
 
+              {props.status !== "new" && props.task_type === "حذف" ? (null) : (
+                <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} title={props.name}
+                  time={props.time} desc={props.desc} status={props.status} type={props.type} task_type={props.task_type}
+                  users={props.users} Geofences={props.Geofences} geofences={props.geofences} weight={props.weight} onRefreshGeo={props}
+                  monitor={props.monitor}  onRefTask={props}  />
+              )}
 
-            <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse' }} >
-      
-        </div>
-        <div>
-     
-              {/* <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'row-reverse', width: '50%' }} >
-                <AssingUser users={props.users} id={props.id} onProfileDelete={props} assigned={props.assigned} />
-                {props.status !== "new" && props.task_type === "حذف" ? (null) : (
-                  <EditTask allstatus={props.allstatus} onProfileDelete={props} id={props.id} title={props.name}
-                    time={props.time} desc={props.desc} status={props.status} type={props.type} task_type={props.task_type}
-                    users={props.users} Geofences={props.Geofences} geofences={props.geofences} weight={props.weight} onRefreshGeo={props}
-                    monitor={props.monitor} />
-                )}
-
-                <AttachFile id={props.id} onProfileDelete={props} />
-              </div> */}
-              <div style={{ display: 'flex', alignItems: 'center', width: '100%',paddingTop:10 }} >
-
-                <Tooltip title="Edit Task" onClick={() => {
-                  window.open(`https://www.iraq-gis.com/` + `Detials_TaskEdite?id=${props.id}`, '_blank')
-                }}>
-                  <IconButton aria-label="Edit Task" style={{ backgroundColor: '#9b999999', borderRadius: "300px",marginRight:10 }}  >
-                    <EditIcon style={{ color: 'rgb(46 107 149)' }} />
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip title="Copy URL" onClick={() => copyCodeToClipboard()}>
-                  <IconButton aria-label="Copy URL" style={{ backgroundColor: '#9b999999', borderRadius: "300px",marginRight:10 }}  >
-                    <FileCopyIcon style={{ color: 'rgb(46 107 149)' }} />
-                  </IconButton>
-                </Tooltip>
-
-                <Tooltip title="Refresh Task" onClick={() => {
-                  const { onRefTask } = props
-                  onRefTask()
-                }}>
-                  <IconButton aria-label="Refresh Task" style={{ backgroundColor: '#9b999999', borderRadius: "300px" }}  >
-                    <RefreshIcon style={{ color: 'rgb(46 107 149)' }} />
-                  </IconButton>
-                </Tooltip>
-              </div>
-          
-
+              <AttachFile id={props.id} onProfileDelete={props} onRefTask={props}  />
+              <Status status={props.status} onProfileDelete={props} id={props.id}  onRefTask={props} />
             </div>
+
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}  >
-              <span style={{ marginRight: 10 }}  >
-                {props.status === "rejected" && JSON.parse(localStorage.getItem("roles")).includes(7) ? (
-                  <i className="far fa-trash-alt" id="dels" onClick={() => {
-                    if (window.confirm('Delete the Task?')) { Delete(props.id) }
-                  }}></i>
-                ) : (null)}
-              </span>
 
-              {JSON.parse(localStorage.getItem("roles")).includes(9) === false ? (null) : (<span style={{ display: 'flex', justifyContent: 'flex-end', cursor: 'help' }} >
-                <img src={require('../../../assets/img/log1.png')} alt='img' style={{ height: 20 }} onClick={() => { window.open(`https://www.iraq-gis.com/` + `LogTable?id=${props.id}&name=${"Task"}`, '_blank') }} />
-              </span>)}
+              {/* Delete Task */}
+              {props.status === "rejected" && JSON.parse(localStorage.getItem("roles")).includes(7) ? (
+                <Tooltip title="Delete Task" onClick={() => copyCodeToClipboard()}>
+                  <IconButton aria-label="Delete Task" style={{ marginRight: 10 }}  >
+                    <i className="far fa-trash-alt" id="dels" onClick={() => {
+                      if (window.confirm('Delete the Task?')) { Delete(props.id) }
+                    }}></i>
+                  </IconButton>
+                </Tooltip>
+              ) : (null)}
+
+              {/* go to LogTable page */}
+              {JSON.parse(localStorage.getItem("roles")).includes(9) === false ? (null) : (
+                <Tooltip title="Show Log" onClick={() => copyCodeToClipboard()}>
+                  <IconButton aria-label="Show Log" style={{ marginRight: 10 }}  >
+                    <img src={require('../../../assets/img/log1.png')} alt='img' style={{ height: 20 }}
+                      onClick={() => { window.open(`https://www.iraq-gis.com/` + `LogTable?id=${props.id}&name=${"Task"}`, '_blank') }} />
+                  </IconButton>
+                </Tooltip>
+              )}
+
+              <Tooltip title="Copy URL" onClick={() => copyCodeToClipboard()}>
+                <IconButton aria-label="Copy URL" style={{ marginRight: 10 }}  >
+                  <FileCopyIcon style={{ color: 'rgb(46 107 149)' }} />
+                </IconButton>
+              </Tooltip>
 
             </div>
+
             {spin === true ? (
               <div style={{ width: "100%", position: "absolute" }}>
                 <Lottie
-                  options={{
-                    animationData: loading
-                  }}
+                  options={{ animationData: loading }}
                   width={300}
                   height={150}
                   position="absolute"
                 />
               </div>
             ) : null}
+
           </ExpansionPanelDetails>
 
           <div id='pan_main'  >
             <div style={{ width: '50%' }} >
-              <div id='coment1' style={{boxShadow:"inset 0 0 0 1px rgba(67, 90, 111, 0.14), inset 0 0px 0px 0 rgba(67, 90, 111, 0.06)",padding:3.5
-            ,color:'rgb(34 97 159 / 55%)'}}  >
-              Comments
-              </div>
-           
-              {/* <Comments id={props.id} onProfileDelete={props} comment={props.comment} comments_count={props.comments_count} /> */}
-              </div>
-            <div style={{ width: '50%' }} ><Details id={props.id} onProfileDelete={props} /></div>
+              <Comments id={props.id} onProfileDelete={props} onRefTask={props} comment={props.comment} comments_count={props.comments_count} />
+            </div>
+            <div style={{ width: '50%' }} >
+              <Details id={props.id} onProfileDelete={props} />
+            </div>
           </div>
 
 

@@ -13,7 +13,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Box from '@material-ui/core/Box';
-import { Popover, Pane ,Avatar } from 'evergreen-ui';
+import { Popover, Pane, Avatar } from 'evergreen-ui';
 import Badge from '@material-ui/core/Badge';
 import { Link, NavLink } from 'react-router-dom'
 import { Navbar, Nav } from 'react-bootstrap';
@@ -193,6 +193,16 @@ export default function PersistentDrawerLeft(props) {
       return (<Detials_TaskEdite />)
     }
   }
+
+
+
+  function onEnter(event) {
+    if (event.keyCode === 13) {
+      // document.getElementById("sign_but").click();
+      window.open(`https://www.iraq-gis.com/` + `Detials_TaskEdite?id=${event.target.value}`, '_blank')
+      console.log(event.target.value);
+    }
+  }
   return (
 
     <Context.Consumer>{ctx => {
@@ -232,18 +242,18 @@ export default function PersistentDrawerLeft(props) {
                   <div id='nav_title' >   {rendertitile(props)} </div>
 
                   <div id='ss' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}  >
-                
-                      <div></div>
-                        <Link to='/Notifications'> 
-                          <Box display="flex">
-                          <Box m={2}>
-                            <Badge badgeContent={ctx.value.noti} color="secondary">
-                              <NotificationsIcon style={{ color: 'white' }} />
-                            </Badge>
-                          </Box>
+
+                    <div></div>
+                    <Link to='/Notifications'>
+                      <Box display="flex">
+                        <Box m={2}>
+                          <Badge badgeContent={ctx.value.noti} color="secondary">
+                            <NotificationsIcon style={{ color: 'white' }} />
+                          </Badge>
                         </Box>
-                        </Link>
-                        <UserInfo ids={cookies.get("user_id")} />
+                      </Box>
+                    </Link>
+                    <UserInfo ids={cookies.get("user_id")} />
 
                     <Tooltip title="Logout" onClick={() => {
                       cookies.remove("token");
@@ -253,7 +263,7 @@ export default function PersistentDrawerLeft(props) {
                         <ExitToAppIcon style={{ color: '#fff' }} />
                       </IconButton>
                     </Tooltip>
-                    
+
 
 
 
@@ -301,7 +311,7 @@ export default function PersistentDrawerLeft(props) {
                   </List>
                 </NavLink>
 
-              <NavLink to='/Users' activeClassName='active' >
+                <NavLink to='/Users' activeClassName='active' >
                   <List className='sidefect' style={{ paddingBottom: 0 }} >
                     <ListItem >
                       <img src={require('../../assets/img/user.png')} alt='img' id='side_img' />
@@ -310,54 +320,61 @@ export default function PersistentDrawerLeft(props) {
                   </List>
                 </NavLink>
 
-                {JSON.parse(localStorage.getItem("roles")).includes(3) && JSON.parse(localStorage.getItem("roles")).includes(4)  ? (
-                 
-                 <NavLink to='/Department' activeClassName='active' >
-                 <List className='sidefect' style={{ paddingBottom: 0 }} >
-                   <ListItem >
-                     <img src={require('../../assets/img/web.png')} alt='img' id='side_img' />
-                     <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Departments</span></ListItemText>
-                   </ListItem>
-                 </List>
-               </NavLink>
-               
-                ) : (null
-            )}
+                {JSON.parse(localStorage.getItem("roles")).includes(3) && JSON.parse(localStorage.getItem("roles")).includes(4) ? (
 
-               
-                <NavLink to='/Tasks' activeClassName='active' >
+                  <NavLink to='/Department' activeClassName='active' >
                     <List className='sidefect' style={{ paddingBottom: 0 }} >
                       <ListItem >
-                        <img src={require('../../assets/img/list.png')} alt='img' id='side_img' />
-                        <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Tasks</span></ListItemText>
-                     </ListItem>
+                        <img src={require('../../assets/img/web.png')} alt='img' id='side_img' />
+                        <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Departments</span></ListItemText>
+                      </ListItem>
                     </List>
                   </NavLink>
 
-                  {JSON.parse(localStorage.getItem("roles")).includes(11)===false ? (
+                ) : (null
+                  )}
+
+
+                <NavLink to='/Tasks' activeClassName='active' >
+                  <List className='sidefect' style={{ paddingBottom: 0 }} >
+                    <ListItem >
+                      <img src={require('../../assets/img/list.png')} alt='img' id='side_img' />
+                      <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Tasks</span></ListItemText>
+                    </ListItem>
+                  </List>
+                </NavLink>
+
+                {JSON.parse(localStorage.getItem("roles")).includes(11) === false ? (
                   <div></div>
                 ) : (
-                  <NavLink to='/Task_type' activeClassName='active' >
-                    <List className='sidefect' style={{ paddingBottom: 0 }} >
-                      <ListItem >
-                        <img src={require('../../assets/img/list.png')} alt='img' id='side_img' />
-                        <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Task Type</span></ListItemText>
-                      </ListItem>
-                    </List>
-                  </NavLink>)}
-
-                    <NavLink to='/Notifications' activeClassName='active' >
+                    <NavLink to='/Task_type' activeClassName='active' >
                       <List className='sidefect' style={{ paddingBottom: 0 }} >
                         <ListItem >
-                          <img src={require('../../assets/img/bell.png')} alt='img' id='side_img' />
-                          <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Notifications</span></ListItemText>
+                          <img src={require('../../assets/img/list.png')} alt='img' id='side_img' />
+                          <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Task Type</span></ListItemText>
                         </ListItem>
                       </List>
-                    </NavLink>
+                    </NavLink>)}
 
+                <NavLink to='/Notifications' activeClassName='active' >
+                  <List className='sidefect' style={{ paddingBottom: 0 }} >
+                    <ListItem >
+                      <img src={require('../../assets/img/bell.png')} alt='img' id='side_img' />
+                      <ListItemText ><span className='sspan' style={{ fontWeight: '500', fontSize: '16px' }}>Notifications</span></ListItemText>
+                    </ListItem>
+                  </List>
+                </NavLink>
 
               </div>
 
+              <div id='foot'  >
+                <input type="number" placeholder="Search Task ID"
+                  title="Write task id then click enter"
+
+                  onKeyDown={(event) => onEnter(event)}
+                // onChange={(event)=> handleInput(event) }
+                />
+              </div>
 
 
             </Drawer>

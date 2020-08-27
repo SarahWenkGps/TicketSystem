@@ -849,7 +849,7 @@ class Tasks extends React.Component {
 
 
                       <NewTask onProfileDelete={() => this.componentDidMount()} users={this.state.users} key={1} onRefreshGeo={() => this.RefreshGeofences()}
-                        type={this.state.type} priorities={this.state.priorities} Geofences={this.state.Geofences} />
+                        type={this.state.type} priorities={this.state.priorities} Geofences={this.state.Geofences} onRefTask={() => this.getTasks()}    />
                       <span className='filter_span' > {this.state.dataF.length} Tasks </span>
                       <Row style={{ width: '100%', display: 'flex' }}   >
 

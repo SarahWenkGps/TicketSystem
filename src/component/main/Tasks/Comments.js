@@ -93,8 +93,10 @@ class Comments extends React.Component {
                 if (res.data.status === true) {
                     toast.success("Comment added successfully")
                     this.callcomm();
-                    const { onProfileDelete } = this.props.onProfileDelete
-                    onProfileDelete()
+                    // const { onProfileDelete } = this.props.onProfileDelete
+                    // onProfileDelete()
+                    const { onRefTask } = this.props.onRefTask
+                    onRefTask()
                     this.setState({ comment: "",file:'',spinComment:false })
 
                 }
@@ -129,8 +131,8 @@ class Comments extends React.Component {
           else if (response.data.status===true) {
            
             this.callcomm();        
-                    const { onProfileDelete } = this.props.onProfileDelete
-                    onProfileDelete()
+            const { onRefTask } = this.props.onRefTask
+            onRefTask()
          toast.success("deleted successfully")
         this.setState({spinComment:false}) 
           }
@@ -231,8 +233,8 @@ class Comments extends React.Component {
                                                                                     if (res.data.status === true) {
                                                                                         toast.success("Comment updated successfully")
                                                                                         this.callcomm();
-                                                                                        const { onProfileDelete } = this.props.onProfileDelete
-                                                                                        onProfileDelete()
+                                                                                        const { onRefTask } = this.props.onRefTask
+                                                                                        onRefTask()
 
                                                                                     }
                                                                                     else if (res.data.status === false) {

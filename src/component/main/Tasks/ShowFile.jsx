@@ -53,8 +53,8 @@ class ShowFile extends React.Component {
           else if (response.data.status===true) {
            
          toast.success("deleted successfully")
-         const { onProfileDelete } = this.props.onProfileDelete
-         onProfileDelete()
+         const { onRefTask } = this.props.onRefTask
+         onRefTask()
           }
           })
           .catch(err => {

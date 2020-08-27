@@ -14,19 +14,19 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 import { toast } from "react-toastify";
 import Lottie from "lottie-react-web";
- import loading from '../../../assets/js/loading.json';
- import axios from "axios";
+import loading from '../../../assets/js/loading.json';
+import axios from "axios";
 import Cookies from "universal-cookie";
- import Host from "../../../assets/js/Host";
+import Host from "../../../assets/js/Host";
 
- const cookies = new Cookies();
+const cookies = new Cookies();
 var spin;
 const useStyles = makeStyles((theme) => ({
   root: {
     height: 100,
     transform: 'translateZ(0px)',
     flexGrow: 1,
-    
+
   },
   speedDial: {
     position: 'absolute',
@@ -35,32 +35,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function myFunction(props,data) {
-spin=true
+function myFunction(props, data) {
+  spin = true
   var headers = {
     jwt: cookies.get("token")
-};
-  axios({  url: Host + `tasks/change_status/${props.id}`,
-                method: "PUT",
-                headers: headers,
-                data: { status_id:data },
-            })     
-                .then(res => {
-                    if (res.data.status === true) {                          
-                        toast.success('task updated successfully')
-                        const { onProfileDelete } = props.onProfileDelete
-                        onProfileDelete()
-                        spin=false
-                    }
-                    else if (res.data.status === false) {
-                        toast.error(res.data.data.message.text)
-                     spin=false
-                    }
-                })
-                .catch(err => {
-                  toast.error("Network Error")
-                  spin=false
-                })
+  };
+  axios({
+    url: Host + `tasks/change_status/${props.id}`,
+    method: "PUT",
+    headers: headers,
+    data: { status_id: data },
+  })
+    .then(res => {
+      if (res.data.status === true) {
+        toast.success('task updated successfully')
+        const { onRefTask } = props.onRefTask
+        onRefTask()
+        spin = false
+      }
+      else if (res.data.status === false) {
+        toast.error(res.data.data.message.text)
+        spin = false
+      }
+    })
+    .catch(err => {
+      toast.error("Network Error")
+      spin = false
+    })
 
 }
 
@@ -73,14 +74,14 @@ export default function OpenIconSpeedDial(props) {
   //   setHidden((prevHidden) => !prevHidden);
   // };
   const actions = [
-    { icon: <AutorenewIcon onClick={()=>{myFunction(props,2) }} />, name: 'In Progress' },
-    { icon: <DoneAllIcon onClick={()=>{myFunction(props,3) }}  />, name: 'Close' },
-    { icon: <ThumbUpIcon  onClick={()=>{myFunction(props,5) }} />, name: 'Approve' },
-    { icon: <ThumbDownIcon  onClick={()=>{myFunction(props,4) }}/>, name: 'Reject' },
-    { icon: <ArchiveIcon onClick={()=>{myFunction(props,6) }} />, name: 'Archive' },
-    
+    { icon: <AutorenewIcon onClick={() => { myFunction(props, 2) }} />, name: 'In Progress' },
+    { icon: <DoneAllIcon onClick={() => { myFunction(props, 3) }} />, name: 'Close' },
+    { icon: <ThumbUpIcon onClick={() => { myFunction(props, 5) }} />, name: 'Approve' },
+    { icon: <ThumbDownIcon onClick={() => { myFunction(props, 4) }} />, name: 'Reject' },
+    { icon: <ArchiveIcon onClick={() => { myFunction(props, 6) }} />, name: 'Archive' },
+
   ];
-  
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -92,7 +93,7 @@ export default function OpenIconSpeedDial(props) {
   return (
     <div className={classes.root}>
       {/* <Button onClick={handleVisibility}>Toggle Speed Dial</Button> */}
-      <SpeedDial 
+      <SpeedDial
         ariaLabel="SpeedDial openIcon example"
         className={classes.speedDial}
         hidden={hidden}
@@ -101,32 +102,32 @@ export default function OpenIconSpeedDial(props) {
         onOpen={handleOpen}
         open={open}
         direction={'right'}
-       
+
       >
-     
+
         {actions.map((action) => (
           <SpeedDialAction
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
             onClick={handleClose}
-         
+
           />
         ))}
       </SpeedDial>
 
-      {spin===true ? (
-                      <div style={{ width: "100%", position: "absolute" }}>
-                        <Lottie
-                          options={{
-                            animationData: loading
-                          }}
-                          width={300}
-                          height={150}
-                          position="absolute"
-                        />
-                      </div>
-                    ) : null}
+      {spin === true ? (
+        <div style={{ width: "100%", position: "absolute" }}>
+          <Lottie
+            options={{
+              animationData: loading
+            }}
+            width={300}
+            height={150}
+            position="absolute"
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
