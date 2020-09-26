@@ -1,0 +1,60 @@
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.9.9",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.52",
+    "@reactions/component": "^2.0.2",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.2",
+    "detect-newline": "^3.1.0",
+    "evergreen-ui": "^4.24.0",
+    "lottie-react-web": "^2.1.4",
+    "material-datatable": "^0.4.1",
+    "material-ui-popup-state": "^1.5.4",
+    "mdbreact": "^4.27.0",
+    "moment": "^2.25.3",
+    "moment-range": "^4.0.2",
+    "react": "^16.13.1",
+    "react-bootstrap": "^1.0.0",
+    "react-browser-notifications": "^1.0.14",
+    "react-color": "^2.18.1",
+    "react-datepicker": "^2.14.1",
+    "react-dom": "^16.13.1",
+    "react-input-files": "^1.2.0",
+    "react-minimal-pie-chart": "^7.1.0",
+    "react-range-picker": "^1.0.1",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.4.1",
+    "react-select": "^3.1.0",
+    "react-toastify": "^5.5.0",
+    "react-web-notification": "^0.8.0",
+    "universal-cookie": "^4.0.3",
+    "use-browser-notifications": "^0.3.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
